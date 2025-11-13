@@ -10,8 +10,8 @@ const heroSlides = [
   {
     id: 1,
     image: heroImage1,
-    title: "Welcome to Jos Smart City",
-    subtitle: "The-Digital Economy",
+    title: "Welcome to ",
+    subtitle: "Jos Smart City, The-Digital Economy",
     description:
       "Access all municipal services, pay bills, and engage with your city - all in one place.",
   },
@@ -74,9 +74,12 @@ function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  // Reset fade-in on slide change for smooth transitions
+  // Reset fade-in on slide change with different directions
   useEffect(() => {
-    // Briefly remove fade-in class, then re-add for smooth animation
+    // Remove fade-in classes first to trigger animation
+    setVisibleElements(new Set());
+
+    // Re-add fade-in classes with delay for staggered effect
     const timer = setTimeout(() => {
       setVisibleElements(
         new Set([
@@ -87,7 +90,7 @@ function Hero() {
           "hero-buttons",
         ])
       );
-    }, 50);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [currentSlide]);
@@ -170,7 +173,7 @@ function Hero() {
           }`}
         >
           <Lightbulb size={20} />
-          <span>Powered by Smart Technology</span>
+          <span>Powered by Cbrilliance AI tech LTD</span>
         </div>
 
         <h1
