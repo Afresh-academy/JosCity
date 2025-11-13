@@ -47,6 +47,9 @@ function App() {
           <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
             Services
           </li>
+          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+            Contact Us
+          </li>
         </ul>
         <button
           type="button"

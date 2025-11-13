@@ -6,6 +6,15 @@
   width: 100%;
   overflow: hidden;
   font-family: $font-family;
+  // Smoothed out edges for a more subtle, rounded look using more intermediate points and gentle curves
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 90%,
+    95% 100%,
+    5% 100%,
+    0 90%
+  );
   // Futuristic animated grid background
   &::before {
     content: "";
@@ -24,6 +33,49 @@
     z-index: 4;
     pointer-events: none;
     mix-blend-mode: overlay;
+  }
+
+  // Bottom border element with same clip-path shape
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-color: $color-primary;
+    clip-path: polygon(
+      50% 0%,
+      100% 0,
+      100% 2%,
+      100% 20%,
+      100% 35%,
+      100% 50%,
+      100% 70%,
+      100% 85%,
+      100% 89%,
+      95% 90%,
+      85% 92.3%,
+      80% 93%,
+      70% 93.5%,
+      60% 93%,
+      52% 92%,
+      45% 91%,
+      35% 89.5%,
+      25% 87%,
+      15% 84%,
+      8% 81.5%,
+      0 79%,
+      0% 70%,
+      0% 50%,
+      0% 35%,
+      0% 20%,
+      0% 2%,
+      0 0
+    );
+    transform: translateY(100%);
+    z-index: 0;
+    pointer-events: none;
   }
 
   &__slide {
@@ -82,8 +134,8 @@
   &__content {
     position: relative;
     z-index: 10;
-    padding: 0rem 0rem 0rem 8rem;
-    max-width: 600px;
+    padding: 3rem 0rem 5rem 5rem;
+    max-width: 700px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -156,7 +208,7 @@
     color: #fff;
     margin: 0;
     line-height: 1.2;
-    transform: translateY(20px);
+    transform: translateX(-50px);
     opacity: 0;
     transition: opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.3),
@@ -165,7 +217,7 @@
 
     &.fade-in {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(0);
       animation: title-glow 3s ease-in-out infinite;
     }
 
@@ -195,14 +247,14 @@
     color: $color-primary;
     margin: 0;
     line-height: 1.2;
-    transform: translateY(20px);
+    transform: translateX(50px);
     opacity: 0;
     transition: opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s;
     position: relative;
 
     &.fade-in {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(0);
     }
   }
 
@@ -212,7 +264,7 @@
     margin: 0;
     line-height: 1.6;
     max-width: 500px;
-    transform: translateY(20px);
+    transform: translateY(30px);
     opacity: 0;
     transition: opacity 0.8s ease-out 0.6s, transform 0.8s ease-out 0.6s;
 
@@ -234,13 +286,20 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    // Fixed buttons that don't move during slide transitions
+    &--fixed {
+      opacity: 1;
+      transform: translateY(0);
+      transition: none;
+    }
   }
 
   &__button {
-    padding: 1.2rem 2.5rem;
-    border-radius: 2rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    padding: 0.9rem 2.2rem;
+    border-radius: 3rem;
+    font-size: 13px;
+    font-weight: 400;
     cursor: pointer;
     border: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -250,7 +309,7 @@
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 
     &--primary {
       background: linear-gradient(
@@ -311,7 +370,7 @@
       }
 
       span {
-        font-size: 1.3rem;
+        font-size: 1rem;
         position: relative;
         z-index: 1;
         transition: transform 0.3s ease;
@@ -345,7 +404,7 @@
           transparent,
           $color-primary
         );
-        border-radius: 2rem;
+        border-radius: 3rem;
         z-index: -1;
         opacity: 0;
         transition: opacity 0.3s ease;
@@ -426,7 +485,7 @@
   // Responsive styles
   @media screen and (max-width: 1024px) {
     &__content {
-      padding: 2rem 4rem;
+      padding: 3rem 0rem 5rem 5rem;
       max-width: 600px;
     }
 
@@ -440,6 +499,14 @@
 
     &__description {
       font-size: 1.1rem;
+    }
+
+    &__button {
+      &--primary,
+      &--secondary {
+        padding: 0.75rem 1.5rem;
+        font-size: 11px;
+      }
     }
   }
 
@@ -470,16 +537,16 @@
       button {
         width: 100%;
         justify-content: center;
-        padding: 0.7rem 1.5rem;
-        font-size: 0.85rem;
+        padding: 0.7rem 1.4rem;
+        font-size: 11px;
       }
     }
 
     &__button {
       &--primary,
       &--secondary {
-        padding: 0.7rem 1.5rem;
-        font-size: 0.85rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 11px;
       }
     }
   }
@@ -511,19 +578,19 @@
 
       button {
         width: 100%;
-        padding: 1.4rem 1.2rem;
-        font-size: 0.75rem;
+        padding: 0.65rem 1.2rem;
+        font-size: 10px;
       }
     }
 
     &__button {
       &--primary,
       &--secondary {
-        padding: 1.4rem 1.2rem;
-        font-size: 0.75rem;
+        padding: 0.65rem 1.2rem;
+        font-size: 10px;
 
         span {
-          font-size: 1rem;
+          font-size: 0.9rem;
         }
       }
     }
