@@ -4,16 +4,62 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  // Futuristic glassmorphism effect
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
   padding: 1rem 8rem;
   width: 100%;
-  height: 100px;
+  height: 80px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  // Animated gradient border effect
+  border-bottom: 2px solid transparent;
+  background-image: linear-gradient(#fff, #fff),
+    linear-gradient(
+      90deg,
+      $color-primary 0%,
+      rgba(0, 201, 80, 0.5) 50%,
+      $color-primary 100%
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  // Smooth entrance animation combined with gradient border
+  animation: slide-down 0.6s ease-out, gradient-border 3s ease infinite;
+  transform: translateY(0);
+
+  &__logo {
+    position: relative;
+    overflow: hidden;
+    // Logo container with glow effect
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(0, 201, 80, 0.3) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    &:hover::before {
+      opacity: 1;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+  }
 
   &__logo-image {
     display: flex;
@@ -24,6 +70,13 @@
     min-width: 120px;
     min-height: 50px;
     object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(0, 201, 80, 0.3));
+
+    &:hover {
+      transform: scale(1.05) rotate(1deg);
+      filter: drop-shadow(0 0 20px rgba(0, 201, 80, 0.6));
+    }
   }
 
   &__menu-toggle {
@@ -60,35 +113,166 @@
       "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
     font-weight: 100;
     padding: 0.5rem 1rem;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     position: relative;
     border-bottom: 2px solid transparent;
-    transition: border-bottom-color 0.3s ease;
-  }
-  &__nav-item:hover {
-    border-bottom-color: $color-primary;
-  }
-  &__nav-item:active {
-    border-bottom-color: $color-primary;
+    // Separate transitions for better stability
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+    // Futuristic text effect
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #333;
+    // Ensure proper stacking
+    z-index: 1;
+    // Prevent layout shift on hover
+    display: inline-block;
+    // Add margin to compensate for transform to prevent hover area shift
+    margin-top: 2px;
+
+    // Animated underline with glow
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        $color-primary,
+        transparent
+      );
+      box-shadow: 0 0 10px $color-primary, 0 0 20px $color-primary;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    // Futuristic scanning line effect
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transition: left 0.5s ease;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    // Hover effect with glow
+    &:hover {
+      color: $color-primary;
+      text-shadow: 0 0 10px rgba(0, 201, 80, 0.5);
+      transform: translateY(-2px);
+      // Ensure hover state is stable
+      will-change: transform;
+
+      &::before {
+        width: 100%;
+      }
+
+      &::after {
+        left: 100%;
+      }
+    }
+
+    // Active state
+    &:active {
+      transform: translateY(-1px);
+    }
+
+    // Focus state for accessibility
+    &:focus {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
   }
   &__get-started-button {
     color: $color-background;
     font-size: 12px;
     padding: 0.8rem 2rem;
     border-radius: 3rem;
-    border: 1px solid #ccc;
-    background-color: $color-primary;
+    border: none;
+    background: linear-gradient(135deg, $color-primary 0%, #00a844 100%);
     cursor: pointer;
     white-space: nowrap;
     margin-left: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 201, 80, 0.4),
+      0 0 20px rgba(0, 201, 80, 0.2) inset;
+    transition: all 0.3s ease;
+
+    // Animated gradient overlay
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transition: left 0.5s ease;
+    }
+
+    // Glow effect
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(0, 201, 80, 0.6),
+        0 0 30px rgba(0, 201, 80, 0.4) inset;
+      filter: brightness(1.1);
+
+      &::before {
+        left: 100%;
+      }
+
+      &::after {
+        width: 300px;
+        height: 300px;
+      }
+    }
+
+    &:active {
+      transform: translateY(-1px) scale(1.02);
+    }
   }
 
   // Tablet styles (768px - 1024px)
   @media screen and (max-width: 1024px) {
     padding: 1rem 3rem;
-    height: 90px;
+    height: 70px;
 
     &__logo-image {
       width: 140px;
@@ -208,5 +392,45 @@
       padding: 0.5rem 1rem;
       margin-left: 0.3rem;
     }
+  }
+}
+
+// ============================================
+// FUTURISTIC ANIMATIONS FOR NAVBAR
+// ============================================
+
+// Slide down animation for navbar entrance
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Animated gradient border
+@keyframes gradient-border {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// Pulse glow effect for logo
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.1);
   }
 }
