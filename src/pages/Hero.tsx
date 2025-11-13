@@ -1,11 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { Lightbulb } from "lucide-react";
 import "../main.css";
+// Import images as modules for Vite build compatibility
+import heroImage1 from "../image/hero-image.png";
+import heroImage2 from "../image/plateau-legs.png";
+import heroImage3 from "../image/terminus.png";
 
 const heroSlides = [
   {
     id: 1,
-    image: "/src/image/hero-image.png",
+    image: heroImage1,
     title: "Welcome to Jos Smart City",
     subtitle: "The-Digital Economy",
     description:
@@ -13,16 +17,15 @@ const heroSlides = [
   },
   {
     id: 2,
-    image: "/src/image/plateau-legs.png",
+    image: heroImage2,
     title: "Anticipate",
-    subtitle:
-      "Jos City Carnival!",
+    subtitle: "Jos City Carnival!",
     description:
       "Purchase tickets, manage bookings, and connect with your event - all in one convenient location",
   },
   {
     id: 3,
-    image: "/src/image/terminus.png",
+    image: heroImage3,
     title: "Exciting Event Ahead at",
     subtitle: "Jos Central Market!",
     description:
