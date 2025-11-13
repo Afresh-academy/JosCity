@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "../main.css";
+// Import logo as module for Vite build compatibility
+import logoImage from "../image/primary-logo.png";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,11 +18,7 @@ function App() {
     <>
       <nav className="navbar">
         <div className="navbar__logo">
-          <img
-            src="/src/image/primary-logo.png"
-            alt="Logo"
-            className="navbar__logo-image"
-          />
+          <img src={logoImage} alt="Logo" className="navbar__logo-image" />
         </div>
         <button
           className={`navbar__menu-toggle ${isMenuOpen ? "active" : ""}`}
