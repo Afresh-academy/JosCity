@@ -18,7 +18,12 @@ function App() {
     <>
       <nav className="navbar">
         <div className="navbar__logo">
-          <img src={logoImage} alt="Logo" className="navbar__logo-image" />
+          <img
+            src={logoImage}
+            alt="Logo"
+            className="navbar__logo-image"
+            loading="eager"
+          />
         </div>
         <button
           className={`navbar__menu-toggle ${isMenuOpen ? "active" : ""}`}
