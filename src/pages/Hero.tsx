@@ -35,6 +35,7 @@ const heroSlides = [
 
 function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set([0])); // Preload first image
   const [visibleElements, setVisibleElements] = useState<Set<string>>(
     new Set()
   );
@@ -43,6 +44,27 @@ function Hero() {
   const subtitleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+
+  // Lazy load images - preload current and next slide
+  useEffect(() => {
+    // Preload current slide image
+    const currentImage = new Image();
+    currentImage.src = heroSlides[currentSlide].image;
+
+    // Preload next slide image for smooth transition
+    const nextIndex = (currentSlide + 1) % heroSlides.length;
+    const nextImage = new Image();
+    nextImage.src = heroSlides[nextIndex].image;
+
+    // Mark images as loaded when they finish loading
+    currentImage.onload = () => {
+      setLoadedImages((prev) => new Set(prev).add(currentSlide));
+    };
+
+    nextImage.onload = () => {
+      setLoadedImages((prev) => new Set(prev).add(nextIndex));
+    };
+  }, [currentSlide]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -129,7 +151,11 @@ function Hero() {
         <div
           key={slide.id}
           className={`hero__slide ${index === currentSlide ? "active" : ""}`}
-          style={{ backgroundImage: `url(${slide.image})` }}
+          style={{
+            backgroundImage: loadedImages.has(index)
+              ? `url(${slide.image})`
+              : "none",
+          }}
         >
           <div className="hero__overlay"></div>
         </div>
