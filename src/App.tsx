@@ -2,14 +2,14 @@ import { useState } from "react";
 import "./main.css";
 
 function App() {
-  const [selectedService, setSelectedService] = useState("");
-
-  const handleServiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedService(e.target.value);
-  };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleGetStarted = () => {
     window.location.href = "https://joscity.com";
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -22,26 +22,29 @@ function App() {
             className="navbar__logo-image"
           />
         </div>
-        <ul className="navbar__nav-list">
-          <li className="navbar__nav-item">Home</li>
-          <li className="navbar__nav-item">About</li>
-          <li className="navbar__nav-item">Testimonials</li>
-        </ul>
-        <select
-          name="services"
-          id="services"
-          className="navbar__nav-select"
-          value={selectedService}
-          onChange={handleServiceChange}
+        <button
+          className={`navbar__menu-toggle ${isMenuOpen ? "active" : ""}`}
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
         >
-          <option value="" disabled>
-            Select Services
-          </option>
-          <option value="service1">Service 1</option>
-          <option value="service2">Service 2</option>
-          <option value="service3">Service 3</option>
-          <option value="service4">Service 4</option>
-        </select>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul className={`navbar__nav-list ${isMenuOpen ? "active" : ""}`}>
+          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+            Home
+          </li>
+          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+            About
+          </li>
+          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+            Testimonials
+          </li>
+          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+            Services
+          </li>
+        </ul>
         <button
           type="button"
           onClick={handleGetStarted}
