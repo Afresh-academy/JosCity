@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../main.css";
 import "../scss/_services.scss";
-import Pricing from "./Pricing";
 
 interface Service {
   id: string;
@@ -655,7 +654,6 @@ const Services: React.FC = () => {
           </div>
         </div>
       </section>
-      <Pricing />
     </>
   );
 };
