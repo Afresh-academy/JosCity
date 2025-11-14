@@ -14,6 +14,14 @@ function App() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const scrollToAbout = () => {
+    setIsMenuOpen(false);
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -38,7 +46,7 @@ function App() {
           <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
             Home
           </li>
-          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+          <li className="navbar__nav-item" onClick={scrollToAbout}>
             About
           </li>
           <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
