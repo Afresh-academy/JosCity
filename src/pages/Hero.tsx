@@ -321,7 +321,7 @@ function AboutSection() {
   ];
 
   return (
-    <section className="about-section">
+    <section id="about" className="about-section">
       <div className="about-section__stats" ref={statsRef}>
         {stats.map((stat, index) => (
           <div
