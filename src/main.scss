@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 @import './scss/base.scss';
 @import './scss/hero.scss';
 @import './scss/navbar.scss';
 @import './scss/services.scss';
+=======
+@forward './scss/variables.scss';
+@forward './scss/base.scss';
+@forward './scss/hero.scss';
+@forward './scss/navbar.scss';
+@forward './scss/services.scss';
+>>>>>>> 149adeef381b65eeaebe02eac7ef49df75abc8e7

@@ -27,6 +27,14 @@
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.8s ease-out 0.1s, transform 0.8s ease-out 0.1s;
+
+    &.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     svg {
       color: $color-primary;
@@ -40,6 +48,14 @@
     margin-bottom: 20px;
     line-height: 1.2;
     letter-spacing: -0.03em;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s;
+
+    &.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   &__subheading {
@@ -49,6 +65,14 @@
     margin: 0 auto;
     line-height: 1.7;
     font-weight: 400;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out 0.5s, transform 0.8s ease-out 0.5s;
+
+    &.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   &__grid {
@@ -56,6 +80,14 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
     margin-bottom: 60px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out 0.7s, transform 0.8s ease-out 0.7s;
+
+    &.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     @media (max-width: 1024px) {
       grid-template-columns: repeat(2, 1fr);
@@ -77,10 +109,18 @@
     flex-direction: column;
     gap: 20px;
     border: 1px solid rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    transform: translateY(40px);
 
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    &.fade-in-up {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
     }
   }
 
@@ -138,7 +178,7 @@
     width: fit-content;
 
     &:hover {
-      color: darken($color-primary, 10%);
+      color: mix(black, $color-primary, 10%);
     }
 
     span {
@@ -150,6 +190,14 @@
   &__view-all {
     text-align: center;
     margin-top: 80px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out 0.9s, transform 0.8s ease-out 0.9s;
+
+    &.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   &__view-all-button {
@@ -169,7 +217,7 @@
 
     &:hover {
       background-color: #2a2a2a;
-      border-color: lighten($color-primary, 10%);
+      border-color: mix($color-primary, white, 10%);
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 201, 80, 0.3);
     }
@@ -201,4 +249,3 @@
     }
   }
 }
-
