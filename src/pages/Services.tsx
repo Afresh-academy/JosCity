@@ -553,7 +553,7 @@ const Services: React.FC = () => {
 
   return (
     <>
-      <section className="services">
+      <section id="services" className="services">
         <div className="services__container">
           <div className="services__hero">
             <div

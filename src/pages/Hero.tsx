@@ -151,7 +151,7 @@ function Hero() {
 
   return (
     <>
-      <div className="hero">
+      <div id="home" className="hero">
         {heroSlides.map((slide, index) => (
           <div
             key={slide.id}

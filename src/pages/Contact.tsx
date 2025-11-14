@@ -33,7 +33,7 @@ const Contact: React.FC = () => {
   ];
 
   return (
-    <section className="contact">
+    <section id="contact" className="contact">
       <div className="contact__container">
         <div className="contact__hero">
           <div className="contact__badge">

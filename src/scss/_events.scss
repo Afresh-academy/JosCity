@@ -1,0 +1,108 @@
+@use "./variables" as *;
+
+.events {
+  padding: 80px 0;
+  background-color: #f5f5f5;
+  font-family: $font-family;
+
+  &__container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  &__heading {
+    text-align: center;
+    padding: 0 20px;
+    margin-bottom: 30px;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: rgba(0, 201, 80, 0.1);
+    border-radius: 20px;
+    color: $color-primary;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.8s ease-out 0.1s, transform 0.8s ease-out 0.1s;
+
+    &.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    svg {
+      color: $color-primary;
+    }
+  }
+
+  &__image-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s;
+    overflow: hidden;
+
+    &.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-width: 100%;
+  }
+
+  // Responsive Styles
+  @media screen and (max-width: 1024px) {
+    padding: 60px 0;
+
+    &__heading {
+      margin-bottom: 25px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 40px 0;
+
+    &__heading {
+      margin-bottom: 20px;
+      padding: 0 15px;
+    }
+
+    &__badge {
+      font-size: 13px;
+      padding: 6px 14px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    padding: 30px 0;
+
+    &__heading {
+      margin-bottom: 15px;
+      padding: 0 10px;
+    }
+
+    &__badge {
+      font-size: 12px;
+      padding: 6px 12px;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+}
