@@ -1,4 +1,5 @@
-@import './scss/base.scss';
-@import './scss/hero.scss';
-@import './scss/navbar.scss';
-@import './scss/variables.scss';
+@forward './scss/variables.scss';
+@forward './scss/base.scss';
+@forward './scss/hero.scss';
+@forward './scss/navbar.scss';
+@forward './scss/services.scss';
