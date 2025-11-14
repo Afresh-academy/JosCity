@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../main.css";
 import "../scss/_services.scss";
+import Pricing from "./Pricing";
 
 interface Service {
   id: string;
@@ -551,108 +552,111 @@ const Services: React.FC = () => {
   }, []);
 
   return (
-    <section className="services">
-      <div className="services__container">
-        <div className="services__hero">
-          <div
-            ref={badgeRef}
-            data-animate-id="services-badge"
-            className={`services__badge ${
-              visibleElements.has("services-badge") ? "fade-in" : ""
-            }`}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M9 11L12 14L22 4"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span>Our Services</span>
-          </div>
-          <h1
-            ref={headingRef}
-            data-animate-id="services-heading"
-            className={`services__heading ${
-              visibleElements.has("services-heading") ? "fade-in" : ""
-            }`}
-          >
-            Comprehensive City Services
-          </h1>
-          <p
-            ref={subheadingRef}
-            data-animate-id="services-subheading"
-            className={`services__subheading ${
-              visibleElements.has("services-subheading") ? "fade-in" : ""
-            }`}
-          >
-            Everything you need to interact with city services, all digitized
-            and accessible 24/7
-          </p>
-        </div>
-
-        <div
-          ref={gridRef}
-          data-animate-id="services-grid"
-          className={`services__grid ${
-            visibleElements.has("services-grid") ? "fade-in" : ""
-          }`}
-        >
-          {services.map((service, index) => (
+    <>
+      <section className="services">
+        <div className="services__container">
+          <div className="services__hero">
             <div
-              key={service.id}
-              data-card-index={index}
-              className={`services__card ${
-                visibleCards.has(index) ? "fade-in-up" : ""
+              ref={badgeRef}
+              data-animate-id="services-badge"
+              className={`services__badge ${
+                visibleElements.has("services-badge") ? "fade-in" : ""
               }`}
             >
-              <div
-                className="services__card-icon"
-                style={{ backgroundColor: service.iconColor }}
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                {service.icon}
-              </div>
-              <div className="services__card-content">
-                <h3 className="services__card-title">{service.title}</h3>
-                <p className="services__card-description">
-                  {service.description}
-                </p>
-                <a href="#" className="services__card-link">
-                  Access Service <span>&gt;</span>
-                </a>
-              </div>
+                <path
+                  d="M9 11L12 14L22 4"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>Our Services</span>
             </div>
-          ))}
-        </div>
+            <h1
+              ref={headingRef}
+              data-animate-id="services-heading"
+              className={`services__heading ${
+                visibleElements.has("services-heading") ? "fade-in" : ""
+              }`}
+            >
+              Comprehensive City Services
+            </h1>
+            <p
+              ref={subheadingRef}
+              data-animate-id="services-subheading"
+              className={`services__subheading ${
+                visibleElements.has("services-subheading") ? "fade-in" : ""
+              }`}
+            >
+              Everything you need to interact with city services, all digitized
+              and accessible 24/7
+            </p>
+          </div>
 
-        <div
-          ref={viewAllRef}
-          data-animate-id="services-view-all"
-          className={`services__view-all ${
-            visibleElements.has("services-view-all") ? "fade-in" : ""
-          }`}
-        >
-          <button className="services__view-all-button">
-            View All <span>&gt;</span>
-          </button>
+          <div
+            ref={gridRef}
+            data-animate-id="services-grid"
+            className={`services__grid ${
+              visibleElements.has("services-grid") ? "fade-in" : ""
+            }`}
+          >
+            {services.map((service, index) => (
+              <div
+                key={service.id}
+                data-card-index={index}
+                className={`services__card ${
+                  visibleCards.has(index) ? "fade-in-up" : ""
+                }`}
+              >
+                <div
+                  className="services__card-icon"
+                  style={{ backgroundColor: service.iconColor }}
+                >
+                  {service.icon}
+                </div>
+                <div className="services__card-content">
+                  <h3 className="services__card-title">{service.title}</h3>
+                  <p className="services__card-description">
+                    {service.description}
+                  </p>
+                  <a href="#" className="services__card-link">
+                    Access Service <span>&gt;</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            ref={viewAllRef}
+            data-animate-id="services-view-all"
+            className={`services__view-all ${
+              visibleElements.has("services-view-all") ? "fade-in" : ""
+            }`}
+          >
+            <button className="services__view-all-button">
+              View All <span>&gt;</span>
+            </button>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <Pricing />
+    </>
   );
 };
 
