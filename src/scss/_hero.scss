@@ -7,7 +7,7 @@
   overflow: hidden;
   font-family: $font-family;
   // Smoothed out edges for a more subtle, rounded look using more intermediate points and gentle curves
-  clip-path: polygon(0 0, 100% 0, 100% 90%, 95% 100%, 5% 100%, 0 90%);
+  clip-path: polygon(0 0, 100% 0, 100% 92%, 85% 100%, 14% 100%, 0 92%);
   // Futuristic animated grid background
   &::before {
     content: "";
