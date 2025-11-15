@@ -178,7 +178,7 @@
     width: fit-content;
 
     &:hover {
-      color: mix(black, $color-primary, 10%);
+      color: color-mix(black, $color-primary, 10%);
     }
 
     span {
@@ -217,7 +217,7 @@
 
     &:hover {
       background-color: #2a2a2a;
-      border-color: mix($color-primary, white, 10%);
+      border-color: color-mix(in srgb, $color-primary 90%, white 10%);
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 201, 80, 0.3);
     }
