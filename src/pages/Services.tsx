@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../main.css";
 import "../scss/_services.scss";
+<<<<<<< HEAD
 import Pricing from "./Pricing";
 import christmasImage from "../image/Christmas.jpg";
+=======
+>>>>>>> 8e478a244b4387d8d9e35de530becbea2f7f3acc
 
 interface Service {
   id: string;
@@ -554,7 +557,7 @@ const Services: React.FC = () => {
 
   return (
     <>
-      <section className="services">
+      <section id="services" className="services">
         <div className="services__container">
           <div className="services__hero">
             <div
@@ -659,7 +662,6 @@ const Services: React.FC = () => {
           </div>
         </div>
       </section>
-      <Pricing />
     </>
   );
 };

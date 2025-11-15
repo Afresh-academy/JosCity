@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
 
       <div className="footer__container">
         <div className="footer__copyright">
-          <p>© 2025 JosCity Smart Services. All rights reserved.</p>
+          <p>&copy; 2025 JosCity Smart Services. All rights reserved. Developed by AfrESH</p>
         </div>
       </div>
     </footer>

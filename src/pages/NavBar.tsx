@@ -22,6 +22,41 @@ function App() {
     }
   };
 
+  const scrollToContact = () => {
+    setIsMenuOpen(false);
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const scrollToServices = () => {
+    setIsMenuOpen(false);
+    const servicesSection = document.getElementById("services");
+    if (servicesSection) {
+      servicesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const scrollToHome = () => {
+    setIsMenuOpen(false);
+    const homeSection = document.getElementById("home");
+    if (homeSection) {
+      homeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const scrollToTestimonials = () => {
+    setIsMenuOpen(false);
+    const testimonialsSection = document.getElementById("testimonials");
+    if (testimonialsSection) {
+      testimonialsSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -43,19 +78,19 @@ function App() {
           <span></span>
         </button>
         <ul className={`navbar__nav-list ${isMenuOpen ? "active" : ""}`}>
-          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+          <li className="navbar__nav-item" onClick={scrollToHome}>
             Home
           </li>
           <li className="navbar__nav-item" onClick={scrollToAbout}>
             About
           </li>
-          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+          <li className="navbar__nav-item" onClick={scrollToTestimonials}>
             Testimonials
           </li>
-          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+          <li className="navbar__nav-item" onClick={scrollToServices}>
             Services
           </li>
-          <li className="navbar__nav-item" onClick={() => setIsMenuOpen(false)}>
+          <li className="navbar__nav-item" onClick={scrollToContact}>
             Contact Us
           </li>
         </ul>
