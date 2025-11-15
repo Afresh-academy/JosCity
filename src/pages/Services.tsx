@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../main.css";
 import "../scss/_services.scss";
 import Pricing from "./Pricing";
+import christmasImage from "../image/Christmas.jpg";
 
 interface Service {
   id: string;
@@ -652,6 +653,9 @@ const Services: React.FC = () => {
             <button className="services__view-all-button">
               View All <span>&gt;</span>
             </button>
+          </div>
+          <div className="services__christmas-image">
+            <img src={christmasImage} alt="Christmas" />
           </div>
         </div>
       </section>
