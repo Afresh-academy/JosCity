@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../main.css";
 // Import logo as module for Vite build compatibility
 import logoImage from "../image/primary-logo.png";
 
 function App() {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleGetStarted = () => {
-    window.location.href = "https://joscity.com";
+    navigate("/welcome");
   };
 
   const toggleMenu = () => {
@@ -16,44 +18,101 @@ function App() {
 
   const scrollToAbout = () => {
     setIsMenuOpen(false);
-    const aboutSection = document.getElementById("about");
-    if (aboutSection) {
-      aboutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const aboutSection = document.getElementById("about");
+        if (aboutSection) {
+          aboutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+    } else {
+      const aboutSection = document.getElementById("about");
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 
   const scrollToContact = () => {
     setIsMenuOpen(false);
-    const contactSection = document.getElementById("contact");
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const contactSection = document.getElementById("contact");
+        if (contactSection) {
+          contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+    } else {
+      const contactSection = document.getElementById("contact");
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 
   const scrollToServices = () => {
     setIsMenuOpen(false);
-    const servicesSection = document.getElementById("services");
-    if (servicesSection) {
-      servicesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const servicesSection = document.getElementById("services");
+        if (servicesSection) {
+          servicesSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
+    } else {
+      const servicesSection = document.getElementById("services");
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 
   const scrollToHome = () => {
     setIsMenuOpen(false);
-    const homeSection = document.getElementById("home");
-    if (homeSection) {
-      homeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Navigate to home if not already there
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const homeSection = document.getElementById("home");
+        if (homeSection) {
+          homeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+    } else {
+      const homeSection = document.getElementById("home");
+      if (homeSection) {
+        homeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 
   const scrollToTestimonials = () => {
     setIsMenuOpen(false);
-    const testimonialsSection = document.getElementById("testimonials");
-    if (testimonialsSection) {
-      testimonialsSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const testimonialsSection = document.getElementById("testimonials");
+        if (testimonialsSection) {
+          testimonialsSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
+    } else {
+      const testimonialsSection = document.getElementById("testimonials");
+      if (testimonialsSection) {
+        testimonialsSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
     }
   };
 

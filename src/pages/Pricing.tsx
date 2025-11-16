@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../main.css";
 import "../scss/_pricing.scss";
 
@@ -15,6 +16,7 @@ interface PricingPlan {
 }
 
 const Pricing: React.FC = () => {
+  const navigate = useNavigate();
   const [visibleElements, setVisibleElements] = useState<Set<string>>(
     new Set()
   );
@@ -278,7 +280,10 @@ const Pricing: React.FC = () => {
                   ))}
                 </ul>
               </div>
-              <button className="pricing__card-button">
+              <button
+                className="pricing__card-button"
+                onClick={() => navigate("/welcome")}
+              >
                 Subscribe Now <span>→</span>
               </button>
             </div>

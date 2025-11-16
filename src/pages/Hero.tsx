@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Lightbulb, Shield, Zap, User, Info } from "lucide-react";
 import "../main.css";
 // Import images as modules for Vite build compatibility
@@ -35,6 +36,7 @@ const heroSlides = [
 ];
 
 function Hero() {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set([0])); // Preload first image
   const [visibleElements, setVisibleElements] = useState<Set<string>>(
@@ -146,7 +148,7 @@ function Hero() {
   };
 
   const handleGetStarted = () => {
-    window.location.href = "https://joscity.com";
+    navigate("/welcome");
   };
 
   return (

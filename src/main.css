@@ -15,8 +15,8 @@ body {
   width: 100%;
   overflow: hidden;
   font-family: "Roboto", sans-serif;
-  -webkit-clip-path: polygon(0 0, 100% 0, 100% 90%, 95% 100%, 5% 100%, 0 90%);
-          clip-path: polygon(0 0, 100% 0, 100% 90%, 95% 100%, 5% 100%, 0 90%);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 92%, 85% 100%, 14% 100%, 0 92%);
+          clip-path: polygon(0 0, 100% 0, 100% 92%, 85% 100%, 14% 100%, 0 92%);
 }
 .hero::before {
   content: "";
@@ -1443,7 +1443,7 @@ body {
   width: fit-content;
 }
 .services__card-link:hover {
-  color: #00b548;
+  color: color-mix(black, #00C950, 10%);
 }
 .services__card-link span {
   font-size: 18px;
@@ -1477,7 +1477,7 @@ body {
 }
 .services__view-all-button:hover {
   background-color: #2a2a2a;
-  border-color: #e6faee;
+  border-color: color-mix(in srgb, #00C950 90%, white 10%);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 201, 80, 0.3);
 }
@@ -1485,22 +1485,22 @@ body {
   font-size: 20px;
   font-weight: 700;
 }
-@media (max-width: 768px) {
-  .services {
-    padding: 60px 0;
-  }
-  .services__heading {
-    font-size: 36px;
-  }
-  .services__subheading {
-    font-size: 16px;
-  }
-  .services__grid {
-    gap: 20px;
-  }
-  .services__card {
-    padding: 20px;
-  }
+.services img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.services__heading {
+  font-size: 36px;
+}
+.services__subheading {
+  font-size: 16px;
+}
+.services__grid {
+  gap: 20px;
+}
+.services__card {
+  padding: 20px;
 }
 
 .contact {
@@ -1707,7 +1707,7 @@ body {
 }
 .footer__divider {
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #99a1af;
   width: 100%;
   margin: 30px 0 20px;
 }
@@ -1900,6 +1900,7 @@ body {
 }
 .pricing__card--platinum .pricing__card-price {
   font-size: 48px;
+  font-weight: bold;
 }
 .pricing__card--platinum .pricing__card-name {
   font-size: 15px;
@@ -1913,6 +1914,7 @@ body {
 }
 .pricing__card--gold .pricing__card-price {
   font-size: 44px;
+  font-weight: bold;
 }
 .pricing__card--silver {
   min-width: 240px;
@@ -1923,6 +1925,7 @@ body {
 }
 .pricing__card--silver .pricing__card-price {
   font-size: 40px;
+  font-weight: bold;
 }
 .pricing__card--bronze {
   min-width: 200px;
@@ -1933,6 +1936,7 @@ body {
 }
 .pricing__card--bronze .pricing__card-price {
   font-size: 36px;
+  font-weight: bold;
 }
 .pricing__card.fade-in-up {
   opacity: 1;
@@ -1999,6 +2003,7 @@ body {
   line-height: 1;
   letter-spacing: -0.03em;
   margin: 8px 0;
+  font-weight: bold;
 }
 .pricing__card-billing {
   font-size: 12px;
@@ -2521,5 +2526,623 @@ body {
   .testimonials__nav-button svg {
     width: 20px;
     height: 20px;
+  }
+}
+
+.welcome-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.welcome-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+.welcome-background .sky-image {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+
+.registration-panel {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  height: 300;
+  max-width: 600px;
+  padding: 3rem 2.5rem;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 201, 80, 0.3);
+  margin: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+.registration-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 201, 80, 0.1) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: -1;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+.logo-container {
+  position: relative;
+  bottom: 50px;
+  display: flex;
+  height: 200px;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+.logo-container .logo-image {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  margin-top: px;
+}
+.logo-container .logo-text {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+  font-family: "Roboto", sans-serif;
+}
+
+.register-heading {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-family: "Roboto", sans-serif;
+}
+
+.registration-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  bottom: 80px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.reg-button {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  min-height: 20px;
+}
+.reg-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+.reg-button:hover::before {
+  left: 100%;
+}
+.reg-button.personal-button.active {
+  background: #00C950;
+  color: white;
+  box-shadow: 0 4px 16px rgba(2, 180, 73, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.reg-button.personal-button:not(.active) {
+  background: rgba(1, 73, 34, 0.2);
+  color: #00C950;
+  border: 2px solid #00C950;
+  box-shadow: 0 4px 16px rgba(0, 201, 80, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.reg-button.business-button.active {
+  background: rgba(0, 2, 1, 0.2);
+  color: #000;
+  border: 2px solid #00C950;
+  box-shadow: 0 4px 16px rgba(0, 201, 80, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.reg-button.business-button:not(.active) {
+  background: rgba(89, 248, 153, 0.2);
+  color: #004018;
+  border: 2px solid #00C950;
+  box-shadow: 0 4px 16px rgba(0, 201, 80, 0.2), inset 0 1px 0 rgb #004018;
+}
+.reg-button.personal-button:hover, .reg-button.business-button:hover, .reg-button.personal-button.active:hover, .reg-button.business-button.active:hover, .reg-button.personal-button:not(.active):hover, .reg-button.business-button:not(.active):hover {
+  transform: translateY(-2px);
+  background-color: #014922 !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(1, 73, 34, 0.4), inset 0 1px 0 rgba(0, 0, 0, 0.2) !important;
+}
+.reg-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .registration-panel {
+    width: 95%;
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+  .logo-container .logo-image {
+    width: 60px;
+    height: 60px;
+  }
+  .logo-container .logo-text {
+    font-size: 2rem;
+  }
+  .register-heading {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .registration-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .reg-button {
+    width: 100%;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
+.register-footer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin-top: 2rem;
+  flex-shrink: 0;
+  border-top: 0.4px solid #99a1af;
+  box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.register-footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.register-footer-copyright {
+  color: #00a63e;
+  font-size: 0.875rem;
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
+
+.register-footer-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.register-footer-links a {
+  color: #00a63e;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-family: "Roboto", sans-serif;
+  transition: color 0.3s ease;
+}
+.register-footer-links a:hover {
+  color: #004018;
+}
+
+.register-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.register-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+.register-background .sky-image {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+
+.register-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem 0 1rem;
+  flex: 1;
+}
+
+.register-flip-container {
+  perspective: 1000px;
+  width: 90%;
+  max-width: 600px;
+}
+
+.register-form-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.register-form-panel.flipped {
+  transform: rotateY(180deg);
+}
+
+.register-card-face {
+  position: relative;
+  width: 100%;
+  padding: 3rem 2.5rem;
+  border-radius: 24px;
+  border: 2px solid rgb(135, 206, 250);
+  background: rgba(0, 201, 80, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.register-card-front {
+  transform: rotateY(0deg);
+}
+
+.register-card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotateY(180deg);
+}
+
+.register-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.register-logo-container .register-logo {
+  width: 100px;
+  height: 100px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.register-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: none;
+}
+.register-tabs:hover .register-tab.active:not(:hover)::after {
+  background: transparent !important;
+}
+
+.register-tab {
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  text-transform: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+.register-tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+.register-tab.register-tab-personal.active {
+  color: white;
+}
+.register-tab.register-tab-personal.active::after {
+  background: white;
+}
+.register-tab.register-tab-personal:hover {
+  color: #004018;
+}
+.register-tab.register-tab-personal:hover::after {
+  background: #004018 !important;
+}
+.register-tab.register-tab-business.active {
+  color: #004018;
+}
+.register-tab.register-tab-business.active::after {
+  background: #004018;
+}
+.register-tab.register-tab-business:hover {
+  color: #004018;
+}
+.register-tab.register-tab-business:hover::after {
+  background: #004018 !important;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.register-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.register-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.register-form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  font-family: "Roboto", sans-serif;
+}
+.register-form-group input,
+.register-form-group select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: white;
+  color: #333;
+  font-size: 0.95rem;
+  font-family: "Roboto", sans-serif;
+  transition: all 0.3s ease;
+}
+.register-form-group input::-moz-placeholder, .register-form-group select::-moz-placeholder {
+  color: #999;
+}
+.register-form-group input::placeholder,
+.register-form-group select::placeholder {
+  color: #999;
+}
+.register-form-group input:focus,
+.register-form-group select:focus {
+  outline: none;
+  border-color: rgba(135, 206, 250, 0.8);
+  box-shadow: 0 0 0 3px rgba(135, 206, 250, 0.2);
+}
+
+.register-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.register-input-wrapper .register-input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #999;
+  pointer-events: none;
+}
+.register-input-wrapper input {
+  padding-left: 3rem;
+  padding-right: 1rem;
+}
+.register-input-wrapper .register-password-toggle {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #999;
+  transition: color 0.3s ease;
+}
+.register-input-wrapper .register-password-toggle:hover {
+  color: #666;
+}
+.register-input-wrapper .register-password-toggle .register-input-icon {
+  position: static;
+}
+.register-input-wrapper input[type=password],
+.register-input-wrapper input[type=text] {
+  padding-right: 3rem;
+}
+
+.register-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.register-select-wrapper select {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  padding-right: 3rem;
+  cursor: pointer;
+}
+.register-select-wrapper .register-select-icon {
+  position: absolute;
+  right: 1rem;
+  color: #999;
+  pointer-events: none;
+}
+
+.register-submit-button {
+  width: 100%;
+  padding: 0.7rem 1.5rem;
+  margin-top: 0.5rem;
+  background: #00c950;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 201, 80, 0.3);
+}
+.register-submit-button:hover {
+  background: #004018;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 64, 24, 0.4);
+}
+.register-submit-button:active {
+  transform: translateY(0);
+}
+
+.register-footer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 2rem;
+  border-top: 0.4px solid #99a1af;
+  box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.register-footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.register-footer-copyright {
+  color: #00a63e;
+  font-size: 0.875rem;
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
+
+.register-footer-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.register-footer-links a {
+  color: #00a63e;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-family: "Roboto", sans-serif;
+  transition: color 0.3s ease;
+}
+.register-footer-links a:hover {
+  color: #004018;
+}
+
+@media (max-width: 768px) {
+  .register-flip-container {
+    width: 95%;
+  }
+  .register-card-face {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+  .register-logo-container .register-logo {
+    width: 80px;
+    height: 80px;
+  }
+  .register-form-row {
+    grid-template-columns: 1fr;
+  }
+  .register-tabs {
+    gap: 1rem;
+  }
+  .register-footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .register-footer-links {
+    justify-content: center;
   }
 }/*# sourceMappingURL=main.css.map */

@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../main.css";
 import "../scss/_services.scss";
-<<<<<<< HEAD
-import Pricing from "./Pricing";
-import christmasImage from "../image/Christmas.jpg";
-=======
->>>>>>> 8e478a244b4387d8d9e35de530becbea2f7f3acc
 
 interface Service {
   id: string;
@@ -16,6 +12,7 @@ interface Service {
 }
 
 const Services: React.FC = () => {
+  const navigate = useNavigate();
   const [visibleElements, setVisibleElements] = useState<Set<string>>(
     new Set()
   );
@@ -638,9 +635,22 @@ const Services: React.FC = () => {
                   <p className="services__card-description">
                     {service.description}
                   </p>
-                  <a href="#" className="services__card-link">
+                  <button
+                    onClick={() => navigate("/welcome")}
+                    className="services__card-link"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      font: "inherit",
+                      color: "inherit",
+                      textAlign: "left",
+                      width: "100%",
+                    }}
+                  >
                     Access Service <span>&gt;</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -656,9 +666,6 @@ const Services: React.FC = () => {
             <button className="services__view-all-button">
               View All <span>&gt;</span>
             </button>
-          </div>
-          <div className="services__christmas-image">
-            <img src={christmasImage} alt="Christmas" />
           </div>
         </div>
       </section>

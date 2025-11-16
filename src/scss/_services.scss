@@ -228,20 +228,12 @@
     }
   }
 
-  &__christmas-image {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-top: 40px;
-    overflow: hidden;
 
     img {
       width: 100%;
       height: auto;
       display: block;
     }
-  }
- 
-
     &__heading {
       font-size: 36px;
     }
@@ -257,4 +249,9 @@
     &__card {
       padding: 20px;
     }
-}
+  }
+ 
+
+    
+
+
