@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../main.css";
 import "../scss/_pricing.scss";
 
 interface PricingFeature {
