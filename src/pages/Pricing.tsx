@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "../main.css";
 import "../scss/_pricing.scss";
 
 interface PricingFeature {

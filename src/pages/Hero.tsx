@@ -415,13 +415,11 @@ function AboutSection() {
           }`}
           style={{ transitionDelay: "0.4s" }}
         >
-          <div className="about-section__image-circle">
-            <img
-              src={aboutImage}
-              alt="3D illustration of a woman with smartphone"
-              className="about-section__image"
-            />
-          </div>
+          <img
+            src={aboutImage}
+            alt="3D illustration of a woman with smartphone"
+            className="about-section__image"
+          />
         </div>
       </div>
     </section>
