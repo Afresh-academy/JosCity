@@ -167,6 +167,8 @@
 
   &__card-link {
     color: $color-primary;
+    background-color: transparent;
+    border: none;
     text-decoration: none;
     font-weight: 400;
     font-size: 15px;
@@ -228,10 +230,12 @@
     }
   }
 
-  // Responsive design
-  @media (max-width: 768px) {
-    padding: 60px 0;
 
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
     &__heading {
       font-size: 36px;
     }
@@ -248,4 +252,8 @@
       padding: 20px;
     }
   }
-}
+ 
+
+    
+
+

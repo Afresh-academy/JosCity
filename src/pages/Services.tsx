@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../main.css";
 import "../scss/_services.scss";
 
@@ -11,6 +12,7 @@ interface Service {
 }
 
 const Services: React.FC = () => {
+  const navigate = useNavigate();
   const [visibleElements, setVisibleElements] = useState<Set<string>>(
     new Set()
   );
@@ -633,9 +635,11 @@ const Services: React.FC = () => {
                   <p className="services__card-description">
                     {service.description}
                   </p>
-                  <a href="#" className="services__card-link">
+                  <button className="services__card-link"
+                    onClick={() => navigate("/welcome")}
+                  >
                     Access Service <span>&gt;</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
