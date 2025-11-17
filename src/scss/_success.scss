@@ -165,13 +165,15 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-family: $font-family;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   letter-spacing: 0.5px;
 
   &:hover {
     background: #0f5a25;
     box-shadow: 0 4px 15px rgba(13, 74, 31, 0.4);
     transform: scale(1.05);
+    color: white;
   }
 
   &:active {

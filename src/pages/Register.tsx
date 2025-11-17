@@ -29,6 +29,14 @@ function Register() {
     address: "",
     password: "",
   });
+  const [businessFormData, setBusinessFormData] = useState({
+    businessName: "",
+    businessType: "",
+    businessEmail: "",
+    businessPhone: "",
+    businessAddress: "",
+    businessPassword: "",
+  });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -40,9 +48,23 @@ function Register() {
     }));
   };
 
+  const handleBusinessInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setBusinessFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    if (registrationType === "personal") {
+      console.log("Personal form submitted:", formData);
+    } else {
+      console.log("Business form submitted:", businessFormData);
+    }
     // Navigate to success page after submission
     navigate("/success");
   };
@@ -258,13 +280,20 @@ function Register() {
                       type="text"
                       id="businessName"
                       name="businessName"
+                      value={businessFormData.businessName}
+                      onChange={handleBusinessInputChange}
                       placeholder="Business Name"
                     />
                   </div>
                   <div className="register-form-group">
                     <label htmlFor="businessType">Business Type</label>
                     <div className="register-select-wrapper">
-                      <select id="businessType" name="businessType">
+                      <select
+                        id="businessType"
+                        name="businessType"
+                        value={businessFormData.businessType}
+                        onChange={handleBusinessInputChange}
+                      >
                         <option value="">Select Type</option>
                         <option value="retail">Retail</option>
                         <option value="service">Service</option>
@@ -284,6 +313,8 @@ function Register() {
                       type="email"
                       id="businessEmail"
                       name="businessEmail"
+                      value={businessFormData.businessEmail}
+                      onChange={handleBusinessInputChange}
                       placeholder="Business Email"
                     />
                   </div>
@@ -295,6 +326,8 @@ function Register() {
                     type="tel"
                     id="businessPhone"
                     name="businessPhone"
+                    value={businessFormData.businessPhone}
+                    onChange={handleBusinessInputChange}
                     placeholder="Business Phone"
                   />
                 </div>
@@ -307,6 +340,8 @@ function Register() {
                       type="text"
                       id="businessAddress"
                       name="businessAddress"
+                      value={businessFormData.businessAddress}
+                      onChange={handleBusinessInputChange}
                       placeholder="Business Address"
                     />
                   </div>
@@ -320,6 +355,8 @@ function Register() {
                       type={showPassword ? "text" : "password"}
                       id="businessPassword"
                       name="businessPassword"
+                      value={businessFormData.businessPassword}
+                      onChange={handleBusinessInputChange}
                       placeholder="Password"
                     />
                     <button
