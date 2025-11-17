@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import skyImage from "../image/sky.png";
 import primaryLogo from "../image/primary-logo.png";
 import {
@@ -13,6 +14,7 @@ import {
 import "../main.css";
 
 function Register() {
+  const navigate = useNavigate();
   const [registrationType, setRegistrationType] = useState<
     "personal" | "business"
   >("personal");
@@ -41,6 +43,8 @@ function Register() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    // Navigate to success page after submission
+    navigate("/success");
   };
 
   return (

@@ -13,6 +13,7 @@ import Testimonials from "./pages/Testimonials";
 import Register from "./pages/Register";
 import BusinessForm from "./pages/BusinessForm";
 import WelcomePage from "./pages/welcomepage";
+import Success from "./pages/Success";
 
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
@@ -40,6 +41,7 @@ if (rootElement) {
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/registernow" element={<Register />} />
           <Route path="/business-form" element={<BusinessForm />} />
+          <Route path="/success" element={<Success />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
