@@ -1409,6 +1409,8 @@ body {
 }
 .services__card-link {
   color: #00C950;
+  background-color: transparent;
+  border: none;
   text-decoration: none;
   font-weight: 400;
   font-size: 15px;
