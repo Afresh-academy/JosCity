@@ -11,9 +11,9 @@ import Hero from "./pages/Hero";
 import Pricing from "./pages/Pricing";
 import Testimonials from "./pages/Testimonials";
 import Register from "./pages/Register";
+import SignIn from "./pages/SignIn";
 import BusinessForm from "./pages/BusinessForm";
 import WelcomePage from "./pages/welcomepage";
-
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (
@@ -39,6 +39,7 @@ if (rootElement) {
           <Route path="/" element={<LandingPage />} />
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/registernow" element={<Register />} />
+          <Route path="/signin" element={<SignIn />} />
           <Route path="/business-form" element={<BusinessForm />} />
         </Routes>
       </BrowserRouter>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import skyImage from "../image/sky.png";
 import primaryLogo from "../image/primary-logo.png";
 import {
@@ -13,6 +14,7 @@ import {
 import "../main.css";
 
 function Register() {
+  const navigate = useNavigate();
   const [registrationType, setRegistrationType] = useState<
     "personal" | "business"
   >("personal");
@@ -40,6 +42,7 @@ function Register() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Handle form submission
     console.log("Form submitted:", formData);
   };
 
@@ -216,6 +219,19 @@ function Register() {
                   SUBMIT
                 </button>
               </form>
+
+              <div className="register-signin-link">
+                <p>
+                  Already have an account?{" "}
+                  <button
+                    className="register-signin-link-button"
+                    onClick={() => navigate("/signin")}
+                    type="button"
+                  >
+                    Sign In
+                  </button>
+                </p>
+              </div>
             </div>
 
             <div className="register-card-face register-card-back">
@@ -286,6 +302,16 @@ function Register() {
                 </div>
 
                 <div className="register-form-group">
+                  <label htmlFor="CACNumber">CAC Number</label>
+                  <input
+                    type="CAC"
+                    id="CACNumber"
+                    name="CACNumber"
+                    placeholder="CAC Number"
+                  />
+                </div>
+
+                <div className="register-form-group">
                   <label htmlFor="businessPhone">Business Phone</label>
                   <input
                     type="tel"
@@ -336,23 +362,23 @@ function Register() {
                   SUBMIT
                 </button>
               </form>
+
+              <div className="register-signin-link">
+                <p>
+                  Already have an account?{" "}
+                  <button
+                    className="register-signin-link-button"
+                    onClick={() => navigate("/signin")}
+                    type="button"
+                  >
+                    Sign In
+                  </button>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <footer className="register-footer">
-        <div className="register-footer-content">
-          <p className="register-footer-copyright">© 2025 JOS Smart City</p>
-          <div className="register-footer-links">
-            <a href="#about">About</a>
-            <a href="#legal">Legal</a>
-            <a href="#privacy">Privacy</a>
-            <a href="#contact">Contact Us</a>
-            <a href="#directory">Directory</a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

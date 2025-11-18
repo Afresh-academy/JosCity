@@ -177,7 +177,6 @@ function BusinessForm() {
             <a href="#legal">Legal</a>
             <a href="#privacy">Privacy</a>
             <a href="#contact">Contact Us</a>
-            <a href="#directory">Directory</a>
           </div>
         </div>
       </footer>

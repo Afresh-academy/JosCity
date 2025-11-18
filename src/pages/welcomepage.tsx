@@ -20,6 +20,10 @@ function WelcomePage() {
     navigate("/business-form");
   };
 
+  const handleSignInClick = () => {
+    navigate("/signin");
+  };
+
   return (
     <div className="welcome-page">
       <div className="welcome-background">
@@ -50,20 +54,16 @@ function WelcomePage() {
             Business
           </button>
         </div>
-      </div>
 
-      <footer className="register-footer">
-        <div className="register-footer-content">
-          <p className="register-footer-copyright">© 2025 JOS Smart City</p>
-          <div className="register-footer-links">
-            <a href="#about">About</a>
-            <a href="#legal">Legal</a>
-            <a href="#privacy">Privacy</a>
-            <a href="#contact">Contact Us</a>
-            <a href="#directory">Directory</a>
-          </div>
+        <div className="signin-link-container">
+          <p className="signin-link-text">
+            Already have an account?{" "}
+            <button className="signin-link-button" onClick={handleSignInClick}>
+              Sign In
+            </button>
+          </p>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }

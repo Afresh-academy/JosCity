@@ -7,8 +7,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: 2rem;
+  justify-content: center;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -35,10 +34,10 @@
   z-index: 1;
   width: 90%;
   max-width: 750px;
-  padding: 6rem 2.5rem 10rem 2.5rem;
+  padding: 6rem 2.5rem 3rem 2.5rem;
   border-radius: 15px;
   border: 2px solid #15fc2599;
-  margin: 4rem auto auto auto;
+  margin: 0 auto;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -227,7 +226,7 @@
     width: 95%;
     padding: 2rem 1.5rem;
     border-radius: 15px;
-    margin: 3rem auto 2rem auto;
+    margin: 0 auto;
   }
 
   .logo-container {
@@ -264,6 +263,38 @@
 
   .register-footer-links {
     justify-content: center;
+  }
+}
+
+.signin-link-container {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+  .signin-link-text {
+    color: white;
+    font-size: 0.95rem;
+    font-family: $font-family;
+    margin: 0;
+  }
+
+  .signin-link-button {
+    background: none;
+    border: none;
+    color: #00a63e;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: $font-family;
+    font-size: 0.95rem;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+    padding: 0;
+    margin-left: 0.25rem;
+
+    &:hover {
+      color: white;
+    }
   }
 }
 
