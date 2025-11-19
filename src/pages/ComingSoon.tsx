@@ -16,7 +16,7 @@ const ComingSoon: React.FC = () => {
   }, []);
 
   const handleBackToRegister = () => {
-    navigate("/registernow");
+    navigate("/");
   };
 
   return (
@@ -80,8 +80,8 @@ const ComingSoon: React.FC = () => {
           <div className="coming-soon-bottom-section">
             <div className="coming-soon-message">
               <p className="coming-soon-text">
-                The Sign In feature Would be active shortly. Bringing you an amazing experience. Please check
-                back soon!
+                The Sign In feature Would be active shortly. Bringing you an
+                amazing experience. Please check back soon!
               </p>
             </div>
 
@@ -90,7 +90,7 @@ const ComingSoon: React.FC = () => {
               className="coming-soon-back-button"
               onClick={handleBackToRegister}
             >
-              Back to Register
+              Back Home
             </button>
           </div>
         </div>
