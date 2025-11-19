@@ -23,22 +23,6 @@ function WelcomePage() {
     }
   }, [navigate]);
 
-  const handleFooterLinkClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>, section: string) => {
-      e.preventDefault();
-      // Navigate to landing page with hash if needed, or handle footer links appropriately
-      navigate("/", { replace: false });
-      // Scroll to section if it exists on the landing page
-      setTimeout(() => {
-        const element = document.getElementById(section);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 100);
-    },
-    [navigate]
-  );
-
   return (
     <div className="welcome-page" role="main">
       <div className="welcome-background" aria-hidden="true">
@@ -93,45 +77,6 @@ function WelcomePage() {
           </button>
         </nav>
       </section>
-
-      <footer className="register-footer" role="contentinfo">
-        <div className="register-footer-content">
-          <p className="register-footer-copyright">
-            &copy; {new Date().getFullYear()} JOS Smart City. All rights
-            reserved.
-          </p>
-          <nav className="register-footer-links" aria-label="Footer navigation">
-            <a
-              href="#about"
-              onClick={(e) => handleFooterLinkClick(e, "about")}
-              aria-label="Learn more about us"
-            >
-              About
-            </a>
-            <a
-              href="#legal"
-              onClick={(e) => handleFooterLinkClick(e, "legal")}
-              aria-label="View legal information"
-            >
-              Legal
-            </a>
-            <a
-              href="#privacy"
-              onClick={(e) => handleFooterLinkClick(e, "privacy")}
-              aria-label="View privacy policy"
-            >
-              Privacy
-            </a>
-            <a
-              href="#contact"
-              onClick={(e) => handleFooterLinkClick(e, "contact")}
-              aria-label="Contact us"
-            >
-              Contact Us
-            </a>
-          </nav>
-        </div>
-      </footer>
     </div>
   );
 }
