@@ -910,6 +910,7 @@ body {
   }
 }
 .navbar {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -974,21 +975,34 @@ body {
 .navbar__menu-toggle {
   display: none;
   flex-direction: column;
-  justify-content: space-around;
-  width: 30px;
-  height: 30px;
+  justify-content: space-between;
+  align-items: center;
+  width: 32px;
+  height: 24px;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 4px 0;
   z-index: 1001;
+  position: relative;
+  transition: all 0.3s ease;
 }
 .navbar__menu-toggle span {
   width: 100%;
   height: 3px;
   background-color: #333;
   border-radius: 3px;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+  transform-origin: center;
+}
+.navbar__menu-toggle:hover span {
+  background-color: #00C950;
+}
+.navbar__menu-toggle:focus {
+  outline: 2px solid #00C950;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 .navbar__nav-list {
   display: flex;
@@ -1223,18 +1237,31 @@ body {
     margin-left: auto;
     order: 3;
     flex-shrink: 0;
+    align-self: center;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    cursor: pointer;
   }
   .navbar__menu-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(8px, 8px);
+    transform: rotate(45deg) translate(6px, 6px);
   }
   .navbar__menu-toggle.active span:nth-child(2) {
     opacity: 0;
+    transform: scaleX(0);
   }
   .navbar__menu-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+  .navbar__menu-toggle.active:hover span {
+    background-color: #00C950;
+  }
+  .navbar__menu-toggle.active ~ .navbar__get-started-button {
+    display: none;
   }
   .navbar__nav-list {
-    order: 3;
+    order: 4;
     width: 100%;
     flex-direction: column;
     align-items: flex-start;
@@ -1265,13 +1292,7 @@ body {
     align-items: center;
     margin-top: 0.5rem;
     gap: 0.5rem;
-  }
-  .navbar__signin-button {
-    font-size: 11px;
-    padding: 0.7rem 1.4rem;
-    letter-spacing: 0.8px;
-    white-space: nowrap;
-    flex: 0 1 auto;
+    transition: opacity 0.3s ease;
   }
   .navbar__get-started-button {
     font-size: 9px;
@@ -1284,12 +1305,20 @@ body {
     order: 2;
     min-width: auto;
     z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+  .navbar__menu-toggle.active ~ .navbar__action-buttons {
+    display: none;
   }
 }
 @media screen and (max-width: 480px) {
   .navbar {
     padding: 0.6rem 0.8rem;
     min-height: 70px;
+  }
+  .navbar__menu-toggle {
+    width: 28px;
+    height: 22px;
   }
   .navbar__logo-image {
     width: 120px;

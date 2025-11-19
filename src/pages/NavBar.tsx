@@ -153,6 +153,7 @@ function App() {
             Contact Us
           </li>
         </ul>
+        {/* Get Started button - will be hidden by CSS when menu is active */}
         <button
           type="button"
           onClick={handleGetStarted}
