@@ -248,7 +248,7 @@ function Register() {
                   Already have an account?{" "}
                   <button
                     className="register-signin-link-button"
-                    onClick={() => navigate("/signin")}
+                    onClick={() => navigate("/coming-soon")}
                     type="button"
                   >
                     Sign In
@@ -406,7 +406,7 @@ function Register() {
                   Already have an account?{" "}
                   <button
                     className="register-signin-link-button"
-                    onClick={() => navigate("/signin")}
+                    onClick={() => navigate("/coming-soon")}
                     type="button"
                   >
                     Sign In
