@@ -287,73 +287,72 @@
 // ----------------------------------------------------------------------------
 .register-footer {
   position: relative;
+  top: 10rem;
   z-index: 1;
   width: 100%;
-  margin-top: auto;
+  margin-top: 13rem;
   margin-bottom: 0;
-  flex-shrink: 0;
-  flex-grow: 0;
   border-top: 0.4px solid $border-gray;
   box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.2);
-}
 
-.register-footer-content {
-  max-width: 1200px;
-  @include center-content;
-  padding: $spacing-md $spacing-lg;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: $spacing-sm;
-}
+  &-content {
+    max-width: 1200px;
+    @include center-content;
+    padding: $spacing-md $spacing-lg;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
 
-.register-footer-copyright {
-  color: $footer-color;
-  font-size: 0.875rem;
-  font-family: $font-family;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.register-footer-links {
-  display: flex;
-  gap: $spacing-md;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-
-  a {
-    color: $footer-color;
-    text-decoration: none;
+  &-copyright {
+    color: $footer-color-dark;
     font-size: 0.875rem;
     font-family: $font-family;
-    @include smooth-transition(color);
-    position: relative;
+    margin: 0;
+    line-height: 1.5;
+  }
 
-    // Underline on hover
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: $footer-color-dark;
-      @include smooth-transition(width);
-    }
+  &-links {
+    display: flex;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
-    &:hover {
+    a {
       color: $footer-color-dark;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-family: $font-family;
+      @include smooth-transition(color);
+      position: relative;
 
+      // Underline on hover
       &::after {
-        width: 100%;
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: $footer-color-dark;
+        @include smooth-transition(width);
       }
-    }
 
-    &:focus-visible {
-      @include focus-visible;
+      &:hover {
+        color: $border-gray;
+
+        &::after {
+          width: 100%;
+        }
+      }
+
+      &:focus-visible {
+        @include focus-visible;
+      }
     }
   }
 }
@@ -367,7 +366,7 @@
 // ----------------------------------------------------------------------------
 @media (max-width: $breakpoint-xs) {
   .welcome-page {
-    padding-top: $spacing-sm;
+    padding-top: 13rem;
     padding-left: $spacing-xs;
     padding-right: $spacing-xs;
   }
