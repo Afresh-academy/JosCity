@@ -201,6 +201,45 @@
       outline-offset: 2px;
     }
   }
+  &__action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__signin-button {
+    color: $color-primary;
+    font-size: 13px;
+    padding: 0.9rem 2rem;
+    border-radius: 3rem;
+    border: 2px solid $color-primary;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    overflow: visible;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 201, 80, 0.2);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    font-family: $font-family;
+
+    &:hover {
+      background: $color-primary;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 201, 80, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
   &__get-started-button {
     color: $color-background;
     font-size: 13px;
@@ -209,7 +248,6 @@
     border: none;
     background: linear-gradient(135deg, $color-primary 0%, #00a844 100%);
     cursor: pointer;
-    margin-left: 1.5rem;
     position: relative;
     overflow: visible;
     text-transform: uppercase;
@@ -297,10 +335,19 @@
       padding: 0.5rem 0.7rem;
     }
 
+    &__action-buttons {
+      gap: 0.75rem;
+    }
+
+    &__signin-button {
+      font-size: 11px;
+      padding: 0.75rem 1.5rem;
+      letter-spacing: 1px;
+    }
+
     &__get-started-button {
       font-size: 11px;
       padding: 0.75rem 1.5rem;
-      margin-left: 1rem;
       letter-spacing: 1px;
     }
   }
@@ -366,13 +413,27 @@
       }
     }
 
-    &__get-started-button {
+    &__action-buttons {
       order: 1;
+      width: 100%;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    &__signin-button {
       font-size: 11px;
       padding: 0.7rem 1.4rem;
-      margin-left: 0.5rem;
       letter-spacing: 0.8px;
       white-space: nowrap;
+      flex: 1;
+    }
+
+    &__get-started-button {
+      font-size: 11px;
+      padding: 0.7rem 1.4rem;
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+      flex: 1;
     }
   }
 
@@ -397,10 +458,20 @@
       padding: 0.5rem 0.5rem;
     }
 
+    &__action-buttons {
+      gap: 0.5rem;
+    }
+
+    &__signin-button {
+      font-size: 10px;
+      padding: 0.65rem 1rem;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
     &__get-started-button {
       font-size: 10px;
-      padding: 0.65rem 1.2rem;
-      margin-left: 0.3rem;
+      padding: 0.65rem 1rem;
       letter-spacing: 0.5px;
       white-space: nowrap;
     }

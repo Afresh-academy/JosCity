@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import skyImage from "../image/sky.png";
 import primaryLogo from "../image/primary-logo.png";
 import { Mail, MapPin, Lock, Eye, EyeOff, ChevronDown } from "lucide-react";
 import "../main.css";
 
 function BusinessForm() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     businessName: "",
@@ -28,6 +30,8 @@ function BusinessForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Business form submitted:", formData);
+    // Navigate to success page after submission
+    navigate("/success");
   };
 
   return (
@@ -177,7 +181,6 @@ function BusinessForm() {
             <a href="#legal">Legal</a>
             <a href="#privacy">Privacy</a>
             <a href="#contact">Contact Us</a>
-            <a href="#directory">Directory</a>
           </div>
         </div>
       </footer>

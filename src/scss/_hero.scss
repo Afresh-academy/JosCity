@@ -920,6 +920,7 @@
     object-fit: cover;
     object-position: center;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+    animation: image-float 6s ease-in-out infinite;
   }
 
   // Responsive Styles
