@@ -149,7 +149,6 @@ function Register() {
                         <option value="">Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
-                        <option value="other">Other</option>
                       </select>
                       <ChevronDown className="register-select-icon" size={20} />
                     </div>
