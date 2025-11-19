@@ -635,19 +635,8 @@ const Services: React.FC = () => {
                   <p className="services__card-description">
                     {service.description}
                   </p>
-                  <button
+                  <button className="services__card-link"
                     onClick={() => navigate("/welcome")}
-                    className="services__card-link"
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 0,
-                      font: "inherit",
-                      color: "inherit",
-                      textAlign: "left",
-                      width: "100%",
-                    }}
                   >
                     Access Service <span>&gt;</span>
                   </button>
