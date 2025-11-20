@@ -130,13 +130,18 @@ function App() {
         <button
           className={`navbar__menu-toggle ${isMenuOpen ? "active" : ""}`}
           onClick={toggleMenu}
-          aria-label="Toggle menu"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMenuOpen}
+          type="button"
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
         </button>
-        <ul className={`navbar__nav-list ${isMenuOpen ? "active" : ""}`}>
+        <ul
+          className={`navbar__nav-list ${isMenuOpen ? "active" : ""}`}
+          aria-hidden={!isMenuOpen}
+        >
           <li className="navbar__nav-item" onClick={scrollToHome}>
             Home
           </li>
