@@ -62,8 +62,62 @@ function BusinessForm() {
     setError(null);
 
     if (registrationType === "personal") {
-      console.log("Personal form submitted:", formData);
-      // Personal form handling can be added later
+      // Personal form submission
+      setIsLoading(true);
+      try {
+        // Map frontend fields to backend expected fields
+        const requestData = {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          gender: formData.gender,
+          phone_number: formData.phoneNumber,
+          email: formData.email,
+          nin_number: formData.ninNumber,
+          address: formData.address,
+          password: formData.password,
+        };
+
+        const response = await fetch(`${API_BASE_URL}/personal/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        });
+
+        // Check if response is JSON before parsing
+        const contentType = response.headers.get("content-type");
+        let data;
+
+        if (contentType && contentType.includes("application/json")) {
+          data = await response.json();
+        } else {
+          // If not JSON, read as text to see what we got
+          const text = await response.text();
+          console.error("Non-JSON response received:", text.substring(0, 200));
+          throw new Error(
+            response.status === 404
+              ? "API endpoint not found. Please check if the backend server is running."
+              : `Server error (${response.status}). Please try again later.`
+          );
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Registration failed. Please try again."
+          );
+        }
+
+        // Only navigate to success page after successful backend confirmation
+        navigate("/success", { state: { submitted: true } });
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "An error occurred. Please try again."
+        );
+        setIsLoading(false);
+      }
       return;
     }
 
@@ -216,8 +270,34 @@ function BusinessForm() {
                   onTogglePassword={() => setShowPassword(!showPassword)}
                 />
 
-                <button type="submit" className="register-submit-button">
-                  SUBMIT
+                {error && (
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
+                    {error}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="register-submit-button"
+                  disabled={isLoading}
+                  style={{
+                    opacity: isLoading ? 0.6 : 1,
+                    cursor: isLoading ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {isLoading ? "SUBMITTING..." : "SUBMIT"}
                 </button>
               </form>
 

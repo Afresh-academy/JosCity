@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 
@@ -9,19 +9,21 @@ app.use(cors());
 app.use(express.json());
 
 // Import routes
-const authRoutes = require('./Scripts/node_apis/modules/routes/authRoute');
-const businessRoutes = require('./Scripts/node_apis/modules/routes/businessRoute');
+const authRoutes = require("./Scripts/node_apis/modules/routes/authRoute");
+const businessRoutes = require("./Scripts/node_apis/modules/routes/businessRoute");
+const personalRoutes = require("./Scripts/node_apis/modules/routes/personalRoute");
 
 // Use routes
-app.use('/api/auth', authRoutes);
-app.use('/api/business', businessRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/business", businessRoutes);
+app.use("/api/personal", personalRoutes);
 
 // Health check
-app.get('/api/ping', (req, res) => {
-  res.json({ 
-    message: 'pong', 
+app.get("/api/ping", (req, res) => {
+  res.json({
+    message: "pong",
     timestamp: new Date().toISOString(),
-    status: 'healthy'
+    status: "healthy",
   });
 });
 
@@ -36,10 +38,10 @@ app.get('/api/ping', (req, res) => {
 
 // Error handler
 app.use((error, req, res, next) => {
-  console.error('Server error:', error);
+  console.error("Server error:", error);
   res.status(500).json({
     error: true,
-    message: 'Internal server error'
+    message: "Internal server error",
   });
 });
 
@@ -47,6 +49,12 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📧 Email service: ${process.env.SMTP_USER ? 'Configured' : 'Not configured'}`);
-  console.log(`🗄️  Database: ${process.env.DB_HOST ? 'Configured' : 'Using defaults'}`);
+  console.log(
+    `📧 Email service: ${
+      process.env.SMTP_USER ? "Configured" : "Not configured"
+    }`
+  );
+  console.log(
+    `🗄️  Database: ${process.env.DB_HOST ? "Configured" : "Using defaults"}`
+  );
 });
