@@ -39,6 +39,10 @@
   &__logo {
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
+    max-width: 110px;
+    display: flex;
+    align-items: center;
     // Logo container with glow effect
     &::before {
       content: "";
@@ -65,13 +69,11 @@
   }
 
   &__logo-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 112px;
-    height: 66px;
-    min-width: 100px;
-    min-height: 50px;
+    display: block;
+    width: 75px;
+    height: auto;
+    max-width: 100%;
+    min-width: 50px;
     object-fit: contain;
     transition: transform 0.3s ease, filter 0.3s ease;
     filter: drop-shadow(0 0 10px rgba(0, 201, 80, 0.3));
@@ -171,6 +173,8 @@
     display: inline-block;
     // Add margin to compensate for transform to prevent hover area shift
     margin-top: 2px;
+    // Contain hover effects within boundaries
+    overflow: hidden;
 
     // Animated underline with glow
     &::before {
@@ -186,7 +190,7 @@
         $color-primary,
         transparent
       );
-      box-shadow: 0 0 10px $color-primary, 0 0 20px $color-primary;
+      box-shadow: 0 0 8px $color-primary, 0 0 15px $color-primary;
       transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: -1;
       pointer-events: none;
@@ -197,8 +201,8 @@
       content: "";
       position: absolute;
       top: 0;
-      left: -100%;
-      width: 100%;
+      left: 0;
+      width: 50%;
       height: 100%;
       background: linear-gradient(
         90deg,
@@ -206,7 +210,8 @@
         rgba(255, 255, 255, 0.3),
         transparent
       );
-      transition: left 0.5s ease;
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
       z-index: -1;
       pointer-events: none;
     }
@@ -214,7 +219,7 @@
     // Hover effect with glow
     &:hover {
       color: $color-primary;
-      text-shadow: 0 0 10px rgba(0, 201, 80, 0.5);
+      text-shadow: 0 0 8px rgba(0, 201, 80, 0.4);
       transform: translateY(-2px);
       // Ensure hover state is stable
       will-change: transform;
@@ -224,7 +229,7 @@
       }
 
       &::after {
-        left: 100%;
+        transform: translateX(200%);
       }
     }
 
@@ -377,11 +382,15 @@
     padding: 1rem 3rem;
     height: 70px;
 
+    &__logo {
+      max-width: 90px;
+    }
+
     &__logo-image {
-      width: 140px;
-      height: 55px;
-      min-width: 120px;
-      min-height: 50px;
+      width: 65px;
+      height: auto;
+      max-width: 100%;
+      min-width: 55px;
     }
 
     &__nav-list {
@@ -421,13 +430,14 @@
     &__logo {
       order: 1;
       flex-shrink: 0;
+      max-width: 85px;
     }
 
     &__logo-image {
-      width: 1200px;
-      height: 52px;
-      min-width: 120px;
-      min-height: 50px;
+      width: 65px;
+      height: auto;
+      max-width: 100%;
+      min-width: 50px;
     }
 
     &__menu-toggle {
@@ -520,11 +530,15 @@
       height: 22px;
     }
 
+    &__logo {
+      max-width: 65px;
+    }
+
     &__logo-image {
-      width: 120px;
-      height: 50px;
-      min-width: 120px;
-      min-height: 50px;
+      width: 55px;
+      height: auto;
+      max-width: 100%;
+      min-width: 40px;
     }
 
     &__nav-list {

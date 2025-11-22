@@ -1,5 +1,5 @@
-import React from 'react';
-import { SquarePlus, UserPlus, MessageCircle, Bell } from 'lucide-react';
+import React, { useState } from 'react';
+import { SquarePlus, UserPlus, MessageCircle, Bell, Menu, X, TrendingUp } from 'lucide-react';
 import NewsFeedSidebar from '../components/NewsFeed/NewsFeedSidebar';
 import StoriesSection from '../components/NewsFeed/StoriesSection';
 import CreatePostInput from '../components/NewsFeed/CreatePostInput';
@@ -27,6 +27,9 @@ import story4 from '../image/newsfeed/tiana.jpg';
 import '../main.css';
 
 const NewsFeed: React.FC = () => {
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
+
   // Mock data - will be replaced with real data later
   const posts = [
     {
@@ -141,9 +144,18 @@ const NewsFeed: React.FC = () => {
       {/* Top Navigation Bar */}
       <header className="newsfeed-header">
         <div className="newsfeed-header__container">
-          <div className="newsfeed-header__logo">
-            <img src={primaryLogo} alt="JOSCity Logo" />
-            <span>JOSCity</span>
+          <div className="newsfeed-header__left">
+            <button 
+              className="newsfeed-header__menu-toggle"
+              onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
+              aria-label="Toggle menu"
+            >
+              {isLeftSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+            <div className="newsfeed-header__logo">
+              <img src={primaryLogo} alt="JOSCity Logo" />
+              <span>JOSCity</span>
+            </div>
           </div>
           <div className="newsfeed-header__actions">
             <button className="newsfeed-header__icon-btn" title="Create">
@@ -160,15 +172,37 @@ const NewsFeed: React.FC = () => {
             </button>
             <button className="newsfeed-header__join-btn">
               <img src={headerAvatar} alt="Join" className="newsfeed-header__join-avatar" />
-              <span>Join</span>
+              <span className="newsfeed-header__join-text">Join</span>
+            </button>
+            <button 
+              className="newsfeed-header__sidebar-toggle"
+              onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+              aria-label="Toggle sidebar"
+              title="Trending & Friends"
+            >
+              <TrendingUp size={20} />
             </button>
           </div>
         </div>
       </header>
 
       <div className="newsfeed-container">
+        {/* Mobile Overlay */}
+        {(isLeftSidebarOpen || isRightSidebarOpen) && (
+          <div 
+            className="newsfeed-overlay"
+            onClick={() => {
+              setIsLeftSidebarOpen(false);
+              setIsRightSidebarOpen(false);
+            }}
+          />
+        )}
+
         {/* Left Sidebar */}
-        <NewsFeedSidebar />
+        <NewsFeedSidebar 
+          isOpen={isLeftSidebarOpen}
+          onClose={() => setIsLeftSidebarOpen(false)}
+        />
 
         {/* Main Content Area */}
         <main className="newsfeed-main">
@@ -218,7 +252,17 @@ const NewsFeed: React.FC = () => {
         </main>
 
         {/* Right Sidebar */}
-        <aside className="newsfeed-aside">
+        <aside className={`newsfeed-aside ${isRightSidebarOpen ? 'newsfeed-aside--open' : ''}`}>
+          <div className="newsfeed-aside__header">
+            <h3>Trending & Friends</h3>
+            <button 
+              className="newsfeed-aside__close"
+              onClick={() => setIsRightSidebarOpen(false)}
+              aria-label="Close sidebar"
+            >
+              <X size={20} />
+            </button>
+          </div>
           <TrendingSection trending={trending} />
           <SuggestedFriends friends={suggestedFriends} />
           

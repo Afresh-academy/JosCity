@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ThumbsUp, MessageCircle, Eye, Star, Share2, Bookmark } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ThumbsUp, MessageCircle, Eye, Star, Share2, Bookmark, MoreVertical, Edit, Trash2, Pin } from 'lucide-react';
 
 interface Comment {
   id: number;
@@ -36,6 +36,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const MAX_CAPTION_LENGTH = 150; // Characters to show before "See more"
   
   const shouldTruncate = post.caption && post.caption.length > MAX_CAPTION_LENGTH;
@@ -88,6 +91,44 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     }
   };
 
+  const handleEdit = () => {
+    setShowMenu(false);
+    // Handle edit post functionality
+    console.log('Edit post:', post.id);
+  };
+
+  const handleDelete = () => {
+    setShowMenu(false);
+    // Handle delete post functionality
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      console.log('Delete post:', post.id);
+    }
+  };
+
+  const handlePin = () => {
+    setShowMenu(false);
+    setIsPinned(!isPinned);
+    // Handle pin post functionality
+    console.log('Pin post:', post.id, !isPinned);
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMenu]);
+
   return (
     <article className="newsfeed-post">
       <div className="newsfeed-post__header">
@@ -102,6 +143,41 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <p className="newsfeed-post__action">{post.action}</p>
             <span className="newsfeed-post__time">{post.timeAgo}</span>
           </div>
+        </div>
+        <div className="newsfeed-post__menu-wrapper" ref={menuRef}>
+          <button
+            className="newsfeed-post__menu-btn"
+            onClick={() => setShowMenu(!showMenu)}
+            aria-label="Post options"
+            title="More options"
+          >
+            <MoreVertical size={20} />
+          </button>
+          {showMenu && (
+            <div className="newsfeed-post__menu-dropdown">
+              <button
+                className="newsfeed-post__menu-item"
+                onClick={handleEdit}
+              >
+                <Edit size={18} />
+                <span>Edit Post</span>
+              </button>
+              <button
+                className="newsfeed-post__menu-item"
+                onClick={handleDelete}
+              >
+                <Trash2 size={18} />
+                <span>Delete Post</span>
+              </button>
+              <button
+                className={`newsfeed-post__menu-item ${isPinned ? 'newsfeed-post__menu-item--active' : ''}`}
+                onClick={handlePin}
+              >
+                <Pin size={18} />
+                <span>{isPinned ? 'Unpin Post' : 'Pin Post'}</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

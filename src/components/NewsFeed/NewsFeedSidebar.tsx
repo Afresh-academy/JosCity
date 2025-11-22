@@ -13,20 +13,40 @@ import {
   Tag,
   Briefcase as Jobs,
   Video,
+  X,
 } from 'lucide-react';
 
-interface NewsFeedSidebarProps {}
+interface NewsFeedSidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
 
-const NewsFeedSidebar: React.FC<NewsFeedSidebarProps> = () => {
+const NewsFeedSidebar: React.FC<NewsFeedSidebarProps> = ({ isOpen = false, onClose }) => {
   const [activeItem, setActiveItem] = useState<string>('newsfeed');
 
   const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement>, itemId: string) => {
     e.preventDefault();
     setActiveItem(itemId);
+    // Close sidebar on mobile after clicking an item
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
-    <aside className="newsfeed-sidebar">
+    <aside className={`newsfeed-sidebar ${isOpen ? 'newsfeed-sidebar--open' : ''}`}>
+      <div className="newsfeed-sidebar__header">
+        <h3 className="newsfeed-sidebar__title">Menu</h3>
+        {onClose && (
+          <button 
+            className="newsfeed-sidebar__close"
+            onClick={onClose}
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
+        )}
+      </div>
       <nav className="newsfeed-sidebar__nav">
         <div className="newsfeed-sidebar__section">
           <a
