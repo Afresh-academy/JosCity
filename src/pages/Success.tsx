@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logoImage from '../image/primary-logo.png';
 import successLogo from '../image/success-logo.png';
 import skyImage from '../image/sky.png';
@@ -7,18 +7,37 @@ import '../main.css';
 
 const Success: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
+    // Check if user came from a successful form submission
+    const submitted = location.state?.submitted;
+    
+    if (!submitted) {
+      // Redirect to business form if accessed directly without submission
+      navigate('/business-form', { replace: true });
+      return;
+    }
+
+    // User is authorized to view success page
+    setIsAuthorized(true);
+
     // Trigger fade-in animation after component mounts
     setTimeout(() => {
       setIsVisible(true);
     }, 50);
-  }, []);
+  }, [location.state, navigate]);
 
   const handleSignIn = () => {
     navigate('/welcome');
   };
+
+  // Don't render content if not authorized (prevents flash before redirect)
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <div className="success-page">

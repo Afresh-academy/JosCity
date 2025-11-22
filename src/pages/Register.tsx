@@ -2,15 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import skyImage from "../image/sky.png";
 import primaryLogo from "../image/primary-logo.png";
-import {
-  Mail,
-  User,
-  MapPin,
-  Lock,
-  Eye,
-  EyeOff,
-  ChevronDown,
-} from "lucide-react";
+import RegistrationTabs from "../components/RegistrationTabs";
+import PersonalFormFields from "../components/PersonalFormFields";
+import BusinessFormFields from "../components/BusinessFormFields";
+import SignInLink from "../components/SignInLink";
 import "../main.css";
 
 function Register() {
@@ -33,6 +28,7 @@ function Register() {
     businessName: "",
     businessType: "",
     businessEmail: "",
+    cacNumber: "",
     businessPhone: "",
     businessAddress: "",
     businessPassword: "",
@@ -91,169 +87,25 @@ function Register() {
                 />
               </div>
 
-              <div className="register-tabs">
-                <button
-                  className={`register-tab register-tab-personal ${
-                    registrationType === "personal" ? "active" : ""
-                  }`}
-                  onClick={() => setRegistrationType("personal")}
-                >
-                  Personal
-                </button>
-                <button
-                  className={`register-tab register-tab-business ${
-                    registrationType === "business" ? "active" : ""
-                  }`}
-                  onClick={() => setRegistrationType("business")}
-                >
-                  Business
-                </button>
-              </div>
+              <RegistrationTabs
+                registrationType={registrationType}
+                onTypeChange={setRegistrationType}
+              />
 
               <form className="register-form" onSubmit={handleSubmit}>
-                <div className="register-form-row">
-                  <div className="register-form-group">
-                    <label htmlFor="firstName">First Name</label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      placeholder="First Name"
-                    />
-                  </div>
-                  <div className="register-form-group">
-                    <label htmlFor="lastName">Last Name</label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Last Name"
-                    />
-                  </div>
-                </div>
-
-                <div className="register-form-row">
-                  <div className="register-form-group">
-                    <label htmlFor="gender">Gender</label>
-                    <div className="register-select-wrapper">
-                      <select
-                        id="gender"
-                        name="gender"
-                        value={formData.gender}
-                        onChange={handleInputChange}
-                      >
-                        <option value="">Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
-                      <ChevronDown className="register-select-icon" size={20} />
-                    </div>
-                  </div>
-                  <div className="register-form-group">
-                    <label htmlFor="phoneNumber">Phone Number</label>
-                    <input
-                      type="tel"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      placeholder="Phone Number"
-                    />
-                  </div>
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="email">Email</label>
-                  <div className="register-input-wrapper">
-                    <Mail className="register-input-icon" size={20} />
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="Email"
-                    />
-                  </div>
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="ninNumber">NIN Number</label>
-                  <div className="register-input-wrapper">
-                    <User className="register-input-icon" size={20} />
-                    <input
-                      type="text"
-                      id="ninNumber"
-                      name="ninNumber"
-                      value={formData.ninNumber}
-                      onChange={handleInputChange}
-                      placeholder="NIN Number"
-                    />
-                  </div>
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="address">Address</label>
-                  <div className="register-input-wrapper">
-                    <MapPin className="register-input-icon" size={20} />
-                    <input
-                      type="text"
-                      id="address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      placeholder="Address"
-                    />
-                  </div>
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="password">Password</label>
-                  <div className="register-input-wrapper">
-                    <Lock className="register-input-icon" size={20} />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      id="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      placeholder="Password"
-                    />
-                    <button
-                      type="button"
-                      className="register-password-toggle"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="register-input-icon" size={20} />
-                      ) : (
-                        <Eye className="register-input-icon" size={20} />
-                      )}
-                    </button>
-                  </div>
-                </div>
+                <PersonalFormFields
+                  formData={formData}
+                  showPassword={showPassword}
+                  onInputChange={handleInputChange}
+                  onTogglePassword={() => setShowPassword(!showPassword)}
+                />
 
                 <button type="submit" className="register-submit-button">
                   SUBMIT
                 </button>
               </form>
 
-              <div className="register-signin-link">
-                <p>
-                  Already have an account?{" "}
-                  <button
-                    className="register-signin-link-button"
-                    onClick={() => navigate("/coming-soon")}
-                    type="button"
-                  >
-                    Sign In
-                  </button>
-                </p>
-              </div>
+              <SignInLink />
             </div>
 
             <div className="register-card-face register-card-back">
@@ -265,153 +117,25 @@ function Register() {
                 />
               </div>
 
-              <div className="register-tabs">
-                <button
-                  className={`register-tab register-tab-personal ${
-                    registrationType === "personal" ? "active" : ""
-                  }`}
-                  onClick={() => setRegistrationType("personal")}
-                >
-                  Personal
-                </button>
-                <button
-                  className={`register-tab register-tab-business ${
-                    registrationType === "business" ? "active" : ""
-                  }`}
-                  onClick={() => setRegistrationType("business")}
-                >
-                  Business
-                </button>
-              </div>
+              <RegistrationTabs
+                registrationType={registrationType}
+                onTypeChange={setRegistrationType}
+              />
 
               <form className="register-form" onSubmit={handleSubmit}>
-                <div className="register-form-row">
-                  <div className="register-form-group">
-                    <label htmlFor="businessName">Business Name</label>
-                    <input
-                      type="text"
-                      id="businessName"
-                      name="businessName"
-                      value={businessFormData.businessName}
-                      onChange={handleBusinessInputChange}
-                      placeholder="Business Name"
-                    />
-                  </div>
-                  <div className="register-form-group">
-                    <label htmlFor="businessType">Business Type</label>
-                    <div className="register-select-wrapper">
-                      <select
-                        id="businessType"
-                        name="businessType"
-                        value={businessFormData.businessType}
-                        onChange={handleBusinessInputChange}
-                      >
-                        <option value="">Select Type</option>
-                        <option value="retail">Retail</option>
-                        <option value="service">Service</option>
-                        <option value="manufacturing">Manufacturing</option>
-                        <option value="other">Other</option>
-                      </select>
-                      <ChevronDown className="register-select-icon" size={20} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="businessEmail">Business Email</label>
-                  <div className="register-input-wrapper">
-                    <Mail className="register-input-icon" size={20} />
-                    <input
-                      type="email"
-                      id="businessEmail"
-                      name="businessEmail"
-                      value={businessFormData.businessEmail}
-                      onChange={handleBusinessInputChange}
-                      placeholder="Business Email"
-                    />
-                  </div>
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="CACNumber">CAC Number</label>
-                  <input
-                    type="CAC"
-                    id="CACNumber"
-                    name="CACNumber"
-                    placeholder="CAC Number"
-                  />
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="businessPhone">Business Phone</label>
-                  <input
-                    type="tel"
-                    id="businessPhone"
-                    name="businessPhone"
-                    value={businessFormData.businessPhone}
-                    onChange={handleBusinessInputChange}
-                    placeholder="Business Phone"
-                  />
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="businessAddress">Business Address</label>
-                  <div className="register-input-wrapper">
-                    <MapPin className="register-input-icon" size={20} />
-                    <input
-                      type="text"
-                      id="businessAddress"
-                      name="businessAddress"
-                      value={businessFormData.businessAddress}
-                      onChange={handleBusinessInputChange}
-                      placeholder="Business Address"
-                    />
-                  </div>
-                </div>
-
-                <div className="register-form-group">
-                  <label htmlFor="businessPassword">Password</label>
-                  <div className="register-input-wrapper">
-                    <Lock className="register-input-icon" size={20} />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      id="businessPassword"
-                      name="businessPassword"
-                      value={businessFormData.businessPassword}
-                      onChange={handleBusinessInputChange}
-                      placeholder="Password"
-                    />
-                    <button
-                      type="button"
-                      className="register-password-toggle"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="register-input-icon" size={20} />
-                      ) : (
-                        <Eye className="register-input-icon" size={20} />
-                      )}
-                    </button>
-                  </div>
-                </div>
+                <BusinessFormFields
+                  formData={businessFormData}
+                  showPassword={showPassword}
+                  onInputChange={handleBusinessInputChange}
+                  onTogglePassword={() => setShowPassword(!showPassword)}
+                />
 
                 <button type="submit" className="register-submit-button">
                   SUBMIT
                 </button>
               </form>
 
-              <div className="register-signin-link">
-                <p>
-                  Already have an account?{" "}
-                  <button
-                    className="register-signin-link-button"
-                    onClick={() => navigate("/coming-soon")}
-                    type="button"
-                  >
-                    Sign In
-                  </button>
-                </p>
-              </div>
+              <SignInLink />
             </div>
           </div>
         </div>
