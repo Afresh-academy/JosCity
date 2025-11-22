@@ -959,9 +959,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
-  height: 80px;
-  min-width: 120px;
+  width: 112px;
+  height: 66px;
+  min-width: 100px;
   min-height: 50px;
   -o-object-fit: contain;
      object-fit: contain;
@@ -995,6 +995,7 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
   transform-origin: center;
+  position: relative;
 }
 .navbar__menu-toggle:hover span {
   background-color: #00C950;
@@ -1003,6 +1004,20 @@ body {
   outline: 2px solid #00C950;
   outline-offset: 4px;
   border-radius: 4px;
+}
+.navbar__menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 7px);
+}
+.navbar__menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+  width: 0;
+}
+.navbar__menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -7px);
+}
+.navbar__menu-toggle.active:hover span {
+  background-color: #00C950;
 }
 .navbar__nav-list {
   display: flex;
@@ -1227,7 +1242,7 @@ body {
     flex-shrink: 0;
   }
   .navbar__logo-image {
-    width: 130px;
+    width: 1200px;
     height: 52px;
     min-width: 120px;
     min-height: 50px;
@@ -1244,22 +1259,6 @@ body {
     z-index: 1000;
     cursor: pointer;
   }
-  .navbar__menu-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
-  }
-  .navbar__menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-    transform: scaleX(0);
-  }
-  .navbar__menu-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
-  }
-  .navbar__menu-toggle.active:hover span {
-    background-color: #00C950;
-  }
-  .navbar__menu-toggle.active ~ .navbar__get-started-button {
-    display: none;
-  }
   .navbar__nav-list {
     order: 4;
     width: 100%;
@@ -1273,6 +1272,12 @@ body {
   }
   .navbar__nav-list.active {
     display: flex;
+  }
+  .navbar__menu-toggle.active ~ .navbar__get-started-button {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   .navbar__nav-item {
     font-size: 1rem;

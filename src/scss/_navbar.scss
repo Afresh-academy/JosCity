@@ -68,9 +68,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 150px;
-    height: 80px;
-    min-width: 120px;
+    width: 112px;
+    height: 66px;
+    min-width: 100px;
     min-height: 50px;
     object-fit: contain;
     transition: transform 0.3s ease, filter 0.3s ease;
@@ -424,7 +424,7 @@
     }
 
     &__logo-image {
-      width: 130px;
+      width: 1200px;
       height: 52px;
       min-width: 120px;
       min-height: 50px;
@@ -453,12 +453,12 @@
       padding: 1rem 0;
       border-top: 1px solid #e0e0e0;
       display: none;
-  
+
       &.active {
         display: flex;
       }
     }
-    
+
     // Hide Get Started button when menu toggle is active on mobile
     &__menu-toggle.active ~ &__get-started-button {
       opacity: 0;
@@ -466,20 +466,20 @@
       pointer-events: none;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-  
+
     &__nav-item {
       font-size: 1rem;
       padding: 0.5rem 0;
       width: 100%;
       border-bottom: 1px solid #f0f0f0;
       padding-bottom: 0.5rem;
-  
+
       &:hover {
         border-bottom-color: $color-primary;
         border-bottom-width: 2px;
       }
     }
-  
+
     &__action-buttons {
       order: 1;
       width: 100%;
