@@ -1694,10 +1694,18 @@ body {
   text-align: center;
   gap: 16px;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 .contact__card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.contact__card:active {
+  transform: translateY(-2px);
+}
+.contact__card:focus {
+  outline: 2px solid #00C950;
+  outline-offset: 2px;
 }
 .contact__card-icon {
   width: 64px;
