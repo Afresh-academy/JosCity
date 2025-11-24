@@ -1,6 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/authController');
+import express, { Router } from 'express';
+import * as authController from '../controllers/authController';
+
+const router: Router = express.Router();
 
 // Public routes
 router.post('/signup', authController.signUp);
@@ -20,4 +21,5 @@ router.get('/admin/pending', authController.getPendingApprovals);
 router.post('/admin/approve', authController.approveAccount);
 router.post('/admin/reject', authController.rejectAccount);
 
-module.exports = router;
+export default router;
+
