@@ -17,6 +17,7 @@ import WelcomePage from "./pages/welcomepage";
 import Success from "./pages/Success";
 import ComingSoon from "./pages/ComingSoon";
 import NewsFeed from "./pages/NewsFeed";
+import Admin from "./components/Admin";
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (
@@ -47,6 +48,7 @@ if (rootElement) {
           <Route path="/business-form" element={<BusinessForm />} />
           <Route path="/success" element={<Success />} />
           <Route path="/newsfeed" element={<NewsFeed />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
