@@ -9,7 +9,7 @@ import Footer from "./pages/Footer";
 import "./main.scss";
 import Hero from "./pages/Hero";
 import Pricing from "./pages/Pricing";
-import Testimonials from "./pages/Testimonials";
+import Guidelines from "./pages/Guidlines";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 import BusinessForm from "./pages/BusinessForm";
@@ -27,7 +27,7 @@ export function LandingPage() {
       <Services />
       <Events />
       <Pricing />
-      <Testimonials />
+      <Guidelines />
       <Contact />
       <Footer />
     </>

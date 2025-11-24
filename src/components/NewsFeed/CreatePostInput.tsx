@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Image, Video, Mic } from 'lucide-react';
 import primaryLogo from '../../image/primary-logo.png';
 import CreatePostModal from './CreatePostModal';
+import LazyImage from '../LazyImage';
 
 interface CreatePostInputProps {
   userName: string;
@@ -26,7 +27,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
     <>
       <div className="newsfeed-create-post">
         <div className="newsfeed-create-post__avatar">
-          <img src={userAvatar || primaryLogo} alt={userName} />
+          <LazyImage src={userAvatar || primaryLogo} alt={userName} />
         </div>
         <div className="newsfeed-create-post__input-wrapper">
           <input

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import logoImage from "../image/primary-logo.png";
 import skyImage from "../image/sky.png";
 import "../main.css";
+import LazyImage from "../components/LazyImage";
+import ScrollAnimate from "../components/ScrollAnimate";
 
 const ComingSoon: React.FC = () => {
   const navigate = useNavigate();
@@ -22,21 +24,25 @@ const ComingSoon: React.FC = () => {
   return (
     <div className="coming-soon-page">
       <div className="coming-soon-background">
-        <img src={skyImage} alt="Sky background" className="sky-image" />
+        <LazyImage src={skyImage} alt="Sky background" className="sky-image" />
       </div>
 
-      <div className={`coming-soon-container ${isVisible ? "fade-in" : ""}`}>
+      <ScrollAnimate animationType="fade-up" className={`coming-soon-container ${isVisible ? "fade-in" : ""}`}>
         <div className="coming-soon-card">
           <div className="coming-soon-top-section">
-            <div className="coming-soon-logo-container">
-              <img
-                src={logoImage}
-                alt="JOSCITY Logo"
-                className="coming-soon-logo"
-              />
-            </div>
+            <ScrollAnimate animationType="scale" delay={0.1}>
+              <div className="coming-soon-logo-container">
+                <LazyImage
+                  src={logoImage}
+                  alt="JOSCITY Logo"
+                  className="coming-soon-logo"
+                />
+              </div>
+            </ScrollAnimate>
 
-            <h1 className="coming-soon-heading">Coming Soon</h1>
+            <ScrollAnimate animationType="fade-up" delay={0.2}>
+              <h1 className="coming-soon-heading">Coming Soon</h1>
+            </ScrollAnimate>
 
             <div className="coming-soon-icon-container">
               <div className="coming-soon-icon">
@@ -94,7 +100,7 @@ const ComingSoon: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
+      </ScrollAnimate>
 
       <footer className="register-footer">
         <div className="register-footer-content">
