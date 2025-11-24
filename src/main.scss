@@ -1,3 +1,6 @@
+@use "./scss/variables" as *;
+@use "./scss/mixins" as *;
+
 @forward "./scss/base.scss";
 @forward "./scss/hero.scss";
 @forward "./scss/navbar.scss";
@@ -5,13 +8,12 @@
 @forward "./scss/contact.scss";
 @forward "./scss/footer.scss";
 @forward "./scss/success.scss";
-@forward "./scss/variables.scss";
-@forward "./scss/mixins.scss";
 @forward "./scss/pricing.scss";
 @forward "./scss/events.scss";
-@forward "./scss/testimonials.scss";
+@forward "./scss/guidelines.scss";
 @forward "./scss/welcomepage.scss";
 @forward "./scss/register.scss";
 @forward "./scss/signin.scss";
 @forward "./scss/comingsoon.scss";
 @forward "./scss/newsfeed.scss";
+@forward "./scss/scroll-animations.scss";

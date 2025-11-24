@@ -185,7 +185,7 @@ JOSCITY/
 │   │   ├── _services.scss
 │   │   ├── _signin.scss
 │   │   ├── _success.scss
-│   │   ├── _testimonials.scss
+│   │   ├── _guidelines.scss
 │   │   ├── _variables.scss
 │   │   └── _welcomepage.scss
 │   ├── main.tsx                  # Application entry point
