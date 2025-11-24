@@ -25,61 +25,65 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
     
     // Status filters
     if (status === 'pending') {
-      whereClause += ' AND user_approved = "0" AND account_status = "pending"';
+      whereClause += ' AND user_approved = 0 AND account_status = $' + (queryParams.length + 1);
+      queryParams.push('pending');
     } else if (status === 'banned') {
-      whereClause += ' AND user_banned = "1"';
+      whereClause += ' AND user_banned = 1';
     } else if (status === 'not_activated') {
-      whereClause += ' AND user_activated = "0"';
+      whereClause += ' AND user_activated = 0';
     } else if (status === 'approved') {
-      whereClause += ' AND user_approved = "1"';
+      whereClause += ' AND user_approved = 1';
     } else if (status === 'online') {
-      whereClause += ' AND user_last_seen >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)';
+      whereClause += " AND user_last_seen >= NOW() - INTERVAL '15 minutes'";
     }
 
     if (account_type) {
-      whereClause += ' AND account_type = ?';
+      whereClause += ' AND account_type = $' + (queryParams.length + 1);
       queryParams.push(account_type);
     }
 
     // User group filter
     if (group) {
-      whereClause += ' AND user_group = ?';
+      whereClause += ' AND user_group = $' + (queryParams.length + 1);
       queryParams.push(group);
     }
 
     // Search filter
     if (search) {
-      whereClause += ` AND (user_name LIKE ? OR user_firstname LIKE ? OR user_lastname LIKE ? OR user_email LIKE ? OR user_phone LIKE ?)`;
       const searchTerm = `%${search}%`;
+      const paramCount = queryParams.length;
+      whereClause += ` AND (user_name LIKE $${paramCount + 1} OR user_firstname LIKE $${paramCount + 2} OR user_lastname LIKE $${paramCount + 3} OR user_email LIKE $${paramCount + 4} OR user_phone LIKE $${paramCount + 5})`;
       queryParams.push(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm);
     }
     
     // Get users
-    const [users] = await db.execute(
+    const limitParam = queryParams.length + 1;
+    const offsetParam = queryParams.length + 2;
+    const usersResult = await db.query(
       `SELECT user_id, user_name, user_firstname, user_lastname, user_email, user_phone, 
               user_gender, user_picture, user_cover, user_registered, user_last_seen,
               user_activated, user_approved, user_banned, user_verified, user_group,
               account_status, nin_number, address
        FROM users ${whereClause} 
        ORDER BY user_id DESC 
-       LIMIT ? OFFSET ?`,
+       LIMIT $${limitParam} OFFSET $${offsetParam}`,
       [...queryParams, parseInt(limit as string), offset]
-    ) as [any[], any];
+    );
     
     // Get total count
-    const [total] = await db.execute(
+    const totalResult = await db.query(
       `SELECT COUNT(*) as count FROM users ${whereClause}`,
       queryParams
-    ) as [any[], any];
+    );
     
     res.json({
       success: true,
-      data: users,
+      data: usersResult.rows,
       pagination: {
         page: parseInt(page as string),
         limit: parseInt(limit as string),
-        total: total[0].count,
-        totalPages: Math.ceil(total[0].count / Number(limit))
+        total: parseInt(totalResult.rows[0].count),
+        totalPages: Math.ceil(parseInt(totalResult.rows[0].count) / Number(limit))
       }
     });
   } catch (error) {
@@ -93,31 +97,31 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     
-    const [users] = await db.execute(
-      `SELECT * FROM users WHERE user_id = ?`,
+    const usersResult = await db.query(
+      `SELECT * FROM users WHERE user_id = $1`,
       [id]
-    ) as [any[], any];
+    );
     
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
     
     // Get user sessions
-    const [sessions] = await db.execute(
-      'SELECT * FROM users_sessions WHERE user_id = ? ORDER BY last_activity DESC',
+    const sessionsResult = await db.query(
+      'SELECT * FROM users_sessions WHERE user_id = $1 ORDER BY last_activity DESC',
       [id]
-    ) as [any[], any];
+    );
     
     // Get user posts count
-    const [postsCount] = await db.execute(
-      'SELECT COUNT(*) as count FROM posts WHERE user_id = ? AND user_type = "user"',
+    const postsCountResult = await db.query(
+      "SELECT COUNT(*) as count FROM posts WHERE user_id = $1 AND user_type = 'user'",
       [id]
-    ) as [any[], any];
+    );
     
-    const user = users[0];
-    user.sessions = sessions;
-    user.posts_count = postsCount[0].count;
+    const user = usersResult.rows[0];
+    user.sessions = sessionsResult.rows;
+    user.posts_count = parseInt(postsCountResult.rows[0].count);
     
     res.json({
       success: true,
@@ -134,14 +138,14 @@ export const approveUser = async (req: AuthRequest, res: Response): Promise<void
   try {
     const { id } = req.params;
     
-    await db.execute(
-      'UPDATE users SET user_approved = "1", account_status = "approved" WHERE user_id = ?',
+    await db.query(
+      "UPDATE users SET user_approved = 1, account_status = 'approved' WHERE user_id = $1",
       [id]
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'user_approval', `Approved user ID: ${id}`]
     );
     
@@ -161,14 +165,14 @@ export const banUser = async (req: AuthRequest, res: Response): Promise<void> =>
     const { id } = req.params;
     const { reason } = req.body;
     
-    await db.execute(
-      'UPDATE users SET user_banned = "1", user_banned_message = ? WHERE user_id = ?',
+    await db.query(
+      'UPDATE users SET user_banned = 1, user_banned_message = $1 WHERE user_id = $2',
       [reason, id]
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'user_ban', `Banned user ID: ${id}. Reason: ${reason}`]
     );
     
@@ -187,14 +191,14 @@ export const unbanUser = async (req: AuthRequest, res: Response): Promise<void> 
   try {
     const { id } = req.params;
     
-    await db.execute(
-      'UPDATE users SET user_banned = "0", user_banned_message = NULL WHERE user_id = ?',
+    await db.query(
+      'UPDATE users SET user_banned = 0, user_banned_message = NULL WHERE user_id = $1',
       [id]
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'user_unban', `Unbanned user ID: ${id}`]
     );
     
@@ -213,14 +217,14 @@ export const verifyUser = async (req: AuthRequest, res: Response): Promise<void>
   try {
     const { id } = req.params;
     
-    await db.execute(
-      'UPDATE users SET user_verified = "1" WHERE user_id = ?',
+    await db.query(
+      'UPDATE users SET user_verified = 1 WHERE user_id = $1',
       [id]
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'user_verification', `Verified user ID: ${id}`]
     );
     
@@ -240,14 +244,14 @@ export const updateUserGroup = async (req: AuthRequest, res: Response): Promise<
     const { id } = req.params;
     const { user_group } = req.body;
     
-    await db.execute(
-      'UPDATE users SET user_group = ? WHERE user_id = ?',
+    await db.query(
+      'UPDATE users SET user_group = $1 WHERE user_id = $2',
       [user_group, id]
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'user_group_update', `Updated user group to ${user_group} for user ID: ${id}`]
     );
     
@@ -266,14 +270,14 @@ export const deleteUser = async (req: AuthRequest, res: Response): Promise<void>
   try {
     const { id } = req.params;
     
-    await db.execute(
-      'DELETE FROM users WHERE user_id = ?',
+    await db.query(
+      'DELETE FROM users WHERE user_id = $1',
       [id]
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'user_delete', `Deleted user ID: ${id}`]
     );
     

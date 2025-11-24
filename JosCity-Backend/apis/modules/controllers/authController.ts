@@ -82,12 +82,12 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
     }
 
     // Check if email already exists
-    const [existingEmail] = await db.execute(
-      'SELECT user_id FROM users WHERE user_email = ?',
+    const existingEmailResult = await db.query(
+      'SELECT user_id FROM users WHERE user_email = $1',
       [email]
-    ) as [any[], any];
+    );
 
-    if (existingEmail.length > 0) {
+    if (existingEmailResult.rows.length > 0) {
       res.status(400).json({
         error: true,
         message: 'Email already registered'
@@ -97,12 +97,12 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
 
     // Check if NIN already exists (for personal accounts)
     if (account_type === 'personal' && nin_number) {
-      const [existingNIN] = await db.execute(
-        'SELECT user_id FROM users WHERE nin_number = ?',
+      const existingNINResult = await db.query(
+        'SELECT user_id FROM users WHERE nin_number = $1',
         [nin_number]
-      ) as [any[], any];
+      );
 
-      if (existingNIN.length > 0) {
+      if (existingNINResult.rows.length > 0) {
         res.status(400).json({
           error: true,
           message: 'NIN number already registered'
@@ -113,12 +113,12 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
 
     // Check if business registration number exists (for business accounts)
     if (account_type === 'business' && CAC_number) {
-      const [existingBusiness] = await db.execute(
-        'SELECT user_id FROM users WHERE CAC_number = ?',
+      const existingBusinessResult = await db.query(
+        'SELECT user_id FROM users WHERE CAC_number = $1',
         [CAC_number]
-      ) as [any[], any];
+      );
 
-      if (existingBusiness.length > 0) {
+      if (existingBusinessResult.rows.length > 0) {
         res.status(400).json({
           error: true,
           message: 'Business registration number already registered'
@@ -139,18 +139,19 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
 
     try {
       // Create user with "pending" status - NO ACTIVATION CODE YET
-      const [userResult] = await connection.execute(
+      const userResult = await connection.query(
         `INSERT INTO users 
          (user_name, user_firstname, user_lastname, user_gender, user_phone, nin_number, 
           user_email, user_password, address, account_status, account_type, 
           business_name, business_type, CAC_number, business_location) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)`,
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'pending', $10, $11, $12, $13, $14)
+         RETURNING user_id`,
         [
           user_name, first_name, last_name, gender, phone_number, nin_number, 
           email, hashedPassword, address, account_type,
           business_name, business_type, CAC_number, business_location
         ]
-      ) as [any, any];
+      );
 
       await connection.commit();
 
@@ -184,7 +185,7 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
       res.status(201).json({
         success: true,
         message: 'Registration submitted for review. You will receive an email once approved.',
-        user_id: (userResult as any).insertId,
+        user_id: userResult.rows[0].user_id,
         status: 'under_review',
         account_type: account_type
       });
@@ -210,18 +211,18 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
  */
 export const getPendingApprovals = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const [pendingUsers] = await db.execute(
+    const pendingUsersResult = await db.query(
       `SELECT u.user_id, u.user_name, u.user_firstname, u.user_lastname, u.user_phone, u.nin_number, 
               u.user_email, u.address, u.user_registered, u.account_type,
               u.business_name, u.business_type, u.CAC_number, u.business_location
        FROM users u
        WHERE u.account_status = 'pending'
        ORDER BY u.user_registered DESC`
-    ) as [any[], any];
+    );
 
     res.json({
       success: true,
-      data: pendingUsers
+      data: pendingUsersResult.rows
     });
 
   } catch (error) {
@@ -245,16 +246,16 @@ export const approveAccount = async (req: Request, res: Response): Promise<void>
     const activationExpires = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
     // Update user status and set activation code
-    const [result] = await db.execute(
+    const result = await db.query(
       `UPDATE users 
        SET account_status = 'approved', 
-           activation_code = ?, 
-           activation_expires = ? 
-       WHERE user_id = ? AND account_status = 'pending'`,
+           activation_code = $1, 
+           activation_expires = $2 
+       WHERE user_id = $3 AND account_status = 'pending'`,
       [activationCode, activationExpires, user_id]
-    ) as [any, any];
+    );
 
-    if (result.affectedRows === 0) {
+    if (result.rowCount === 0) {
       res.status(404).json({
         error: true,
         message: 'User not found or already processed'
@@ -263,12 +264,12 @@ export const approveAccount = async (req: Request, res: Response): Promise<void>
     }
 
     // Get user details for email
-    const [users] = await db.execute(
-      'SELECT user_email, user_firstname, user_lastname, account_type, business_name FROM users WHERE user_id = ?',
+    const usersResult = await db.query(
+      'SELECT user_email, user_firstname, user_lastname, account_type, business_name FROM users WHERE user_id = $1',
       [user_id]
-    ) as [any[], any];
+    );
 
-    const user = users[0];
+    const user = usersResult.rows[0];
 
     // Send approval email with activation code - ONLY AFTER APPROVAL
     const emailSubject = user.account_type === 'business'
@@ -321,14 +322,14 @@ export const rejectAccount = async (req: Request, res: Response): Promise<void> 
     const { user_id, reason } = req.body;
 
     // Update user status to rejected
-    const [result] = await db.execute(
+    const result = await db.query(
       `UPDATE users 
        SET account_status = 'rejected'
-       WHERE user_id = ? AND account_status = 'pending'`,
+       WHERE user_id = $1 AND account_status = 'pending'`,
       [user_id]
-    ) as [any, any];
+    );
 
-    if (result.affectedRows === 0) {
+    if (result.rowCount === 0) {
       res.status(404).json({
         error: true,
         message: 'User not found or already processed'
@@ -337,12 +338,12 @@ export const rejectAccount = async (req: Request, res: Response): Promise<void> 
     }
 
     // Get user details for email
-    const [users] = await db.execute(
-      'SELECT user_email, user_firstname, user_lastname, account_type, business_name FROM users WHERE user_id = ?',
+    const usersResult = await db.query(
+      'SELECT user_email, user_firstname, user_lastname, account_type, business_name FROM users WHERE user_id = $1',
       [user_id]
-    ) as [any[], any];
+    );
 
-    const user = users[0];
+    const user = usersResult.rows[0];
 
     // Send rejection email
     const recipientName = user.account_type === 'business'
@@ -384,15 +385,15 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
     const { email, password, activation_code } = req.body;
 
     // Find user
-    const [users] = await db.execute(
+    const usersResult = await db.query(
       `SELECT user_id, user_email, user_password, user_firstname, user_lastname, 
               account_status, activation_code, activation_expires, is_verified, account_type,
               business_name, user_verified
-       FROM users WHERE user_email = ?`,
+       FROM users WHERE user_email = $1`,
       [email]
-    ) as [any[], any];
+    );
 
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       res.status(401).json({
         error: true,
         message: 'Invalid email or password'
@@ -400,7 +401,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const user = users[0];
+    const user = usersResult.rows[0];
 
     // Check account status
     if (user.account_status === 'pending') {
@@ -451,8 +452,8 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
 
     // Mark as verified on first successful login
     if (!user.is_verified) {
-      await db.execute(
-        'UPDATE users SET is_verified = 1, verified_at = NOW(), activation_code = NULL WHERE user_id = ?',
+      await db.query(
+        'UPDATE users SET is_verified = 1, verified_at = NOW(), activation_code = NULL WHERE user_id = $1',
         [user.user_id]
       );
     }
@@ -474,7 +475,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
       user_id: user.user_id,
       email: user.user_email,
       is_verified: true,
-      has_verified_badge: user.user_verified === '1',
+      has_verified_badge: user.user_verified === 1 || user.user_verified === '1',
       account_type: user.account_type
     };
 
@@ -511,12 +512,12 @@ export const forgetPassword = async (req: Request, res: Response): Promise<void>
   try {
     const { email } = req.body;
 
-    const [users] = await db.execute(
-      'SELECT user_id, user_firstname, user_lastname, business_name, account_type FROM users WHERE user_email = ? AND account_status = "approved"',
+    const usersResult = await db.query(
+      "SELECT user_id, user_firstname, user_lastname, business_name, account_type FROM users WHERE user_email = $1 AND account_status = 'approved'",
       [email]
-    ) as [any[], any];
+    );
 
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       // Don't reveal if email exists or not for security
       res.json({
         success: true,
@@ -525,12 +526,12 @@ export const forgetPassword = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const user = users[0];
+    const user = usersResult.rows[0];
     const resetCode = generateResetCode();
     const resetExpires = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour
 
-    await db.execute(
-      'UPDATE users SET reset_code = ?, reset_expires = ? WHERE user_id = ?',
+    await db.query(
+      'UPDATE users SET reset_code = $1, reset_expires = $2 WHERE user_id = $3',
       [resetCode, resetExpires, user.user_id]
     );
 
@@ -574,12 +575,12 @@ export const forgetPasswordConfirm = async (req: Request, res: Response): Promis
   try {
     const { email, reset_key } = req.body;
 
-    const [users] = await db.execute(
-      'SELECT user_id FROM users WHERE user_email = ? AND reset_code = ? AND reset_expires > NOW()',
+    const usersResult = await db.query(
+      'SELECT user_id FROM users WHERE user_email = $1 AND reset_code = $2 AND reset_expires > NOW()',
       [email, reset_key]
-    ) as [any[], any];
+    );
 
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       res.status(400).json({
         error: true,
         message: 'Invalid or expired reset code'
@@ -616,12 +617,12 @@ export const forgetPasswordReset = async (req: Request, res: Response): Promise<
       return;
     }
 
-    const [users] = await db.execute(
-      'SELECT user_id FROM users WHERE user_email = ? AND reset_code = ? AND reset_expires > NOW()',
+    const usersResult = await db.query(
+      'SELECT user_id FROM users WHERE user_email = $1 AND reset_code = $2 AND reset_expires > NOW()',
       [email, reset_key]
-    ) as [any[], any];
+    );
 
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       res.status(400).json({
         error: true,
         message: 'Invalid or expired reset code'
@@ -631,9 +632,9 @@ export const forgetPasswordReset = async (req: Request, res: Response): Promise<
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await db.execute(
-      'UPDATE users SET user_password = ?, reset_code = NULL, reset_expires = NULL WHERE user_id = ?',
-      [hashedPassword, users[0].user_id]
+    await db.query(
+      'UPDATE users SET user_password = $1, reset_code = NULL, reset_expires = NULL WHERE user_id = $2',
+      [hashedPassword, usersResult.rows[0].user_id]
     );
 
     res.json({
@@ -657,12 +658,12 @@ export const resendActivation = async (req: Request, res: Response): Promise<voi
   try {
     const { email } = req.body;
 
-    const [users] = await db.execute(
-      'SELECT user_id, user_firstname, user_lastname, business_name, account_type FROM users WHERE user_email = ? AND account_status = "approved"',
+    const usersResult = await db.query(
+      "SELECT user_id, user_firstname, user_lastname, business_name, account_type FROM users WHERE user_email = $1 AND account_status = 'approved'",
       [email]
-    ) as [any[], any];
+    );
 
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       res.status(404).json({
         error: true,
         message: 'Email not found or account not approved'
@@ -670,12 +671,12 @@ export const resendActivation = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const user = users[0];
+    const user = usersResult.rows[0];
     const newActivationCode = generateActivationCode();
     const activationExpires = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
-    await db.execute(
-      'UPDATE users SET activation_code = ?, activation_expires = ? WHERE user_id = ?',
+    await db.query(
+      'UPDATE users SET activation_code = $1, activation_expires = $2 WHERE user_id = $3',
       [newActivationCode, activationExpires, user.user_id]
     );
 

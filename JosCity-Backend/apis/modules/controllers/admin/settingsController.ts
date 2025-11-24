@@ -16,18 +16,18 @@ export const getSettings = async (req: Request, res: Response): Promise<void> =>
     let queryParams: any[] = [];
     
     if (group) {
-      whereClause = 'WHERE option_group = ?';
+      whereClause = 'WHERE option_group = $1';
       queryParams.push(group);
     }
     
-    const [settings] = await db.execute(
+    const settingsResult = await db.query(
       `SELECT * FROM system_options ${whereClause} ORDER BY option_group, option_name`,
       queryParams
-    ) as [any[], any];
+    );
     
     // Group settings by their groups
     const groupedSettings: any = {};
-    settings.forEach((setting: any) => {
+    settingsResult.rows.forEach((setting: any) => {
       if (!groupedSettings[setting.option_group]) {
         groupedSettings[setting.option_group] = [];
       }
@@ -51,15 +51,15 @@ export const updateSettings = async (req: AuthRequest, res: Response): Promise<v
     const { settings } = req.body;
     
     for (const [optionName, optionValue] of Object.entries(settings)) {
-      await db.execute(
-        'UPDATE system_options SET option_value = ?, updated_at = CURRENT_TIMESTAMP WHERE option_name = ?',
+      await db.query(
+        'UPDATE system_options SET option_value = $1, updated_at = CURRENT_TIMESTAMP WHERE option_name = $2',
         [optionValue, optionName]
       );
     }
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'settings_update', 'Updated system settings']
     );
     
@@ -76,13 +76,13 @@ export const updateSettings = async (req: AuthRequest, res: Response): Promise<v
 // Get registration settings
 export const getRegistrationSettings = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const [settings] = await db.execute(
-      'SELECT * FROM system_options WHERE option_group = "registration" ORDER BY option_name'
-    ) as [any[], any];
+    const settingsResult = await db.query(
+      "SELECT * FROM system_options WHERE option_group = 'registration' ORDER BY option_name"
+    );
     
     res.json({
       success: true,
-      data: settings
+      data: settingsResult.rows
     });
   } catch (error) {
     console.error('Get registration settings error:', error);
@@ -95,14 +95,14 @@ export const updateRegistrationSettings = async (req: AuthRequest, res: Response
   try {
     const { registration_approval_required } = req.body;
     
-    await db.execute(
-      'UPDATE system_options SET option_value = ? WHERE option_name = "registration_approval_required"',
+    await db.query(
+      "UPDATE system_options SET option_value = $1 WHERE option_name = 'registration_approval_required'",
       [registration_approval_required ? '1' : '0']
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'settings_update', `Updated registration approval setting to: ${registration_approval_required}`]
     );
     

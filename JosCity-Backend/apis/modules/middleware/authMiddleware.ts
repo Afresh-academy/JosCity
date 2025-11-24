@@ -21,17 +21,17 @@ export const adminAuth = async (req: AuthRequest, res: Response, next: NextFunct
       return;
     }
 
-    const [users] = await db.execute(
-      'SELECT user_id, user_group FROM users WHERE user_id = ?',
+    const usersResult = await db.query(
+      'SELECT user_id, user_group FROM users WHERE user_id = $1',
       [req.user.user_id]
-    ) as [any[], any];
+    );
 
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       res.status(401).json({ error: 'User not found' });
       return;
     }
 
-    const user = users[0] as User;
+    const user = usersResult.rows[0] as User;
     
     // check if user is admin (user_group = 1) or moderator (user_group = 2)
     if (user.user_group !== 1 && user.user_group !== 2) {
@@ -54,17 +54,17 @@ export const superAdminAuth = async (req: AuthRequest, res: Response, next: Next
       return;
     }
 
-    const [users] = await db.execute(
-      'SELECT user_id, user_group FROM users WHERE user_id = ?',
+    const usersResult = await db.query(
+      'SELECT user_id, user_group FROM users WHERE user_id = $1',
       [req.user.user_id]
-    ) as [any[], any];
+    );
 
-    if (users.length === 0) {
+    if (usersResult.rows.length === 0) {
       res.status(401).json({ error: 'User not found' });
       return;
     }
 
-    const user = users[0] as User;
+    const user = usersResult.rows[0] as User;
     
     // This is to allow Only super admin (user_group = 1)
     if (user.user_group !== 1) {

@@ -24,26 +24,29 @@ export const getPosts = async (req: Request, res: Response): Promise<void> => {
     
     // Status filters
     if (status === 'pending') {
-      whereClause += ' AND pre_approved = "0" AND has_approved = "0"';
+      whereClause += ' AND pre_approved = 0 AND has_approved = 0';
     } else if (status === 'approved') {
-      whereClause += ' AND (pre_approved = "1" OR has_approved = "1")';
+      whereClause += ' AND (pre_approved = 1 OR has_approved = 1)';
     }
 
     // Post type filter
     if (type) {
-      whereClause += ' AND post_type = ?';
+      whereClause += ' AND post_type = $' + (queryParams.length + 1);
       queryParams.push(type);
     }
 
     // Search filter
     if (search) {
-      whereClause += ` AND (text LIKE ? OR posts.post_id = ?)`;
       const searchTerm = `%${search}%`;
+      const paramCount = queryParams.length;
+      whereClause += ` AND (text LIKE $${paramCount + 1} OR posts.post_id = $${paramCount + 2})`;
       queryParams.push(searchTerm, search);
     }
     
     // Get posts with author info
-    const [posts] = await db.execute(
+    const limitParam = queryParams.length + 1;
+    const offsetParam = queryParams.length + 2;
+    const postsResult = await db.query(
       `SELECT p.*, 
               u.user_name, u.user_firstname, u.user_lastname, u.user_gender, u.user_picture,
               pg.page_name, pg.page_title, pg.page_picture
@@ -52,12 +55,12 @@ export const getPosts = async (req: Request, res: Response): Promise<void> => {
        LEFT JOIN pages pg ON p.user_id = pg.page_id AND p.user_type = 'page'
        ${whereClause} 
        ORDER BY p.post_id DESC 
-       LIMIT ? OFFSET ?`,
+       LIMIT $${limitParam} OFFSET $${offsetParam}`,
       [...queryParams, parseInt(limit as string), offset]
-    ) as [any[], any];
+    );
     
     // Format post data
-    const formattedPosts = posts.map((post: any) => {
+    const formattedPosts = postsResult.rows.map((post: any) => {
       const formatted = { ...post };
       
       // Set author info based on user_type
@@ -75,10 +78,10 @@ export const getPosts = async (req: Request, res: Response): Promise<void> => {
     });
     
     // Get total count
-    const [total] = await db.execute(
+    const totalResult = await db.query(
       `SELECT COUNT(*) as count FROM posts p ${whereClause}`,
       queryParams
-    ) as [any[], any];
+    );
     
     res.json({
       success: true,
@@ -86,8 +89,8 @@ export const getPosts = async (req: Request, res: Response): Promise<void> => {
       pagination: {
         page: parseInt(page as string),
         limit: parseInt(limit as string),
-        total: total[0].count,
-        totalPages: Math.ceil(total[0].count / Number(limit))
+        total: parseInt(totalResult.rows[0].count),
+        totalPages: Math.ceil(parseInt(totalResult.rows[0].count) / Number(limit))
       }
     });
   } catch (error) {
@@ -101,14 +104,14 @@ export const approvePost = async (req: AuthRequest, res: Response): Promise<void
   try {
     const { id } = req.params;
     
-    await db.execute(
-      'UPDATE posts SET pre_approved = "1", has_approved = "1" WHERE post_id = ?',
+    await db.query(
+      'UPDATE posts SET pre_approved = 1, has_approved = 1 WHERE post_id = $1',
       [id]
     );
     
     // This is an admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'post_approval', `Approved post ID: ${id}`]
     );
     
@@ -127,14 +130,14 @@ export const deletePost = async (req: AuthRequest, res: Response): Promise<void>
   try {
     const { id } = req.params;
     
-    await db.execute(
-      'DELETE FROM posts WHERE post_id = ?',
+    await db.query(
+      'DELETE FROM posts WHERE post_id = $1',
       [id]
     );
     
     // Log admin action
-    await db.execute(
-      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES (?, ?, ?)',
+    await db.query(
+      'INSERT INTO admin_logs (admin_id, action_type, action_details) VALUES ($1, $2, $3)',
       [req.user!.user_id, 'post_delete', `Deleted post ID: ${id}`]
     );
     
@@ -153,38 +156,38 @@ export const getPost = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     
-    const [posts] = await db.execute(
+    const postsResult = await db.query(
       `SELECT p.*, 
               u.user_name, u.user_firstname, u.user_lastname, u.user_gender, u.user_picture,
               pg.page_name, pg.page_title, pg.page_picture
        FROM posts p
        LEFT JOIN users u ON p.user_id = u.user_id AND p.user_type = 'user'
        LEFT JOIN pages pg ON p.user_id = pg.page_id AND p.user_type = 'page'
-       WHERE p.post_id = ?`,
+       WHERE p.post_id = $1`,
       [id]
-    ) as [any[], any];
+    );
     
-    if (posts.length === 0) {
+    if (postsResult.rows.length === 0) {
       res.status(404).json({ error: 'Post not found' });
       return;
     }
     
-    const post = posts[0];
+    const post = postsResult.rows[0];
     
     // Get post comments count
-    const [commentsCount] = await db.execute(
-      'SELECT COUNT(*) as count FROM posts_comments WHERE node_id = ? AND node_type = "post"',
+    const commentsCountResult = await db.query(
+      "SELECT COUNT(*) as count FROM posts_comments WHERE node_id = $1 AND node_type = 'post'",
       [id]
-    ) as [any[], any];
+    );
     
     // Get post reactions count
-    const [reactionsCount] = await db.execute(
-      'SELECT COUNT(*) as count FROM posts_reactions WHERE post_id = ?',
+    const reactionsCountResult = await db.query(
+      'SELECT COUNT(*) as count FROM posts_reactions WHERE post_id = $1',
       [id]
-    ) as [any[], any];
+    );
     
-    post.comments_count = commentsCount[0].count;
-    post.reactions_count = reactionsCount[0].count;
+    post.comments_count = parseInt(commentsCountResult.rows[0].count);
+    post.reactions_count = parseInt(reactionsCountResult.rows[0].count);
     
     res.json({
       success: true,
