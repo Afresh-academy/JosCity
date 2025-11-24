@@ -8,7 +8,6 @@ import heroImage2 from "../image/plateau-legs.png";
 import heroImage3 from "../image/terminus.png";
 import aboutImage from "../image/3dwOMAN.png";
 import LazyImage from "../components/LazyImage";
-import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const heroSlides = [
   {
