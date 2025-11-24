@@ -111,9 +111,6 @@
 
     svg {
       flex-shrink: 0;
-      color: white;
-      width: 24px;
-      height: 24px;
     }
 
     @media (max-width: 992px) {
@@ -206,9 +203,6 @@
 
     svg {
       flex-shrink: 0;
-      color: white;
-      width: 20px;
-      height: 20px;
     }
 
     @media (max-width: 992px) {
@@ -448,7 +442,7 @@
     bottom: 0;
     width: 280px;
     max-width: 85vw;
-    z-index: 1100;
+    z-index: 300;
     transform: translateX(-100%);
     opacity: 0;
     visibility: hidden;
@@ -459,7 +453,6 @@
     height: calc(100vh - 64px);
     padding: 16px;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-    background-color: white;
   }
 
   &--open {
@@ -1933,7 +1926,7 @@
     bottom: 0;
     width: 320px;
     max-width: 85vw;
-    z-index: 1100;
+    z-index: 300;
     transform: translateX(100%);
     opacity: 0;
     visibility: hidden;
@@ -2310,7 +2303,7 @@
       left: 0;
       bottom: 0;
       width: 260px;
-      z-index: 1100;
+      z-index: 300;
       transform: translateX(-100%);
       opacity: 0;
       visibility: hidden;
@@ -2321,7 +2314,6 @@
       height: calc(100vh - 64px);
       padding: 16px;
       box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-      background-color: white;
 
       &--open {
         transform: translateX(0);
@@ -2336,7 +2328,7 @@
       right: 0;
       bottom: 0;
       width: 300px;
-      z-index: 1100;
+      z-index: 300;
       transform: translateX(100%);
       opacity: 0;
       visibility: hidden;
