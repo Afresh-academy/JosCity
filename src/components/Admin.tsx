@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import "../main.css";
+import "../scss/_admin.scss";
 import {
   Search,
   Plus,
