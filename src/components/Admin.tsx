@@ -33,14 +33,22 @@ import {
   Megaphone,
   Package,
   Smartphone,
-  Info,
   Settings,
   Menu,
   Flag,
   Tag,
   Newspaper,
+  Heart,
+  Smile,
+  Image,
+  History,
+  Languages,
+  Coins,
+  Zap,
+  UserCircle,
 } from "lucide-react";
 import primaryLogo from "../image/primary-logo.png";
+import userAvatar from "../image/sky.png";
 
 const Admin: React.FC = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -54,12 +62,17 @@ const Admin: React.FC = () => {
     tools: false,
     plugins: false,
   });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
     }));
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   // Chart data for Monthly Average
@@ -90,9 +103,18 @@ const Admin: React.FC = () => {
       {/* Header Bar */}
       <header className="admin-header">
         <div className="admin-header__container">
-          <div className="admin-header__logo">
-            <img src={primaryLogo} alt="JOSCity Logo" />
-            <span>JOSCity</span>
+          <div className="admin-header__left">
+            <button
+              className="admin-header__menu-toggle"
+              onClick={toggleMobileMenu}
+              aria-label="Toggle menu"
+            >
+              <Menu size={24} />
+            </button>
+            <div className="admin-header__logo">
+              <img src={primaryLogo} alt="JOSCity Logo" />
+              <span>JOSCity</span>
+            </div>
           </div>
           <div className="admin-header__actions">
             <button
@@ -111,7 +133,14 @@ const Admin: React.FC = () => {
               <MessageSquare size={20} />
             </button>
             <div className="admin-header__profile">
-              <div className="admin-header__avatar"></div>
+              <div className="admin-header__avatar">
+                <img
+                  src={userAvatar}
+                  alt="User Avatar"
+                  width={32}
+                  height={32}
+                />
+              </div>
               <span>Join</span>
             </div>
           </div>
@@ -119,9 +148,35 @@ const Admin: React.FC = () => {
       </header>
 
       <div className="admin-container">
+        {/* Mobile Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className="admin-sidebar__overlay"
+            onClick={toggleMobileMenu}
+          ></div>
+        )}
         {/* Left Sidebar */}
-        <aside className="admin-sidebar">
-          <nav className="admin-sidebar__nav">
+        <aside
+          className={`admin-sidebar ${
+            isMobileMenuOpen ? "admin-sidebar--open" : ""
+          }`}
+        >
+          <button
+            className="admin-sidebar__close-btn"
+            onClick={toggleMobileMenu}
+            aria-label="Close menu"
+          >
+            <XCircle size={24} />
+          </button>
+          <nav
+            className="admin-sidebar__nav"
+            onClick={(e) => {
+              // Close menu when clicking on links
+              if ((e.target as HTMLElement).closest("a")) {
+                setIsMobileMenuOpen(false);
+              }
+            }}
+          >
             {/* EXPLORE Section */}
             <div className="admin-sidebar__section">
               <div className="admin-sidebar-section-container">
@@ -149,7 +204,7 @@ const Admin: React.FC = () => {
                     <span>Design</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <Globe size={18} />
+                    <Languages size={18} />
                     <span>Languages</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
@@ -190,7 +245,7 @@ const Admin: React.FC = () => {
                       href="#"
                       className="admin-sidebar-section-container__item"
                     >
-                      <Users size={18} />
+                      <UserCircle size={18} />
                       <span>Users</span>
                     </a>
                     <a
@@ -377,7 +432,7 @@ const Admin: React.FC = () => {
                 </div>
                 <div className="admin-sidebar-section-container__list">
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <CreditCard size={18} />
+                    <Coins size={18} />
                     <span>Coin Payments</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
@@ -493,15 +548,15 @@ const Admin: React.FC = () => {
                     <span>Widgets</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <Gift size={18} />
+                    <Heart size={18} />
                     <span>Reactions</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <Gift size={18} />
+                    <Smile size={18} />
                     <span>Emojis</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <Gift size={18} />
+                    <Image size={18} />
                     <span>Stickers</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
@@ -573,7 +628,7 @@ const Admin: React.FC = () => {
                 </div>
                 <div className="admin-sidebar-section-container__list">
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <Smartphone size={18} />
+                    <Zap size={18} />
                     <span>PWA</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
@@ -596,11 +651,11 @@ const Admin: React.FC = () => {
                 </div>
                 <div className="admin-sidebar-section-container__list">
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <Info size={18} />
+                    <History size={18} />
                     <span>Changelog</span>
                   </a>
                   <a href="#" className="admin-sidebar-section-container__item">
-                    <Info size={18} />
+                    <Tag size={18} />
                     <span>Build v4.11</span>
                   </a>
                 </div>
@@ -616,7 +671,6 @@ const Admin: React.FC = () => {
               <a href="#terms">Terms</a>
               <a href="#privacy">Privacy</a>
               <a href="#contact">Contact Us</a>
-              
             </div>
           </footer>
         </aside>
@@ -769,25 +823,6 @@ const Admin: React.FC = () => {
 
             {/* Statistics Cards - Continued */}
             <div className="admin-stats">
-              {/* Row 3 - Content Items (3 columns) */}
-              <div className="admin-stat-card admin-stat-card--dark-purple admin-stat-card--span-2">
-                <div className="admin-stat-card__number">0</div>
-                <div className="admin-stat-card__label">Pending</div>
-                <div className="admin-stat-card__action">Manage Pending</div>
-              </div>
-              <div className="admin-stat-card admin-stat-card--dark-purple admin-stat-card--span-2">
-                <div className="admin-stat-card__number">2</div>
-                <div className="admin-stat-card__label">Not Activated</div>
-                <div className="admin-stat-card__action">
-                  Manage Not Activated
-                </div>
-              </div>
-              <div className="admin-stat-card admin-stat-card--dark-purple admin-stat-card--span-2">
-                <div className="admin-stat-card__number">0</div>
-                <div className="admin-stat-card__label">Banned</div>
-                <div className="admin-stat-card__action">Manage Banned</div>
-              </div>
-
               {/* Row 4 - Posts & Comments (2 columns) */}
               <div className="admin-stat-card admin-stat-card--teal admin-stat-card--span-3">
                 <div className="admin-stat-card__number">22</div>
