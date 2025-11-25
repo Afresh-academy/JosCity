@@ -135,8 +135,13 @@
     height: 80px;
     margin-bottom: 0;
     object-fit: contain;
-    filter: drop-shadow(0 4px 8px $shadow-light);
     @include smooth-transition(transform);
+    
+    // Remove white background and box-shadow from lazy loading wrapper
+    &.lazy-image-wrapper {
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
   }
 
   .logo-text {

@@ -15,12 +15,16 @@ import adminRoutes from "./apis/modules/routes/admin";
 
 // Import routes
 import authRoutes from "./apis/modules/routes/authRoute";
+import landingPageRoutes from "./apis/modules/routes/landingPage";
 
 // Use admin routes
 app.use("/api/admin", adminRoutes);
 
 // Use routes
 app.use("/api/auth", authRoutes);
+
+// Public landing page routes (no authentication required)
+app.use("/api/landing-page", landingPageRoutes);
 // app.use('/api/business', businessRoutes);
 
 // Health check

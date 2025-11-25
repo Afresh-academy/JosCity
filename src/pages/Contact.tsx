@@ -10,7 +10,7 @@ const Contact: React.FC = () => {
       iconBg: "rgba(33, 150, 243, 0.1)",
       title: "Phone",
       detail1: "+234 7067621916",
-      detail2: "Mon-Saturday 24/7",
+      detail2: "Mon - Sat 24/7",
       action: () => {
         window.location.href = "tel:+234 7067621916";
       },
