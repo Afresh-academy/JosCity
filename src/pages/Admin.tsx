@@ -51,6 +51,7 @@ import {
 } from "lucide-react";
 import primaryLogo from "../image/primary-logo.png";
 import userAvatar from "../image/sky.png";
+import PagesControlPanel from "../components/PagesControlPanel";
 
 const Admin: React.FC = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -65,6 +66,7 @@ const Admin: React.FC = () => {
     plugins: false,
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isControlPanelOpen, setIsControlPanelOpen] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({
@@ -629,7 +631,14 @@ const Admin: React.FC = () => {
                   Apps
                 </div>
                 <div className="admin-sidebar-section-container__list">
-                  <a href="#" className="admin-sidebar-section-container__item">
+                  <a
+                    href="#"
+                    className="admin-sidebar-section-container__item"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsControlPanelOpen(true);
+                    }}
+                  >
                     <Zap size={18} />
                     <span>PWA</span>
                   </a>
@@ -867,8 +876,16 @@ const Admin: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Pages Control Panel */}
+      {isControlPanelOpen && (
+        <PagesControlPanel
+          onClose={() => setIsControlPanelOpen(false)}
+        />
+      )}
     </div>
   );
 };
 
 export default Admin;
+

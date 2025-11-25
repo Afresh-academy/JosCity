@@ -90,6 +90,12 @@
   height: auto;
   max-width: 120px;
   object-fit: contain;
+  
+  // Remove white background and box-shadow from lazy loading wrapper
+  &.lazy-image-wrapper {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
 }
 
 .coming-soon-heading {

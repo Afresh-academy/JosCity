@@ -1,19 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../main.css";
 import "../scss/_guidelines.scss";
-import primaryLogo from "../image/primary-logo.png";
+import primaryLogo from "../image/primary-logo.png"; // Fallback
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 import LazyImage from "../components/LazyImage";
+import { publicGuidelinesApi } from "../services/publicLandingPageApi";
 
-interface Guidelines {
-  id: number;
+interface Guideline {
+  id: string;
   quote: string;
-  name: string;
+  author_name: string;
+  author_role?: string;
   rating: number;
+  author_image_url?: string;
+  display_order: number;
+  is_active: boolean;
 }
 
 const Guidelines: React.FC = () => {
   const [currentGuidelines, setCurrentGuidelines] = useState(0);
+  const [guidelines, setGuidelines] = useState<Guideline[]>([
+    {
+      id: "1",
+      quote:
+        "Welcome to the Jos Smart City PWA! We're here to help you navigate and enjoy your city with ease. In this phase of the app, kindly click on the green 'Get Started' button to redirect you to an account type panel, select your type of account, carefully fill in your details, an email would be sent to you if submitted successfully, with a login button, your email address and an OTP, kindly change your password after logging in. Your Information is protected and will not be shared with anyone.",
+      author_name: "AfrESH Support",
+      rating: 5,
+      display_order: 0,
+      is_active: true,
+    },
+  ]);
+  const [badgeText, setBadgeText] = useState<string>("Guidelines");
+  const [heading, setHeading] = useState<string>("PWA Guidelines");
 
   // Scroll animations
   const badgeAnimation = useScrollAnimation({
@@ -33,15 +51,41 @@ const Guidelines: React.FC = () => {
     animationClass: "scroll-in",
   });
 
-  const guidelines: Guidelines[] = [
-    {
-      id: 1,
-      quote:
-        "Welcome to the Jos Smart City PWA! We're here to help you navigate and enjoy your city with ease. In this phase of the app, kindly click on green 'Get Started' button to redirect you to an account type panel, select your type of account, carefukky fill in your details, an email would be sent to you if submitted successfully, with a login button, your email address and an OTP, kindly change your password after logging in.",
-      name: "AfrESH Support",
-      rating: 5,
-    },
-  ];
+  useEffect(() => {
+    const fetchGuidelines = async () => {
+      try {
+        // Fetch settings
+        const settingsResponse = await publicGuidelinesApi.getSettings();
+        if (settingsResponse.success && settingsResponse.data) {
+          if (settingsResponse.data.badge_text) {
+            setBadgeText(settingsResponse.data.badge_text);
+          }
+          if (settingsResponse.data.heading) {
+            setHeading(settingsResponse.data.heading);
+          }
+        }
+
+        // Fetch guidelines
+        const guidelinesResponse = await publicGuidelinesApi.getGuidelines();
+        if (guidelinesResponse.success && guidelinesResponse.data) {
+          const activeGuidelines = guidelinesResponse.data
+            .filter((g: Guideline) => g.is_active)
+            .sort(
+              (a: Guideline, b: Guideline) => a.display_order - b.display_order
+            );
+
+          if (activeGuidelines.length > 0) {
+            setGuidelines(activeGuidelines);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch guidelines:", error);
+        // Use fallback data if API fails
+      }
+    };
+
+    fetchGuidelines();
+  }, []);
 
   const goToPrevious = () => {
     setCurrentGuidelines(
@@ -54,6 +98,7 @@ const Guidelines: React.FC = () => {
   };
 
   const current = guidelines[currentGuidelines];
+  const currentImage = current?.author_image_url || primaryLogo;
 
   return (
     <section className="guidelines" id="guidelines">
@@ -78,13 +123,13 @@ const Guidelines: React.FC = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            <span>Guidelines</span>
+            <span>{badgeText}</span>
           </div>
           <h2
             ref={headingAnimation.ref as React.RefObject<HTMLHeadingElement>}
             className={`guidelines__title ${headingAnimation.className}`}
           >
-            PWA Guidelines
+            {heading}
           </h2>
         </div>
 
@@ -93,9 +138,9 @@ const Guidelines: React.FC = () => {
           className={`guidelines__card ${cardAnimation.className}`}
         >
           <div className="guidelines__content">
-            <p className="guidelines__quote">{current.quote}</p>
+            <p className="guidelines__quote">{current?.quote || ""}</p>
             <div className="guidelines__rating">
-              {[...Array(current.rating)].map((_, index) => (
+              {[...Array(current?.rating || 5)].map((_, index) => (
                 <svg
                   key={index}
                   width="20"
@@ -108,11 +153,14 @@ const Guidelines: React.FC = () => {
                 </svg>
               ))}
             </div>
-            <h3 className="guidelines__name">{current.name}</h3>
+            <h3 className="guidelines__name">{current?.author_name || ""}</h3>
+            {current?.author_role && (
+              <p className="guidelines__role">{current.author_role}</p>
+            )}
           </div>
           <LazyImage
-            src={primaryLogo}
-            alt={current.name}
+            src={currentImage}
+            alt={current?.author_name || "Guideline author"}
             className={`guidelines__image ${imageAnimation.className}`}
             ref={imageAnimation.ref as React.RefObject<HTMLDivElement>}
           />

@@ -17,7 +17,7 @@ import WelcomePage from "./pages/welcomepage";
 import Success from "./pages/Success";
 import ComingSoon from "./pages/ComingSoon";
 import NewsFeed from "./pages/NewsFeed";
-import Admin from "./components/Admin";
+import Admin from "./pages/Admin";
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (

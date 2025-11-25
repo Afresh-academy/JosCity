@@ -731,3 +731,21 @@ export const signOut = async (_req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * Personal Registration - Wrapper for signUp with account_type='personal'
+ */
+export const personalRegister = async (req: Request<{}, {}, SignUpBody>, res: Response): Promise<void> => {
+  // Set account_type to 'personal' and call signUp
+  req.body.account_type = 'personal';
+  await signUp(req, res);
+};
+
+/**
+ * Business Registration - Wrapper for signUp with account_type='business'
+ */
+export const businessRegister = async (req: Request<{}, {}, SignUpBody>, res: Response): Promise<void> => {
+  // Set account_type to 'business' and call signUp
+  req.body.account_type = 'business';
+  await signUp(req, res);
+};
+
