@@ -252,14 +252,42 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     headers,
   });
 
+  const data = await response
+    .json()
+    .catch(() => ({ error: response.statusText }));
+
+  // Helper to convert error message to string
+  const getErrorMessage = (value: unknown): string => {
+    if (typeof value === "string") return value;
+    if (typeof value === "boolean")
+      return value ? "An error occurred" : "Request failed";
+    if (value && typeof value === "object") {
+      const errorObj = value as { message?: unknown; error?: unknown };
+      if (errorObj.message) return String(errorObj.message);
+      if (errorObj.error) return String(errorObj.error);
+      return JSON.stringify(value);
+    }
+    return String(value || "Request failed");
+  };
+
   if (!response.ok) {
-    const errorData = await response
-      .json()
-      .catch(() => ({ error: response.statusText }));
-    throw new Error(errorData.error || `API Error: ${response.statusText}`);
+    const errorMessage =
+      getErrorMessage(data.error) ||
+      getErrorMessage(data.message) ||
+      `API Error: ${response.statusText}`;
+    throw new Error(errorMessage);
   }
 
-  return response.json();
+  // Check if response has success field and it's false
+  if (data.success === false) {
+    const errorMessage =
+      getErrorMessage(data.error) ||
+      getErrorMessage(data.message) ||
+      "Request failed";
+    throw new Error(errorMessage);
+  }
+
+  return data;
 };
 
 // Navbar API
