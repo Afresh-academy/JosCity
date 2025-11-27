@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import db from '../config/database';
 
 interface User {
@@ -12,6 +13,52 @@ interface AuthRequest extends Request {
   };
   admin?: User;
 }
+
+// JWT verification middleware - extracts token and sets req.user
+export const verifyToken = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    // Check if JWT_SECRET is configured
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not configured in environment variables');
+      res.status(500).json({ error: 'Server configuration error', message: 'JWT authentication not properly configured' });
+      return;
+    }
+
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+      res.status(401).json({ error: 'Authentication required', message: 'No authorization header provided' });
+      return;
+    }
+
+    const token = authHeader.startsWith('Bearer ') 
+      ? authHeader.slice(7) 
+      : authHeader;
+
+    if (!token) {
+      res.status(401).json({ error: 'Authentication required', message: 'No token provided' });
+      return;
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET) as { user_id: number; email?: string };
+      req.user = { user_id: decoded.user_id };
+      next();
+    } catch (jwtError: any) {
+      if (jwtError.name === 'TokenExpiredError') {
+        res.status(401).json({ error: 'Token expired', message: 'Please login again' });
+        return;
+      } else if (jwtError.name === 'JsonWebTokenError') {
+        res.status(401).json({ error: 'Invalid token', message: 'Authentication failed' });
+        return;
+      }
+      throw jwtError;
+    }
+  } catch (error: any) {
+    console.error('Token verification error:', error);
+    res.status(500).json({ error: 'Authentication failed', message: 'Token verification error' });
+  }
+};
 
 // first check if user is admin
 export const adminAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -41,8 +88,9 @@ export const adminAuth = async (req: AuthRequest, res: Response, next: NextFunct
 
     req.admin = user;
     next();
-  } catch (error) {
-    res.status(500).json({ error: 'Authentication failed' });
+  } catch (error: any) {
+    console.error('Admin auth error:', error);
+    res.status(500).json({ error: 'Authentication failed', message: error.message || 'Internal server error' });
   }
 };
 
@@ -74,8 +122,9 @@ export const superAdminAuth = async (req: AuthRequest, res: Response, next: Next
 
     req.admin = user;
     next();
-  } catch (error) {
-    res.status(500).json({ error: 'Authentication failed' });
+  } catch (error: any) {
+    console.error('Super admin auth error:', error);
+    res.status(500).json({ error: 'Authentication failed', message: error.message || 'Internal server error' });
   }
 };
 

@@ -18,7 +18,13 @@ This folder contains the PostgreSQL database schema for all pages in the JosCity
 psql -U your_username -d joscity
 ```
 
-2. Run the schema file:
+2. **IMPORTANT: Run users schema first:**
+
+```bash
+psql -U your_username -d joscity -f users_schema.sql
+```
+
+3. Then run the main schema file:
 
 ```bash
 \i schema.sql
@@ -30,7 +36,75 @@ Or from command line:
 psql -U your_username -d joscity -f schema.sql
 ```
 
+**Note:** The `users` table must be created before running `schema.sql` because other tables have foreign key references to it.
+
 ## Schema Overview
+
+### Users Table (Authentication & Registration)
+
+#### `users`
+
+Stores user accounts for both personal and business registrations. This table must be created **before** running the main schema.sql file.
+
+**Setup Order:**
+1. First, run `users_schema.sql` to create the users table
+2. Then, run `schema.sql` for all other tables
+
+**Key Fields:**
+
+**Account Information:**
+- `user_id` (SERIAL, Primary Key) - Auto-incrementing user ID
+- `account_type` (personal, business) - Type of account
+- `account_status` (pending, approved, rejected, suspended) - Current account status
+- `user_name` (unique) - Username for login
+- `user_email` (unique) - Email address
+- `user_password` - Bcrypt hashed password
+
+**Personal Information:**
+- `user_firstname`, `user_lastname` - Full name
+- `user_gender` (male, female, other)
+- `user_phone` - Phone number
+- `address` - Physical address
+
+**Personal Account Fields:**
+- `nin_number` (unique, required for personal) - National Identification Number
+
+**Business Account Fields:**
+- `business_name` (required for business) - Business name
+- `business_type` (required for business) - Type of business
+- `CAC_number` (unique, optional) - Corporate Affairs Commission number
+- `business_location` - Business address
+
+**Account Management:**
+- `user_approved` (boolean) - Admin approval status
+- `user_activated` (boolean) - User activation status (after entering activation code)
+- `user_banned` (boolean) - Ban status
+- `is_verified` (boolean) - Email verification status
+- `user_verified` (boolean) - Additional verification badge
+- `user_group` (integer) - 0=regular, 1=admin, 2=moderator
+
+**Activation:**
+- `activation_code` (unique) - 6-digit code sent via email
+- `activation_code_expires_at` - Code expiration timestamp
+- `verified_at` - When account was verified
+
+**Activity Tracking:**
+- `user_registered` - Registration timestamp
+- `user_last_seen` - Last activity timestamp
+- `last_login` - Last login timestamp
+- `created_at`, `updated_at` - Automatic timestamps
+
+**Constraints:**
+- Personal accounts require `nin_number`
+- Business accounts require `business_name` and `business_type`
+- Email and username must be unique
+- NIN and CAC numbers must be unique when provided
+
+**Indexes:**
+- Email, username, account type/status
+- NIN number, business name, CAC number
+- Account management fields (approved, activated, banned)
+- Activity tracking fields
 
 ### Contact Page Tables
 
@@ -252,10 +326,13 @@ These tables are designed to work with the backend API controllers. Ensure your 
 
 ## Notes
 
-- The schema assumes a `users` table already exists (created elsewhere for authentication)
+- **The `users` table must be created first** using `users_schema.sql` before running `schema.sql`
 - All timestamps use `TIMESTAMP WITH TIME ZONE` for proper timezone handling
 - Status fields use CHECK constraints to ensure valid values
 - Soft deletes can be implemented by using status fields instead of hard deletes
+- The `users` table uses SERIAL (integer) for `user_id` to match backend expectations
+- Passwords are hashed using bcrypt (handled by backend)
+- Activation codes expire after 48 hours (handled by backend)
 
 ## Maintenance
 

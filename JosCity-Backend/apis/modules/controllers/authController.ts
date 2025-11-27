@@ -63,10 +63,10 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
 
     // Business account validation
     if (account_type === 'business') {
-      if (!business_name || !business_type) {
+      if (!business_name || !business_type || !CAC_number) {
         res.status(400).json({
           error: true,
-          message: 'Business name and type are required for business accounts'
+          message: 'Business name, type, and CAC number are required for business accounts'
         });
         return;
       }
@@ -111,8 +111,16 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
       }
     }
 
-    // Check if business registration number exists (for business accounts)
-    if (account_type === 'business' && CAC_number) {
+    // Check if business registration number exists (for business accounts - CAC_number is required)
+    if (account_type === 'business') {
+      if (!CAC_number) {
+        res.status(400).json({
+          error: true,
+          message: 'CAC number is required for business accounts'
+        });
+        return;
+      }
+
       const existingBusinessResult = await db.query(
         'SELECT user_id FROM users WHERE CAC_number = $1',
         [CAC_number]
@@ -458,6 +466,16 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
       );
     }
 
+    // Check if JWT_SECRET is configured
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not configured in environment variables');
+      res.status(500).json({
+        error: true,
+        message: 'Server configuration error: JWT authentication not properly configured'
+      });
+      return;
+    }
+
     // Generate JWT token
     const token = jwt.sign(
       { 
@@ -466,7 +484,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
         is_verified: true,
         account_type: user.account_type
       },
-      process.env.JWT_SECRET as string,
+      process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
 

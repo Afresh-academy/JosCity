@@ -54,16 +54,28 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
+// Validate required environment variables
+if (!process.env.JWT_SECRET) {
+  console.error("❌ ERROR: JWT_SECRET is not set in .env file");
+  console.error("   Please add JWT_SECRET to your .env file");
+  process.exit(1);
+}
+
 // Start server
 const PORT: string | number = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(
+    `🔐 JWT Authentication: ${
+      process.env.JWT_SECRET ? "Configured" : "Not configured"
+    }`
+  );
   console.log(
     `📧 Email service: ${
       process.env.SMTP_USER ? "Configured" : "Not configured"
     }`
   );
   console.log(
-    `🗄️  Database: ${process.env.DB_HOST ? "Configured" : "Using defaults"}`
+    `🗄️  Database: ${process.env.DB_HOST ? "Configured" : "Using defaults"}` 
   );
 });
