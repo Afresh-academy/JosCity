@@ -9,27 +9,28 @@ const app: Express = express();
 // Middleware - must be before routes
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://joscity-frontend.onrender.com'
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://joscity-frontend.onrender.com",
 ].filter(Boolean);
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // If no origin header is present (like for curl or mobile apps), allow
-    if (!origin) return callback(null, true);
-    // Filter undefined just in case
-    const filteredOrigins = allowedOrigins.filter((o): o is string => !!o);
-    if (filteredOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // If no origin header is present (like for curl or mobile apps), allow
+      if (!origin) return callback(null, true);
+      // Filter undefined just in case
+      const filteredOrigins = allowedOrigins.filter((o): o is string => !!o);
+      if (filteredOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
-
 
 // Import admin routes
 import adminRoutes from "./apis/modules/routes/admin";
@@ -83,9 +84,10 @@ if (!process.env.JWT_SECRET) {
 }
 
 // Start server
-const PORT: string | number = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+const PORT: number = parseInt(process.env.PORT || "3000", 10);
+const HOST = process.env.HOST || "0.0.0.0";
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server running on ${HOST}:${PORT}`);
   console.log(
     `🔐 JWT Authentication: ${
       process.env.JWT_SECRET ? "Configured" : "Not configured"
@@ -97,6 +99,6 @@ app.listen(PORT, () => {
     }`
   );
   console.log(
-    `🗄️  Database: ${process.env.DB_HOST ? "Configured" : "Using defaults"}` 
+    `🗄️  Database: ${process.env.DB_HOST ? "Configured" : "Using defaults"}`
   );
 });
