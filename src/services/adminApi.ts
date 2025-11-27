@@ -175,26 +175,76 @@ const adminApiRequest = async (
 export const adminApi = {
   // Admin login (no auth required)
   login: async (credentials: AdminLoginRequest): Promise<AdminLoginResponse> => {
-    const response = await fetch(`${API_BASE_URL}/admin/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
+    let response: Response;
+    
+    try {
+      response = await fetch(`${API_BASE_URL}/admin/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+        signal: AbortSignal.timeout(30000), // 30 second timeout
+      });
+    } catch (fetchError: any) {
+      // Handle network errors
+      if (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') {
+        throw new Error("Request timed out. Please check your connection and try again.");
+      }
+      if (fetchError.message?.includes('Failed to fetch') || fetchError.message?.includes('ECONNREFUSED')) {
+        throw new Error(
+          "Unable to connect to server. Please ensure the backend is running on port 3000."
+        );
+      }
+      throw new Error(`Network error: ${fetchError.message || 'Connection failed'}`);
+    }
 
-    const data = await response.json();
+    // Check if response has content before parsing
+    const contentType = response.headers.get("content-type");
+    const text = await response.text().catch(() => "");
+    
+    let data: any;
+    
+    // Only try to parse as JSON if content-type indicates JSON and text is not empty
+    if (contentType && contentType.includes("application/json") && text.trim()) {
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        console.error("Response text:", text);
+        throw new Error(
+          `Server returned invalid JSON response. Please check if the backend is running correctly.`
+        );
+      }
+    } else if (text.trim()) {
+      // If not JSON but has content
+      console.error("Non-JSON response:", text);
+      throw new Error(
+        `Server returned unexpected format. Expected JSON but got: ${contentType || "unknown"}. Please check if the backend is running.`
+      );
+    } else {
+      // Empty response
+      console.error("Empty response from server");
+      throw new Error(
+        `Server returned empty response (Status: ${response.status}). Please check if the backend is running and accessible at ${API_BASE_URL}/admin/auth/login`
+      );
+    }
 
     if (!response.ok) {
-      throw new Error(
-        data.message || data.error || "Admin login failed. Please try again."
-      );
+      const errorMessage = data?.message || data?.error || `Admin login failed (${response.status}). Please try again.`;
+      console.error("Login failed:", errorMessage);
+      throw new Error(errorMessage);
     }
 
     if (data.success && data.token) {
       // Store admin token
       localStorage.setItem("adminToken", data.token);
       localStorage.setItem("adminData", JSON.stringify(data.admin));
+      console.log("Admin login successful, token stored");
+    } else if (data.success === false) {
+      const errorMessage = data?.message || data?.error || "Admin login failed. Please check your credentials.";
+      console.error("Login failed:", errorMessage);
+      throw new Error(errorMessage);
     }
 
     return data;
