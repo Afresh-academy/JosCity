@@ -247,19 +247,74 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
-
-  if (!response.ok) {
-    const errorData = await response
-      .json()
-      .catch(() => ({ error: response.statusText }));
-    throw new Error(errorData.error || `API Error: ${response.statusText}`);
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+      signal: AbortSignal.timeout(30000), // 30 second timeout
+    });
+  } catch (fetchError: any) {
+    // Handle network errors (connection refused, timeout, etc.)
+    if (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') {
+      throw new Error("Request timed out. Please check your connection and try again.");
+    }
+    if (fetchError.message?.includes('Failed to fetch') || fetchError.message?.includes('ECONNREFUSED')) {
+      throw new Error("Unable to connect to server. Please ensure the backend is running on port 3000.");
+    }
+    throw new Error(`Network error: ${fetchError.message || 'Connection failed'}`);
   }
 
-  return response.json();
+  // Check if response is ok before trying to parse
+  const contentType = response.headers.get("content-type");
+  const text = await response.text().catch(() => "");
+  
+  let data: any;
+  
+  if (contentType && contentType.includes("application/json") && text.trim()) {
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      data = { error: response.statusText || "Invalid response format" };
+    }
+  } else if (text.trim()) {
+    data = { error: text.substring(0, 200) || response.statusText };
+  } else {
+    data = { error: response.statusText || "Empty response" };
+  }
+
+  // Helper to convert error message to string
+  const getErrorMessage = (value: unknown): string => {
+    if (typeof value === "string") return value;
+    if (typeof value === "boolean")
+      return value ? "An error occurred" : "Request failed";
+    if (value && typeof value === "object") {
+      const errorObj = value as { message?: unknown; error?: unknown };
+      if (errorObj.message) return String(errorObj.message);
+      if (errorObj.error) return String(errorObj.error);
+      return JSON.stringify(value);
+    }
+    return String(value || "Request failed");
+  };
+
+  if (!response.ok) {
+    const errorMessage =
+      getErrorMessage(data.error) ||
+      getErrorMessage(data.message) ||
+      `API Error: ${response.statusText}`;
+    throw new Error(errorMessage);
+  }
+
+  // Check if response has success field and it's false
+  if (data.success === false) {
+    const errorMessage =
+      getErrorMessage(data.error) ||
+      getErrorMessage(data.message) ||
+      "Request failed";
+    throw new Error(errorMessage);
+  }
+
+  return data;
 };
 
 // Navbar API

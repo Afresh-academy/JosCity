@@ -646,7 +646,7 @@
 @media (orientation: landscape) and (max-height: 600px) {
   .welcome-page {
     padding-top: $spacing-sm;
-    min-height: auto;
+    min-height: 0;
   }
 
   .registration-panel {
@@ -681,6 +681,7 @@
 // ----------------------------------------------------------------------------
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .logo-image {
+    image-rendering: -webkit-optimize-contrast;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }

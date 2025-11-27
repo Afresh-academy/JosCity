@@ -7,6 +7,11 @@ import PersonalFormFields from "../components/PersonalFormFields";
 import BusinessFormFields from "../components/BusinessFormFields";
 import SignInLink from "../components/SignInLink";
 import { API_BASE_URL } from "../api/config";
+import {
+  validatePersonalForm,
+  validateBusinessForm,
+  type ValidationError,
+} from "../utils/validationSchemas";
 import "../main.css";
 
 function BusinessForm() {
@@ -36,6 +41,9 @@ function BusinessForm() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>(
+    []
+  );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -45,6 +53,9 @@ function BusinessForm() {
       ...prev,
       [name]: value,
     }));
+    // Clear validation error for this field when user starts typing
+    setValidationErrors((prev) => prev.filter((err) => err.field !== name));
+    setError(null);
   };
 
   const handleBusinessInputChange = (
@@ -55,29 +66,41 @@ function BusinessForm() {
       ...prev,
       [name]: value,
     }));
+    // Clear validation error for this field when user starts typing
+    setValidationErrors((prev) => prev.filter((err) => err.field !== name));
+    setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setValidationErrors([]);
 
     if (registrationType === "personal") {
+      // Validate personal form
+      const errors = validatePersonalForm(formData);
+      if (errors.length > 0) {
+        setValidationErrors(errors);
+        setError("Please fix the errors in the form before submitting.");
+        return;
+      }
+
       // Personal form submission
       setIsLoading(true);
       try {
         // Map frontend fields to backend expected fields
         const requestData = {
-          first_name: formData.firstName,
-          last_name: formData.lastName,
+          first_name: formData.firstName.trim(),
+          last_name: formData.lastName.trim(),
           gender: formData.gender,
-          phone_number: formData.phoneNumber,
-          email: formData.email,
-          nin_number: formData.ninNumber,
-          address: formData.address,
+          phone_number: formData.phoneNumber.trim(),
+          email: formData.email.trim(),
+          nin_number: formData.ninNumber.trim(),
+          address: formData.address.trim(),
           password: formData.password,
         };
 
-        const response = await fetch(`${API_BASE_URL}/personal/register`, {
+        const response = await fetch(`${API_BASE_URL}/auth/personal/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -104,12 +127,20 @@ function BusinessForm() {
 
         if (!response.ok) {
           throw new Error(
-            data.message || "Registration failed. Please try again."
+            data.message ||
+              data.error ||
+              "Registration failed. Please try again."
           );
         }
 
         // Only navigate to success page after successful backend confirmation
-        navigate("/success", { state: { submitted: true } });
+        navigate("/success", {
+          state: {
+            submitted: true,
+            accountType: "personal",
+            email: formData.email,
+          },
+        });
       } catch (err) {
         setError(
           err instanceof Error
@@ -121,22 +152,30 @@ function BusinessForm() {
       return;
     }
 
+    // Validate business form
+    const errors = validateBusinessForm(businessFormData);
+    if (errors.length > 0) {
+      setValidationErrors(errors);
+      setError("Please fix the errors in the form before submitting.");
+      return;
+    }
+
     // Business form submission
     setIsLoading(true);
     try {
       // Map frontend fields to backend expected fields
       const requestData = {
-        business_name: businessFormData.businessName,
-        business_location: businessFormData.businessAddress, // Using address as location
-        phone_number: businessFormData.businessPhone,
-        email: businessFormData.businessEmail,
-        CAC_number: businessFormData.cacNumber,
-        address: businessFormData.businessAddress,
+        business_name: businessFormData.businessName.trim(),
+        business_location: businessFormData.businessAddress.trim(),
+        phone_number: businessFormData.businessPhone.trim(),
+        email: businessFormData.businessEmail.trim(),
+        CAC_number: businessFormData.cacNumber.trim(), // Required for business accounts
+        address: businessFormData.businessAddress.trim(),
         password: businessFormData.businessPassword,
         business_type: businessFormData.businessType,
       };
 
-      const response = await fetch(`${API_BASE_URL}/business/register`, {
+      const response = await fetch(`${API_BASE_URL}/auth/business/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,12 +202,18 @@ function BusinessForm() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Registration failed. Please try again."
+          data.message || data.error || "Registration failed. Please try again."
         );
       }
 
       // Only navigate to success page after successful backend confirmation
-      navigate("/success", { state: { submitted: true } });
+      navigate("/success", {
+        state: {
+          submitted: true,
+          accountType: "business",
+          email: businessFormData.businessEmail,
+        },
+      });
     } catch (err) {
       setError(
         err instanceof Error
@@ -213,6 +258,26 @@ function BusinessForm() {
                   onInputChange={handleBusinessInputChange}
                   onTogglePassword={() => setShowPassword(!showPassword)}
                 />
+
+                {validationErrors.length > 0 && (
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
+                    {validationErrors.map((err, idx) => (
+                      <div key={idx}>{err.message}</div>
+                    ))}
+                  </div>
+                )}
 
                 {error && (
                   <div
@@ -269,6 +334,26 @@ function BusinessForm() {
                   onInputChange={handleInputChange}
                   onTogglePassword={() => setShowPassword(!showPassword)}
                 />
+
+                {validationErrors.length > 0 && (
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
+                    {validationErrors.map((err, idx) => (
+                      <div key={idx}>{err.message}</div>
+                    ))}
+                  </div>
+                )}
 
                 {error && (
                   <div

@@ -2,20 +2,60 @@ import { API_BASE_URL } from '../api/config';
 
 // Public API functions (no authentication required)
 const publicApiRequest = async (endpoint: string, options: RequestInit = {}) => {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  let response: Response;
+  
+  try {
+    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      signal: AbortSignal.timeout(30000), // 30 second timeout
+    });
+  } catch (fetchError: any) {
+    // Handle network errors gracefully
+    if (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') {
+      throw new Error("Request timed out. Please check your connection.");
+    }
+    if (fetchError.message?.includes('Failed to fetch') || fetchError.message?.includes('ECONNREFUSED')) {
+      // Silently fail for public endpoints - don't spam errors
+      console.warn(`[Public API] Backend unavailable for ${endpoint}`);
+      throw new Error("Service temporarily unavailable");
+    }
+    throw new Error(`Network error: ${fetchError.message || 'Connection failed'}`);
+  }
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: response.statusText }));
+    const contentType = response.headers.get("content-type");
+    const text = await response.text().catch(() => "");
+    let errorData: any;
+    
+    if (contentType && contentType.includes("application/json") && text.trim()) {
+      try {
+        errorData = JSON.parse(text);
+      } catch {
+        errorData = { error: response.statusText };
+      }
+    } else {
+      errorData = { error: text || response.statusText };
+    }
+    
     throw new Error(errorData.error || `API Error: ${response.statusText}`);
   }
 
-  return response.json();
+  const contentType = response.headers.get("content-type");
+  const text = await response.text().catch(() => "");
+  
+  if (contentType && contentType.includes("application/json") && text.trim()) {
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error("Invalid JSON response");
+    }
+  }
+  
+  throw new Error("Unexpected response format");
 };
 
 // Public Hero API

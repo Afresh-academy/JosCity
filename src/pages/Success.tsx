@@ -30,8 +30,8 @@ const Success: React.FC = () => {
     }, 50);
   }, [location.state, navigate]);
 
-  const handleSignIn = () => {
-    navigate('/welcome');
+  const handleBackHome = () => {
+    navigate('/');
   };
 
   // Don't render content if not authorized (prevents flash before redirect)
@@ -79,9 +79,9 @@ const Success: React.FC = () => {
             <button
               type="button"
               className="success-signin-button"
-              onClick={handleSignIn}
+              onClick={handleBackHome}
             >
-              Sign In
+              Back home
             </button>
           </div>
         </div>

@@ -18,6 +18,7 @@ import Success from "./pages/Success";
 import ComingSoon from "./pages/ComingSoon";
 import NewsFeed from "./pages/NewsFeed";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (
@@ -48,6 +49,7 @@ if (rootElement) {
           <Route path="/business-form" element={<BusinessForm />} />
           <Route path="/success" element={<Success />} />
           <Route path="/newsfeed" element={<NewsFeed />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>

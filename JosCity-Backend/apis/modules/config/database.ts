@@ -15,6 +15,15 @@ const pool = new Pool({
   connectionTimeoutMillis: 10000,
 });
 
+// Set search_path to joscity schema for all connections
+pool.on('connect', async (client) => {
+  try {
+    await client.query('SET search_path TO joscity, public');
+  } catch (error) {
+    console.error('Error setting search_path:', error);
+  }
+});
+
 // PostgreSQL native database interface
 interface DatabaseConnection {
   query(query: string, params?: any[]): Promise<QueryResult>;
@@ -33,6 +42,13 @@ const db = {
   // Get connection for transactions
   async getConnection(): Promise<DatabaseConnection> {
     const client: PoolClient = await pool.connect();
+    
+    // Set search_path for this connection
+    try {
+      await client.query('SET search_path TO joscity, public');
+    } catch (error) {
+      console.error('Error setting search_path on connection:', error);
+    }
 
     return {
       query: async (
@@ -60,9 +76,28 @@ const db = {
 // Test the connection
 async function testConnection(): Promise<void> {
   try {
+    // Set search_path first
+    await pool.query('SET search_path TO joscity, public');
+    
+    // Test if users table exists in joscity schema
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'joscity' 
+        AND table_name = 'users'
+      ) as table_exists
+    `);
+    
     const result = await pool.query("SELECT NOW() as current_time");
     console.log("✅ Connected to PostgreSQL Database");
     console.log(`   → Server time: ${result.rows[0].current_time}`);
+    console.log(`   → Schema: joscity`);
+    console.log(`   → Users table exists: ${tableCheck.rows[0].table_exists ? 'Yes' : 'No'}`);
+    
+    if (!tableCheck.rows[0].table_exists) {
+      console.warn("⚠️  WARNING: Users table not found in joscity schema!");
+      console.warn("   → Please run: psql -U your_user -d postgres -f database/joscity/users_schema.sql");
+    }
   } catch (error: any) {
     console.error("❌ Database Connection Failed:", error.message);
     if (error.code === "ETIMEDOUT" || error.code === "ECONNREFUSED") {

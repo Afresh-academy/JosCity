@@ -6,8 +6,6 @@
   width: 100%;
   overflow: hidden;
   font-family: $font-family;
-  // Smoothed out edges for a more subtle, rounded look using more intermediate points and gentle curves
-  clip-path: polygon(0 0, 100% 0, 100% 92%, 85% 100%, 14% 100%, 0 92%);
   // Futuristic animated grid background
   &::before {
     content: "";
@@ -142,8 +140,8 @@
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border-radius: 2rem;
     font-size: 0.9rem;
     font-weight: 500;

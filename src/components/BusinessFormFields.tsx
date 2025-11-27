@@ -74,14 +74,15 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="cacNumber">CAC Number</label>
+        <label htmlFor="cacNumber">CAC Number <span style={{ color: '#ff4444' }}>*</span></label>
         <input
           type="text"
           id="cacNumber"
           name="cacNumber"
           value={formData.cacNumber}
           onChange={onInputChange}
-          placeholder="CAC Number"
+          placeholder="CAC Number (Required)"
+          required
         />
       </div>
 

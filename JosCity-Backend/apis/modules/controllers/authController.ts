@@ -63,10 +63,10 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
 
     // Business account validation
     if (account_type === 'business') {
-      if (!business_name || !business_type) {
+      if (!business_name || !business_type || !CAC_number) {
         res.status(400).json({
           error: true,
-          message: 'Business name and type are required for business accounts'
+          message: 'Business name, type, and CAC number are required for business accounts'
         });
         return;
       }
@@ -111,8 +111,16 @@ export const signUp = async (req: Request<{}, {}, SignUpBody>, res: Response): P
       }
     }
 
-    // Check if business registration number exists (for business accounts)
-    if (account_type === 'business' && CAC_number) {
+    // Check if business registration number exists (for business accounts - CAC_number is required)
+    if (account_type === 'business') {
+      if (!CAC_number) {
+        res.status(400).json({
+          error: true,
+          message: 'CAC number is required for business accounts'
+        });
+        return;
+      }
+
       const existingBusinessResult = await db.query(
         'SELECT user_id FROM users WHERE CAC_number = $1',
         [CAC_number]
@@ -458,6 +466,16 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
       );
     }
 
+    // Check if JWT_SECRET is configured
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not configured in environment variables');
+      res.status(500).json({
+        error: true,
+        message: 'Server configuration error: JWT authentication not properly configured'
+      });
+      return;
+    }
+
     // Generate JWT token
     const token = jwt.sign(
       { 
@@ -466,7 +484,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
         is_verified: true,
         account_type: user.account_type
       },
-      process.env.JWT_SECRET as string,
+      process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
 
@@ -727,6 +745,130 @@ export const signOut = async (_req: Request, res: Response): Promise<void> => {
     res.status(500).json({
       error: true,
       message: 'Logout failed'
+    });
+  }
+};
+
+/**
+ * Admin Login - Bypasses activation code requirement
+ * Only allows login for users with user_group = 1 (admin) or user_group = 2 (moderator)
+ */
+export const adminLogin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      res.status(400).json({
+        error: true,
+        message: 'Email and password are required'
+      });
+      return;
+    }
+
+    // Find user
+    const usersResult = await db.query(
+      `SELECT user_id, user_email, user_password, user_firstname, user_lastname, 
+              user_group, account_status, account_type, user_verified
+       FROM users WHERE user_email = $1`,
+      [email]
+    );
+
+    if (usersResult.rows.length === 0) {
+      res.status(401).json({
+        error: true,
+        message: 'Invalid email or password'
+      });
+      return;
+    }
+
+    const user = usersResult.rows[0];
+
+    // Check if user is admin or moderator
+    if (user.user_group !== 1 && user.user_group !== 2) {
+      res.status(403).json({
+        error: true,
+        message: 'Access denied. Admin privileges required.'
+      });
+      return;
+    }
+
+    // Check account status - admin accounts should be approved
+    if (user.account_status !== 'approved') {
+      res.status(403).json({
+        error: true,
+        message: 'Account is not approved. Please contact support.',
+        status: user.account_status
+      });
+      return;
+    }
+
+    // Verify password
+    const validPassword = await bcrypt.compare(password, user.user_password);
+    if (!validPassword) {
+      res.status(401).json({
+        error: true,
+        message: 'Invalid email or password'
+      });
+      return;
+    }
+
+    // Update last login timestamp
+    await db.query(
+      'UPDATE users SET last_login = NOW(), user_last_seen = NOW() WHERE user_id = $1',
+      [user.user_id]
+    );
+
+    // Check if JWT_SECRET is configured
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not configured in environment variables');
+      res.status(500).json({
+        error: true,
+        message: 'Server configuration error: JWT authentication not properly configured'
+      });
+      return;
+    }
+
+    // Generate JWT token with admin role
+    const token = jwt.sign(
+      { 
+        user_id: user.user_id, 
+        email: user.user_email,
+        is_verified: true,
+        account_type: user.account_type,
+        user_group: user.user_group,
+        is_admin: true
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
+
+    // Prepare admin response
+    const adminResponse: any = {
+      user_id: user.user_id,
+      email: user.user_email,
+      first_name: user.user_firstname,
+      last_name: user.user_lastname,
+      display_name: `${user.user_firstname} ${user.user_lastname}`,
+      user_group: user.user_group,
+      is_admin: user.user_group === 1,
+      is_moderator: user.user_group === 2,
+      account_type: user.account_type,
+      is_verified: true,
+      has_verified_badge: user.user_verified === 1 || user.user_verified === '1'
+    };
+
+    res.json({
+      success: true,
+      message: 'Admin login successful',
+      token: token,
+      admin: adminResponse
+    });
+
+  } catch (error) {
+    console.error('Admin login error:', error);
+    res.status(500).json({
+      error: true,
+      message: 'Admin login failed'
     });
   }
 };
