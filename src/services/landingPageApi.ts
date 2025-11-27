@@ -247,14 +247,41 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+      signal: AbortSignal.timeout(30000), // 30 second timeout
+    });
+  } catch (fetchError: any) {
+    // Handle network errors (connection refused, timeout, etc.)
+    if (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') {
+      throw new Error("Request timed out. Please check your connection and try again.");
+    }
+    if (fetchError.message?.includes('Failed to fetch') || fetchError.message?.includes('ECONNREFUSED')) {
+      throw new Error("Unable to connect to server. Please ensure the backend is running on port 3000.");
+    }
+    throw new Error(`Network error: ${fetchError.message || 'Connection failed'}`);
+  }
 
-  const data = await response
-    .json()
-    .catch(() => ({ error: response.statusText }));
+  // Check if response is ok before trying to parse
+  const contentType = response.headers.get("content-type");
+  const text = await response.text().catch(() => "");
+  
+  let data: any;
+  
+  if (contentType && contentType.includes("application/json") && text.trim()) {
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      data = { error: response.statusText || "Invalid response format" };
+    }
+  } else if (text.trim()) {
+    data = { error: text.substring(0, 200) || response.statusText };
+  } else {
+    data = { error: response.statusText || "Empty response" };
+  }
 
   // Helper to convert error message to string
   const getErrorMessage = (value: unknown): string => {

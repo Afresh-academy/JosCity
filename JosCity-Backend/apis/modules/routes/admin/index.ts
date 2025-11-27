@@ -7,6 +7,7 @@ import usersRoutes from "./users";
 import postsRoutes from "./posts";
 import settingsRoutes from "./settings";
 import landingPageRoutes from "./landingPage";
+import dataRoutes from "./data";
 
 const router: Router = express.Router();
 
@@ -17,5 +18,6 @@ router.use("/users", usersRoutes);
 router.use("/posts", postsRoutes);
 router.use("/settings", settingsRoutes);
 router.use("/landing-page", landingPageRoutes);
+router.use("/data", dataRoutes);
 
 export default router;

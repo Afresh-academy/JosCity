@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../main.css";
 import "../scss/_admin.scss";
 import {
@@ -48,12 +49,17 @@ import {
   Coins,
   Zap,
   UserCircle,
+  LogOut,
 } from "lucide-react";
 import primaryLogo from "../image/primary-logo.png";
 import userAvatar from "../image/sky.png";
 import PagesControlPanel from "../components/PagesControlPanel";
+import { adminApi } from "../services/adminApi";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const Admin: React.FC = () => {
+  const navigate = useNavigate();
+  const [adminData, setAdminData] = useState<any>(null);
   const [expandedSections, setExpandedSections] = useState<{
     [key: string]: boolean;
   }>({
@@ -67,6 +73,20 @@ const Admin: React.FC = () => {
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isControlPanelOpen, setIsControlPanelOpen] = useState(false);
+
+  // Load admin data on mount
+  useEffect(() => {
+    const admin = adminApi.getCurrentAdmin();
+    setAdminData(admin);
+  }, []);
+
+  // Handle logout
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to logout?")) {
+      adminApi.logout();
+      navigate("/admin/login");
+    }
+  };
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({
@@ -103,7 +123,8 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <div className="admin-page">
+    <ProtectedRoute requireAdmin={true}>
+      <div className="admin-page">
       {/* Header Bar */}
       <header className="admin-header">
         <div className="admin-header__container">
@@ -140,12 +161,29 @@ const Admin: React.FC = () => {
               <div className="admin-header__avatar">
                 <img
                   src={userAvatar}
-                  alt="User Avatar"
+                  alt="Admin Avatar"
                   width={32}
                   height={32}
                 />
               </div>
-              <span>Join</span>
+              <span>{adminData?.display_name || adminData?.email || "Admin"}</span>
+              <button
+                onClick={handleLogout}
+                className="admin-header__icon-btn"
+                title="Logout"
+                style={{
+                  marginLeft: "0.5rem",
+                  padding: "0.5rem",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#666",
+                }}
+              >
+                <LogOut size={18} />
+              </button>
             </div>
           </div>
         </div>
@@ -883,7 +921,8 @@ const Admin: React.FC = () => {
           onClose={() => setIsControlPanelOpen(false)}
         />
       )}
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 };
 

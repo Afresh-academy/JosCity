@@ -161,29 +161,30 @@ COMMENT ON COLUMN joscity.users.user_activated IS 'User activation status (true 
 -- ============================================
 
 -- Insert a default admin user (password should be changed immediately)
--- Password: 'admin123' (hashed with bcrypt)
+-- Password: 'admin123' (hashed with bcrypt, salt rounds: 12)
 -- You should change this password after first login!
--- INSERT INTO joscity.users (
---     user_name, user_email, user_password, user_firstname, user_lastname,
---     user_gender, user_phone, address, account_type, account_status,
---     user_approved, user_activated, user_group, is_verified, user_verified
--- ) VALUES (
---     'admin',
---     'admin@joscity.com',
---     '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5', -- Change this!
---     'Admin',
---     'User',
---     'male',
---     '+2348000000000',
---     'Jos, Plateau State, Nigeria',
---     'personal',
---     'approved',
---     true,
---     true,
---     1, -- Admin group
---     true,
---     true
--- ) ON CONFLICT (user_email) DO NOTHING;
+INSERT INTO joscity.users (
+    user_name, user_email, user_password, user_firstname, user_lastname,
+    user_gender, user_phone, address, account_type, account_status,
+    nin_number, user_approved, user_activated, user_group, is_verified, user_verified
+) VALUES (
+    'admin',
+    'admin@joscity.com',
+    '$2b$12$LEcWiMRw9snJt3ttEHhLzejtZycWxF4VXa3l1bX0ratYcbaf3SkIi', -- Password: admin123
+    'Admin',
+    'User',
+    'male',
+    '+2348000000000',
+    'Jos, Plateau State, Nigeria',
+    'personal',
+    'approved',
+    '00000000000', -- Default NIN number (change this to a valid NIN)
+    true,
+    true,
+    1, -- Admin group (1 = admin, 0 = regular user, 2 = moderator)
+    true,
+    true
+) ON CONFLICT (user_email) DO NOTHING;
 
 -- ============================================
 -- VERIFICATION QUERIES
