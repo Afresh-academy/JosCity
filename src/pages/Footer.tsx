@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import logoImage from '../image/primary-logo.png';
 
 const Footer: React.FC = () => {
@@ -61,16 +62,16 @@ const Footer: React.FC = () => {
             <h3 className="footer__heading">Legal</h3>
             <ul className="footer__links">
               <li>
-                <a href="#" className="footer__link">Privacy Policy</a>
+                <Link to="/privacy-policy" className="footer__link">Privacy Policy</Link>
               </li>
               <li>
-                <a href="#" className="footer__link">Terms of Service</a>
+                <Link to="/terms-of-service" className="footer__link">Terms of Service</Link>
               </li>
               <li>
-                <a href="#" className="footer__link">Cookie Policy</a>
+                <Link to="/cookie-policy" className="footer__link">Cookie Policy</Link>
               </li>
               <li>
-                <a href="#" className="footer__link">Accessibility</a>
+                <Link to="/accessibility" className="footer__link">Accessibility</Link>
               </li>
             </ul>
           </div>
