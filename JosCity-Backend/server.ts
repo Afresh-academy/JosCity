@@ -49,6 +49,16 @@ app.use("/api/auth", authRoutes);
 app.use("/api/landing-page", landingPageRoutes);
 // app.use('/api/business', businessRoutes);
 
+// Root route
+app.get("/", (_req: Request, res: Response) => {
+  res.json({
+    message: "JosCity Backend API",
+    version: "1.0.0",
+    status: "running",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health check
 app.get("/api/ping", (_req: Request, res: Response) => {
   res.json({
@@ -86,8 +96,10 @@ if (!process.env.JWT_SECRET) {
 // Start server
 const PORT: number = parseInt(process.env.PORT || "3000", 10);
 const HOST = process.env.HOST || "0.0.0.0";
-app.listen(PORT, HOST, () => {
+
+const server = app.listen(PORT, HOST, () => {
   console.log(`🚀 Server running on ${HOST}:${PORT}`);
+  console.log(`   → Environment: ${process.env.NODE_ENV || "development"}`);
   console.log(
     `🔐 JWT Authentication: ${
       process.env.JWT_SECRET ? "Configured" : "Not configured"
@@ -99,6 +111,21 @@ app.listen(PORT, HOST, () => {
     }`
   );
   console.log(
-    `🗄️  Database: ${process.env.DB_HOST ? "Configured" : "Using defaults"}`
+    `🗄️  Database: ${
+      process.env.DB_HOST || process.env.DATABASE_URL
+        ? "Configured"
+        : "Using defaults"
+    }`
   );
+});
+
+// Handle server errors
+server.on("error", (error: NodeJS.ErrnoException) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`❌ Port ${PORT} is already in use`);
+    process.exit(1);
+  } else {
+    console.error("❌ Server error:", error);
+    process.exit(1);
+  }
 });
