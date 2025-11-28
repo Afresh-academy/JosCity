@@ -87,3 +87,22 @@ Desktop.ini
 .env.production.local
 .env*.local
 
+# Deployment and CI/CD
+.vercel
+.netlify
+.render
+
+# Database dumps and backups
+*.sql.backup
+*.sql.bak
+*.dump
+*.db
+*.sqlite
+*.sqlite3
+
+# Package manager lock files (optional - some teams commit these)
+# Uncomment if you don't want to commit lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
