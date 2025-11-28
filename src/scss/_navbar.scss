@@ -38,11 +38,12 @@
 
   &__logo {
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     flex-shrink: 0;
-    max-width: 110px;
+    max-width: 75px;
     display: flex;
     align-items: center;
+    cursor: pointer;
     // Logo container with glow effect
     &::before {
       content: "";
@@ -70,11 +71,14 @@
 
   &__logo-image {
     display: block;
-    width: 75px;
+    width: 53px;
     height: auto;
     max-width: 100%;
-    min-width: 50px;
+    min-width: 38px;
     object-fit: contain;
+    animation: glow-pulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6))
+      drop-shadow(0 0 20px rgba(0, 120, 48, 0.4));
     transition: transform 0.3s ease, filter 0.3s ease;
     filter: drop-shadow(0 0 10px rgba(0, 201, 80, 0.3));
 
@@ -346,33 +350,33 @@
     }
 
     &:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 25px rgba(0, 201, 80, 0.6),
-        0 0 30px rgba(0, 201, 80, 0.4) inset;
-      filter: brightness(1.1);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 201, 80, 0.6),
+        0 0 25px rgba(0, 201, 80, 0.4) inset;
+      filter: brightness(1.08);
 
       &::before {
         left: 100%;
       }
 
       &::after {
-        width: 300px;
-        height: 300px;
+        width: 180px;
+        height: 180px;
       }
     }
 
     &:active {
-      transform: translateY(-1px) scale(1.02);
+      transform: translateY(-1px) scale(1.01);
     }
 
     // Mobile hover/active states need to maintain centering
     @media screen and (max-width: 768px) {
       &:hover {
-        transform: translateX(-50%) translateY(-2px) scale(1.03);
+        transform: translateX(-50%) translateY(-1px) scale(1.01);
       }
 
       &:active {
-        transform: translateX(-50%) translateY(-1px) scale(1.01);
+        transform: translateX(-50%) translateY(0) scale(1);
       }
     }
   }
@@ -383,14 +387,14 @@
     height: 70px;
 
     &__logo {
-      max-width: 90px;
+      max-width: 65px;
     }
 
     &__logo-image {
-      width: 65px;
+      width: 48px;
       height: auto;
       max-width: 100%;
-      min-width: 55px;
+      min-width: 58px;
     }
 
     &__nav-list {
@@ -430,14 +434,14 @@
     &__logo {
       order: 1;
       flex-shrink: 0;
-      max-width: 85px;
+      max-width: 60px;
     }
 
     &__logo-image {
-      width: 65px;
+      width: 48px;
       height: auto;
       max-width: 100%;
-      min-width: 50px;
+      min-width: 53px;
     }
 
     &__menu-toggle {
@@ -531,11 +535,11 @@
     }
 
     &__logo {
-      max-width: 65px;
+      max-width: 50px;
     }
 
     &__logo-image {
-      width: 55px;
+      width: 41px;
       height: auto;
       max-width: 100%;
       min-width: 40px;

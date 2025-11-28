@@ -88,8 +88,10 @@
 .coming-soon-logo {
   width: auto;
   height: auto;
-  max-width: 120px;
+  max-width: 88px;
   object-fit: contain;
+  animation: glow-pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6)) drop-shadow(0 0 20px rgba(0, 120, 48, 0.4));
   
   // Remove white background and box-shadow from lazy loading wrapper
   &.lazy-image-wrapper {
@@ -207,7 +209,7 @@
   }
 
   .coming-soon-logo {
-    max-width: 100px;
+    max-width: 73px;
   }
 
   .coming-soon-text {

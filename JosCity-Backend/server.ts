@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -9,6 +10,7 @@ const app: Express = express();
 // Middleware - must be before routes
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // Import admin routes
 import adminRoutes from "./apis/modules/routes/admin";
@@ -18,7 +20,7 @@ import authRoutes from "./apis/modules/routes/authRoute";
 import landingPageRoutes from "./apis/modules/routes/landingPage";
 
 // Use admin routes
-app.use("/api/admin", adminRoutes);
+app.use("/admin/auth", adminRoutes);
 
 // Use routes
 app.use("/api/auth", authRoutes);
@@ -54,16 +56,29 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-// Validate required environment variables
+// Validate required environment variables (non-fatal - just warn)
 if (!process.env.JWT_SECRET) {
-  console.error("❌ ERROR: JWT_SECRET is not set in .env file");
+  console.error("❌ WARNING: JWT_SECRET is not set in .env file");
   console.error("   Please add JWT_SECRET to your .env file");
-  process.exit(1);
+  console.error("   Server will continue but authentication may not work");
 }
+
+// Handle uncaught exceptions - prevent server crash
+process.on('uncaughtException', (error: Error) => {
+  console.error('❌ Uncaught Exception:', error);
+  console.error('   → Server will continue running');
+  // Don't exit - log and continue
+});
+
+process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('   → Server will continue running');
+  // Don't exit - log and continue
+});
 
 // Start server
 const PORT: string | number = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(
     `🔐 JWT Authentication: ${
@@ -78,4 +93,21 @@ app.listen(PORT, () => {
   console.log(
     `🗄️  Database: ${process.env.DB_HOST ? "Configured" : "Using defaults"}` 
   );
+});
+
+// Graceful shutdown handler
+process.on('SIGINT', () => {
+  console.log('\n🛑 Shutting down server gracefully...');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGTERM', () => {
+  console.log('\n🛑 Shutting down server gracefully...');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
 });

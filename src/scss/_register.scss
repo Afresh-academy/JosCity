@@ -94,10 +94,11 @@
   margin-top: 0.5rem;
 
   .register-logo {
-    width: 100px;
-    height: 100px;
+    width: 73px;
+    height: 73px;
     object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    animation: glow-pulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6)) drop-shadow(0 0 20px rgba(0, 120, 48, 0.4)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   }
 }
 

@@ -21,6 +21,7 @@ router.post('/forget_password_reset', authController.forgetPasswordReset);
 router.post('/resend_activation', authController.resendActivation);
 
 // Admin routes
+router.post('/admin/login', authController.adminLogin);
 router.get('/admin/pending', authController.getPendingApprovals);
 router.post('/admin/approve', authController.approveAccount);
 router.post('/admin/reject', authController.rejectAccount);
