@@ -136,13 +136,35 @@
     margin-bottom: 0;
     object-fit: contain;
     @include smooth-transition(transform);
-    animation: glow-pulse 2s ease-in-out infinite;
-    filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6)) drop-shadow(0 0 20px rgba(0, 120, 48, 0.4));
+    border-radius: 50%;
+    position: relative;
+    display: block;
     
-    // Remove white background and box-shadow from lazy loading wrapper
+    // LazyImage wrapper styling - apply animation here since LazyImage uses wrapper
     &.lazy-image-wrapper {
       background-color: transparent !important;
       box-shadow: none !important;
+      border-radius: 50%;
+      overflow: visible;
+      width: 58px;
+      height: 58px;
+      animation: logo-glow-spin 15s ease-in-out 5s infinite, glow-pulse 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6)) drop-shadow(0 0 20px rgba(0, 120, 48, 0.4));
+      will-change: transform, filter;
+      display: block;
+    }
+
+    // Style the actual image inside LazyImage wrapper
+    .lazy-image,
+    img {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      // Inherit animation from parent wrapper
+      animation: inherit;
+      filter: inherit;
     }
 
     // Remove green background glow effect from logo animation
