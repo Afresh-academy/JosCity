@@ -1,29 +1,125 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+yarn.lock
+pnpm-lock.yaml
+
+# Testing
+/coverage
+*.lcov
+.nyc_output
+
+# Production
+/dist
+/build
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+JosCity-Backend/.env
+JosCity-Backend/.env.local
+JosCity-Backend/.env*.local
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+.pnpm-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
+.vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
 
-# Environment variables
-.env
-.env.local
-.env.production
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# TypeScript
+*.tsbuildinfo
+
+# Backend build outputs
+JosCity-Backend/dist/
+JosCity-Backend/build/
+JosCity-Backend/node_modules/
+JosCity-Backend/*.tsbuildinfo
+
+# Vercel
+.vercel
+
+# Vite
+.vite
+
+# Deployment and CI/CD
+.netlify
+.render
+
+# Database dumps and backups
+*.sql.backup
+*.sql.bak
+*.dump
+*.db
+*.sqlite
+*.sqlite3
+
+# Source maps (optional - uncomment if you don't want to commit source maps)
+# *.map
+
+# Package manager lock files
+# Note: Some teams commit these, others don't
+# Uncomment the lines below if you don't want to commit lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
