@@ -1,197 +1,160 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import NavBar from "./NavBar";
-import Footer from "./Footer";
-import "../scss/_legal.scss";
+import { useNavigate } from "react-router-dom";
+import { Home, ArrowLeft } from "lucide-react";
+import "../main.css";
 
 const PrivacyPolicy: React.FC = () => {
-  const currentDate = new Date().toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
+  const navigate = useNavigate();
 
   return (
-    <>
-      <NavBar />
-      <div className="legal-page">
-        <div className="legal-container">
-          <div className="legal-header">
-            <h1 className="legal-title">Privacy Policy</h1>
-            <p className="legal-subtitle">Last Updated: {currentDate}</p>
-          </div>
+    <div className="legal-page">
+      <div className="legal-page__container">
+        <div className="legal-page__header">
+          <button
+            className="legal-page__back-button"
+            onClick={() => navigate("/")}
+          >
+            <ArrowLeft size={20} />
+            Back Home
+          </button>
+          <h1 className="legal-page__title">Privacy Policy</h1>
+          <p className="legal-page__last-updated">
+            Last updated:{" "}
+            {new Date().toLocaleDateString("en-US", {
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+        </div>
 
-          <div className="legal-content">
-            <section className="legal-section">
-              <h2>1. Introduction</h2>
-              <p>
-                Welcome to JosCity Smart Services ("we," "our," or "us"). We are
-                committed to protecting your privacy and ensuring you have a
-                positive experience on our platform. This Privacy Policy
-                explains how we collect, use, disclose, and safeguard your
-                information when you use our services.
-              </p>
-            </section>
+        <div className="legal-page__content">
+          <section className="legal-page__section">
+            <h2>1. Introduction</h2>
+            <p>
+              JosCity Smart Services we (Afresh/Cbrilliance) are committed to
+              protecting your privacy. This Privacy Policy explains how we
+              collect, use, disclose, and safeguard your information when you
+              use our platform and services.
+            </p>
+          </section>
 
-            <section className="legal-section">
-              <h2>2. Information We Collect</h2>
-              <h3>2.1 Personal Information</h3>
-              <p>
-                We may collect personal information that you provide directly to
-                us, including:
-              </p>
-              <ul>
-                <li>Name, email address, phone number, and postal address</li>
-                <li>
-                  Government identification numbers (for account verification)
-                </li>
-                <li>
-                  Payment information (processed securely through third-party
-                  providers)
-                </li>
-                <li>Account credentials and authentication information</li>
-              </ul>
+          <section className="legal-page__section">
+            <h2>2. Information We Collect</h2>
+            <h3>2.1 Personal Information</h3>
+            <p>We may collect the following personal information:</p>
+            <ul>
+              <li>Name, email address, and contact information</li>
+              <li>National Identification Number (NIN)</li>
+              <li>Phone number and address</li>
+              <li>
+                Payment information (processed securely through third-party
+                providers)
+              </li>
+              <li>Account credentials and preferences</li>
+            </ul>
 
-              <h3>2.2 Usage Information</h3>
-              <p>
-                We automatically collect certain information when you use our
-                services:
-              </p>
-              <ul>
-                <li>
-                  Device information (IP address, browser type, operating
-                  system)
-                </li>
-                <li>Usage patterns and preferences</li>
-                <li>Log files and analytics data</li>
-                <li>Cookies and similar tracking technologies</li>
-              </ul>
-            </section>
+            <h3>2.2 Usage Data</h3>
+            <p>
+              We automatically collect information about how you interact with
+              our platform, including:
+            </p>
+            <ul>
+              <li>Device information and IP address</li>
+              <li>Browser type and version</li>
+              <li>Pages visited and time spent on pages</li>
+              <li>Referring website addresses</li>
+            </ul>
+          </section>
 
-            <section className="legal-section">
-              <h2>3. How We Use Your Information</h2>
-              <p>We use the information we collect to:</p>
-              <ul>
-                <li>Provide, maintain, and improve our services</li>
-                <li>Process transactions and manage your account</li>
-                <li>Send you administrative information and updates</li>
-                <li>Respond to your inquiries and provide customer support</li>
-                <li>
-                  Detect, prevent, and address technical issues and security
-                  threats
-                </li>
-                <li>Comply with legal obligations and enforce our terms</li>
-                <li>
-                  Conduct research and analytics to improve user experience
-                </li>
-              </ul>
-            </section>
+          <section className="legal-page__section">
+            <h2>3. How We Use Your Information</h2>
+            <p>We use the collected information for the following purposes:</p>
+            <ul>
+              <li>To provide and maintain our services</li>
+              <li>To process transactions and bill payments</li>
+              <li>To communicate with you about your account and services</li>
+              <li>To improve our platform and user experience</li>
+              <li>To comply with legal obligations</li>
+              <li>To prevent fraud and ensure security</li>
+            </ul>
+          </section>
 
-            <section className="legal-section">
-              <h2>4. Information Sharing and Disclosure</h2>
-              <p>
-                We do not sell your personal information. We may share your
-                information in the following circumstances:
-              </p>
-              <ul>
-                <li>
-                  <strong>Service Providers:</strong> With trusted third-party
-                  service providers who assist in operating our platform
-                </li>
-                <li>
-                  <strong>Legal Requirements:</strong> When required by law or
-                  to protect our rights and safety
-                </li>
-                <li>
-                  <strong>Business Transfers:</strong> In connection with a
-                  merger, acquisition, or sale of assets
-                </li>
-                <li>
-                  <strong>With Your Consent:</strong> When you explicitly
-                  authorize us to share your information
-                </li>
-              </ul>
-            </section>
+          <section className="legal-page__section">
+            <h2>4. Data Sharing and Disclosure</h2>
+            <p>
+              We do not sell your personal information. We may share your
+              information:
+            </p>
+            <ul>
+              <li>
+                With government agencies for official services and compliance
+              </li>
+              <li>
+                With trusted service providers who assist in our operations
+              </li>
+              <li>When required by law or legal process</li>
+              <li>To protect our rights, property, or safety</li>
+            </ul>
+          </section>
 
-            <section className="legal-section">
-              <h2>5. Data Security</h2>
-              <p>
-                We implement appropriate technical and organizational measures
-                to protect your personal information against unauthorized
-                access, alteration, disclosure, or destruction. However, no
-                method of transmission over the Internet is 100% secure, and we
-                cannot guarantee absolute security.
-              </p>
-            </section>
+          <section className="legal-page__section">
+            <h2>5. Data Security</h2>
+            <p>
+              We implement industry-standard security measures to protect your
+              personal information, including encryption, secure servers, and
+              access controls. However, no method of transmission over the
+              internet is 100% secure.
+            </p>
+          </section>
 
-            <section className="legal-section">
-              <h2>6. Your Rights and Choices</h2>
-              <p>You have the right to:</p>
-              <ul>
-                <li>Access and receive a copy of your personal information</li>
-                <li>Correct inaccurate or incomplete information</li>
-                <li>Request deletion of your personal information</li>
-                <li>Object to or restrict certain processing activities</li>
-                <li>Withdraw consent where processing is based on consent</li>
-                <li>Opt-out of marketing communications</li>
-              </ul>
-            </section>
+          <section className="legal-page__section">
+            <h2>6. Your Rights</h2>
+            <p>You have the right to:</p>
+            <ul>
+              <li>Access your personal information</li>
+              <li>Correct inaccurate information</li>
+              <li>Request deletion of your information</li>
+              <li>Object to processing of your information</li>
+              <li>Request data portability</li>
+            </ul>
+          </section>
 
-            <section className="legal-section">
-              <h2>7. Cookies and Tracking Technologies</h2>
-              <p>
-                We use cookies and similar tracking technologies to enhance your
-                experience, analyze usage patterns, and deliver personalized
-                content. You can control cookie preferences through your browser
-                settings. For more information, please see our{" "}
-                <Link to="/cookie-policy">Cookie Policy</Link>.
-              </p>
-            </section>
+          <section className="legal-page__section">
+            <h2>7. Cookies and Tracking</h2>
+            <p>
+              We use cookies and similar tracking technologies to enhance your
+              experience. You can control cookies through your browser settings.
+              For more information, please see our Cookie Policy.
+            </p>
+          </section>
 
-            <section className="legal-section">
-              <h2>8. Children's Privacy</h2>
-              <p>
-                Our services are not intended for individuals under the age of
-                18. We do not knowingly collect personal information from
-                children. If you believe we have collected information from a
-                child, please contact us immediately.
-              </p>
-            </section>
+          <section className="legal-page__section">
+            <h2>8. Contact Us</h2>
+            <p>
+              If you have questions about this Privacy Policy, please contact us
+              at:
+            </p>
+            <p>
+              <strong>Email:</strong> support@afresh.academy
+              <br />
+              <strong>Phone:</strong> +234 7067621916
+              <br />
+              <strong>Address:</strong> Jos, Plateau State, Nigeria
+            </p>
+          </section>
+        </div>
 
-            <section className="legal-section">
-              <h2>9. Changes to This Privacy Policy</h2>
-              <p>
-                We may update this Privacy Policy from time to time. We will
-                notify you of any material changes by posting the new policy on
-                this page and updating the "Last Updated" date. Your continued
-                use of our services after such changes constitutes acceptance of
-                the updated policy.
-              </p>
-            </section>
-
-            <section className="legal-section">
-              <h2>10. Contact Us</h2>
-              <p>
-                If you have questions or concerns about this Privacy Policy or
-                our data practices, please contact us at:
-              </p>
-              <p>
-                <strong>Email:</strong> support@joscity.com
-                <br />
-                <strong>Address:</strong> Anglo Jos Road, Jos City, Plateau
-                State, Nigeria
-              </p>
-            </section>
-          </div>
-
-          <div className="legal-footer">
-            <Link to="/" className="legal-back-link">
-              ← Back to Home
-            </Link>
-          </div>
+        <div className="legal-page__footer">
+          <button
+            className="legal-page__home-button"
+            onClick={() => navigate("/")}
+          >
+            <Home size={20} />
+            Return to Home
+          </button>
         </div>
       </div>
-      <Footer />
-    </>
+    </div>
   );
 };
 

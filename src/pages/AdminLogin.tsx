@@ -82,14 +82,6 @@ function AdminLogin() {
           </div>
 
           <h2 className="signin-title">Admin Login</h2>
-          <p className="signin-subtitle" style={{ 
-            marginTop: '0.5rem', 
-            marginBottom: '1.5rem', 
-            color: '#666',
-            fontSize: '0.9rem'
-          }}>
-            Sign in to access the admin dashboard
-          </p>
 
           {error && (
             <div className="signin-error" style={{
@@ -120,7 +112,7 @@ function AdminLogin() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="admin@joscity.com"
+                  placeholder="email"
                   disabled={isLoading}
                   required
                 />
@@ -174,7 +166,7 @@ function AdminLogin() {
               Regular user?{" "}
               <button
                 className="signin-register-link-button"
-                onClick={() => navigate("/signin")}
+                onClick={() => navigate("/coming-soon")}
                 type="button"
                 disabled={isLoading}
               >

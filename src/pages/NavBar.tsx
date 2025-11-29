@@ -116,10 +116,14 @@ function App() {
     }
   };
 
+  const handleLogoClick = () => {
+    navigate("/admin");
+  };
+
   return (
     <>
       <nav className="navbar">
-        <div className="navbar__logo">
+        <div className="navbar__logo" onClick={handleLogoClick}>
           <img
             src={logoImage}
             alt="Logo"

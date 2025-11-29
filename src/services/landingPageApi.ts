@@ -233,9 +233,12 @@ export interface FooterSettings {
 
 // Generic API functions
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
-  // Get authentication token from localStorage (check adminToken first for admin routes)
+  // Get authentication token from localStorage
+  // Check multiple possible token keys (adminToken, token, authToken)
   const token =
-    localStorage.getItem("adminToken") || localStorage.getItem("token") || localStorage.getItem("authToken");
+    localStorage.getItem("adminToken") || 
+    localStorage.getItem("token") || 
+    localStorage.getItem("authToken");
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
