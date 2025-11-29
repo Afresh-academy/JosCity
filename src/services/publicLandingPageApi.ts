@@ -2,10 +2,11 @@ import { API_BASE_URL } from '../api/config';
 
 // Public API functions (no authentication required)
 const publicApiRequest = async (endpoint: string, options: RequestInit = {}) => {
+  const fullUrl = `${API_BASE_URL}${endpoint}`;
   let response: Response;
   
   try {
-    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    response = await fetch(fullUrl, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -19,16 +20,29 @@ const publicApiRequest = async (endpoint: string, options: RequestInit = {}) => 
       throw new Error("Request timed out. Please check your connection.");
     }
     if (fetchError.message?.includes('Failed to fetch') || fetchError.message?.includes('ECONNREFUSED')) {
-      // Silently fail for public endpoints - don't spam errors
-      console.warn(`[Public API] Backend unavailable for ${endpoint}`);
-      throw new Error("Service temporarily unavailable");
+      console.warn(`[Public API] Backend unavailable for ${endpoint} at ${fullUrl}`);
+      throw new Error(`Unable to connect to backend at ${fullUrl}. Please ensure the backend is running and VITE_API_URL is configured correctly.`);
     }
     throw new Error(`Network error: ${fetchError.message || 'Connection failed'}`);
   }
 
+  // Check response content type before parsing
+  const contentType = response.headers.get("content-type");
+  const text = await response.text().catch(() => "");
+  
+  // If we got HTML instead of JSON, it means the URL is wrong (likely hitting frontend server)
+  if (contentType && contentType.includes("text/html")) {
+    console.error(`[Public API] Received HTML instead of JSON from ${fullUrl}`);
+    console.error(`Response preview:`, text.substring(0, 200));
+    throw new Error(
+      `Server returned HTML instead of JSON. This usually means the backend URL is incorrect. ` +
+      `Current API URL: ${API_BASE_URL}. ` +
+      `Please check that VITE_API_URL is set correctly in your environment variables. ` +
+      `Expected format: https://your-backend.onrender.com/api`
+    );
+  }
+
   if (!response.ok) {
-    const contentType = response.headers.get("content-type");
-    const text = await response.text().catch(() => "");
     let errorData: any;
     
     if (contentType && contentType.includes("application/json") && text.trim()) {
@@ -41,21 +55,27 @@ const publicApiRequest = async (endpoint: string, options: RequestInit = {}) => 
       errorData = { error: text || response.statusText };
     }
     
-    throw new Error(errorData.error || `API Error: ${response.statusText}`);
+    throw new Error(errorData.error || `API Error: ${response.statusText} (Status: ${response.status})`);
   }
 
-  const contentType = response.headers.get("content-type");
-  const text = await response.text().catch(() => "");
-  
   if (contentType && contentType.includes("application/json") && text.trim()) {
     try {
       return JSON.parse(text);
-    } catch {
-      throw new Error("Invalid JSON response");
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      console.error("Response text:", text.substring(0, 200));
+      throw new Error("Invalid JSON response from server");
     }
   }
   
-  throw new Error("Unexpected response format");
+  // If we get here, response was ok but not JSON
+  console.error(`[Public API] Unexpected response format from ${fullUrl}`);
+  console.error(`Content-Type: ${contentType || 'unknown'}`);
+  console.error(`Response preview:`, text.substring(0, 200));
+  throw new Error(
+    `Server returned unexpected format. Expected JSON but got: ${contentType || "unknown"}. ` +
+    `Please check if the backend is running at ${fullUrl}`
+  );
 };
 
 // Public Hero API
