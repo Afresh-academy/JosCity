@@ -26,6 +26,13 @@
     object-fit: cover;
     object-position: center;
   }
+
+  .register-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 }
 
 .register-container {
@@ -94,11 +101,10 @@
   margin-top: 0.5rem;
 
   .register-logo {
-    width: 73px;
-    height: 73px;
+    width: 92px;
+    height: 92px;
     object-fit: contain;
-    animation: glow-pulse 2s ease-in-out infinite;
-    filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6)) drop-shadow(0 0 20px rgba(0, 120, 48, 0.4)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   }
 }
 
@@ -405,8 +411,8 @@
 
   .register-logo-container {
     .register-logo {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
     }
   }
 

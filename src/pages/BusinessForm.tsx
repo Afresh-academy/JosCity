@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import skyImage from "../image/sky.png";
+import welcomeVideo from "../vid/welcome-vid.mp4";
 import primaryLogo from "../image/primary-logo.png";
 import RegistrationTabs from "../components/RegistrationTabs";
 import PersonalFormFields from "../components/PersonalFormFields";
 import BusinessFormFields from "../components/BusinessFormFields";
 import SignInLink from "../components/SignInLink";
-import { API_BASE_URL } from "../api/config";
+import { BASE_URL } from "../api/config";
 import {
   validatePersonalForm,
   validateBusinessForm,
@@ -100,7 +100,7 @@ function BusinessForm() {
           password: formData.password,
         };
 
-        const response = await fetch(`${API_BASE_URL}/auth/personal/register`, {
+        const response = await fetch(`${BASE_URL}/auth/personal/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -175,7 +175,7 @@ function BusinessForm() {
         business_type: businessFormData.businessType,
       };
 
-      const response = await fetch(`${API_BASE_URL}/auth/business/register`, {
+      const response = await fetch(`${BASE_URL}/auth/business/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -227,7 +227,10 @@ function BusinessForm() {
   return (
     <div className="register-page">
       <div className="register-background">
-        <img src={skyImage} alt="Sky background" className="sky-image" />
+        <video autoPlay loop muted playsInline className="register-video">
+          <source src={welcomeVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       <div className="register-container">

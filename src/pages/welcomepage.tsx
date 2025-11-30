@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import skyImage from "../image/sky.png";
+import welcomeVideo from "../vid/welcome-vid.mp4";
 import primaryLogo from "../image/primary-logo.png";
 import "../main.css";
 import LazyImage from "../components/LazyImage";
@@ -28,11 +28,16 @@ function WelcomePage() {
   return (
     <div className="welcome-page" role="main">
       <div className="welcome-background" aria-hidden="true">
-        <LazyImage
-          src={skyImage}
-          alt=""
-          className="sky-image"
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="welcome-video"
+        >
+          <source src={welcomeVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       <section
@@ -45,8 +50,8 @@ function WelcomePage() {
               src={primaryLogo}
               alt="JOSCITY Logo"
               className="logo-image"
-              width={80}
-              height={80}
+              width={72}
+              height={72}
             />
             <h1 id="registration-heading" className="register-heading">
               Register now

@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api/config";
+import { BASE_URL } from "../api/config";
 
 // Admin login types
 export interface AdminLoginRequest {
@@ -76,7 +76,10 @@ export interface User {
 }
 
 // Generic API request helper with admin authentication
-const adminApiRequest = async (endpoint: string, options: RequestInit = {}) => {
+const adminApiRequest = async (
+  endpoint: string,
+  options: RequestInit = {}
+) => {
   const token =
     localStorage.getItem("adminToken") || localStorage.getItem("token");
 
@@ -90,42 +93,34 @@ const adminApiRequest = async (endpoint: string, options: RequestInit = {}) => {
   }
 
   let response: Response;
-
+  
   try {
-    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
       headers,
       signal: AbortSignal.timeout(30000), // 30 second timeout
     });
   } catch (networkError: any) {
     // Handle network errors gracefully
-    if (
-      networkError.name === "AbortError" ||
-      networkError.name === "TimeoutError"
-    ) {
-      throw new Error(
-        "Request timed out. Please check your connection and try again."
-      );
+    if (networkError.name === 'AbortError' || networkError.name === 'TimeoutError') {
+      throw new Error("Request timed out. Please check your connection and try again.");
     }
-    if (
-      networkError.message?.includes("Failed to fetch") ||
-      networkError.message?.includes("ECONNREFUSED")
-    ) {
+    if (networkError.message?.includes('Failed to fetch') || networkError.message?.includes('ECONNREFUSED')) {
       throw new Error(
         `Unable to connect to server. Please ensure the backend is running on port 3000.`
       );
     }
     throw new Error(
-      `Network error: ${networkError.message || "Connection failed"}`
+      `Network error: ${networkError.message || 'Connection failed'}`
     );
   }
 
   // Check if response has content before parsing
   const contentType = response.headers.get("content-type");
   const text = await response.text().catch(() => "");
-
+  
   let data: any;
-
+  
   if (contentType && contentType.includes("application/json") && text.trim()) {
     try {
       data = JSON.parse(text);
@@ -179,13 +174,11 @@ const adminApiRequest = async (endpoint: string, options: RequestInit = {}) => {
 // Admin API functions
 export const adminApi = {
   // Admin login (no auth required)
-  login: async (
-    credentials: AdminLoginRequest
-  ): Promise<AdminLoginResponse> => {
+  login: async (credentials: AdminLoginRequest): Promise<AdminLoginResponse> => {
     let response: Response;
-
+    
     try {
-      response = await fetch(`${API_BASE_URL}/auth/admin/login`, {
+      response = await fetch(`${BASE_URL}/admin/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -195,39 +188,25 @@ export const adminApi = {
       });
     } catch (fetchError: any) {
       // Handle network errors
-      if (
-        fetchError.name === "AbortError" ||
-        fetchError.name === "TimeoutError"
-      ) {
-        throw new Error(
-          "Request timed out. Please check your connection and try again."
-        );
+      if (fetchError.name === 'AbortError' || fetchError.name === 'TimeoutError') {
+        throw new Error("Request timed out. Please check your connection and try again.");
       }
-      if (
-        fetchError.message?.includes("Failed to fetch") ||
-        fetchError.message?.includes("ECONNREFUSED")
-      ) {
+      if (fetchError.message?.includes('Failed to fetch') || fetchError.message?.includes('ECONNREFUSED')) {
         throw new Error(
           "Unable to connect to server. Please ensure the backend is running on port 3000."
         );
       }
-      throw new Error(
-        `Network error: ${fetchError.message || "Connection failed"}`
-      );
+      throw new Error(`Network error: ${fetchError.message || 'Connection failed'}`);
     }
 
     // Check if response has content before parsing
     const contentType = response.headers.get("content-type");
     const text = await response.text().catch(() => "");
-
+    
     let data: any;
-
+    
     // Only try to parse as JSON if content-type indicates JSON and text is not empty
-    if (
-      contentType &&
-      contentType.includes("application/json") &&
-      text.trim()
-    ) {
+    if (contentType && contentType.includes("application/json") && text.trim()) {
       try {
         data = JSON.parse(text);
       } catch (parseError) {
@@ -241,23 +220,18 @@ export const adminApi = {
       // If not JSON but has content
       console.error("Non-JSON response:", text);
       throw new Error(
-        `Server returned unexpected format. Expected JSON but got: ${
-          contentType || "unknown"
-        }. Please check if the backend is running.`
+        `Server returned unexpected format. Expected JSON but got: ${contentType || "unknown"}. Please check if the backend is running.`
       );
     } else {
       // Empty response
       console.error("Empty response from server");
       throw new Error(
-        `Server returned empty response (Status: ${response.status}). Please check if the backend is running and accessible at ${API_BASE_URL}/auth/admin/login`
+        `Server returned empty response (Status: ${response.status}). Please check if the backend is running and accessible at ${BASE_URL}/admin/auth/login`
       );
     }
 
     if (!response.ok) {
-      const errorMessage =
-        data?.message ||
-        data?.error ||
-        `Admin login failed (${response.status}). Please try again.`;
+      const errorMessage = data?.message || data?.error || `Admin login failed (${response.status}). Please try again.`;
       console.error("Login failed:", errorMessage);
       throw new Error(errorMessage);
     }
@@ -268,10 +242,7 @@ export const adminApi = {
       localStorage.setItem("adminData", JSON.stringify(data.admin));
       console.log("Admin login successful, token stored");
     } else if (data.success === false) {
-      const errorMessage =
-        data?.message ||
-        data?.error ||
-        "Admin login failed. Please check your credentials.";
+      const errorMessage = data?.message || data?.error || "Admin login failed. Please check your credentials.";
       console.error("Login failed:", errorMessage);
       throw new Error(errorMessage);
     }
@@ -302,10 +273,7 @@ export const adminApi = {
   },
 
   // Database Statistics
-  getDatabaseStats: async (): Promise<{
-    success: boolean;
-    data: DatabaseStats;
-  }> => {
+  getDatabaseStats: async (): Promise<{ success: boolean; data: DatabaseStats }> => {
     return adminApiRequest("/admin/data/stats");
   },
 
@@ -332,8 +300,7 @@ export const adminApi = {
     if (params?.page) queryParams.append("page", params.page.toString());
     if (params?.limit) queryParams.append("limit", params.limit.toString());
     if (params?.status) queryParams.append("status", params.status);
-    if (params?.account_type)
-      queryParams.append("account_type", params.account_type);
+    if (params?.account_type) queryParams.append("account_type", params.account_type);
     if (params?.search) queryParams.append("search", params.search);
     if (params?.sort_by) queryParams.append("sort_by", params.sort_by);
     if (params?.sort_order) queryParams.append("sort_order", params.sort_order);
@@ -370,9 +337,7 @@ export const adminApi = {
       }>;
     };
   }> => {
-    return adminApiRequest(
-      `/admin/data/tables/${tableName}/schema?schema=${schema}`
-    );
+    return adminApiRequest(`/admin/data/tables/${tableName}/schema?schema=${schema}`);
   },
 
   // Get table data
@@ -399,16 +364,12 @@ export const adminApi = {
     if (params?.limit) queryParams.append("limit", params.limit.toString());
 
     const queryString = queryParams.toString();
-    const endpoint = `/admin/data/tables/${tableName}/data${
-      queryString ? `?${queryString}` : ""
-    }`;
+    const endpoint = `/admin/data/tables/${tableName}/data${queryString ? `?${queryString}` : ""}`;
     return adminApiRequest(endpoint);
   },
 
   // Execute custom query (read-only)
-  executeQuery: async (
-    query: string
-  ): Promise<{
+  executeQuery: async (query: string): Promise<{
     success: boolean;
     data: any[];
     rowCount: number;
@@ -419,3 +380,4 @@ export const adminApi = {
     });
   },
 };
+

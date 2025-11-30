@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoImage from "../image/primary-logo.png";
-import skyImage from "../image/sky.png";
+import welcomeVideo from "../vid/welcome-vid.mp4";
 import "../main.css";
 import LazyImage from "../components/LazyImage";
 import ScrollAnimate from "../components/ScrollAnimate";
@@ -24,10 +24,16 @@ const ComingSoon: React.FC = () => {
   return (
     <div className="coming-soon-page">
       <div className="coming-soon-background">
-        <LazyImage src={skyImage} alt="Sky background" className="sky-image" />
+        <video autoPlay loop muted playsInline className="coming-soon-video">
+          <source src={welcomeVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
-      <ScrollAnimate animationType="fade-up" className={`coming-soon-container ${isVisible ? "fade-in" : ""}`}>
+      <ScrollAnimate
+        animationType="fade-up"
+        className={`coming-soon-container ${isVisible ? "fade-in" : ""}`}
+      >
         <div className="coming-soon-card">
           <div className="coming-soon-top-section">
             <ScrollAnimate animationType="scale" delay={0.1}>
