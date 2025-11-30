@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api/config";
+import { BASE_URL } from "../api/config";
 
 // Types for all landing page tables
 export interface NavbarMenuItem {
@@ -234,11 +234,8 @@ export interface FooterSettings {
 // Generic API functions
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   // Get authentication token from localStorage
-  // Check multiple possible token keys (adminToken, token, authToken)
   const token =
-    localStorage.getItem("adminToken") || 
-    localStorage.getItem("token") || 
-    localStorage.getItem("authToken");
+    localStorage.getItem("token") || localStorage.getItem("authToken");
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -252,7 +249,7 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
 
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
       headers,
       signal: AbortSignal.timeout(30000), // 30 second timeout

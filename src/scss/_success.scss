@@ -24,6 +24,13 @@
     object-fit: cover;
     object-position: center;
   }
+
+  .success-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 }
 
 .success-container {
@@ -88,10 +95,8 @@
 .success-logo {
   width: auto;
   height: auto;
-  max-width: 88px;
+  max-width: 112px;
   object-fit: contain;
-  animation: glow-pulse 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6)) drop-shadow(0 0 20px rgba(0, 120, 48, 0.4));
 }
 
 .success-heading {
@@ -183,7 +188,6 @@
   }
 }
 
-
 // Responsive design
 @media (max-width: 768px) {
   .success-card {
@@ -212,7 +216,7 @@
   }
 
   .success-logo {
-    max-width: 73px;
+    max-width: 92px;
   }
 
   .success-text {
@@ -233,4 +237,3 @@
     gap: 16px;
   }
 }
-

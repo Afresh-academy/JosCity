@@ -31,20 +31,6 @@
   }
 }
 
-// Pulsing glow animation for filter drop-shadow
-@keyframes glow-pulse {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6))
-      drop-shadow(0 0 20px rgba(0, 120, 48, 0.4));
-  }
-  50% {
-    filter: drop-shadow(0 0 15px rgba(0, 160, 64, 0.8))
-      drop-shadow(0 0 30px rgba(0, 140, 56, 0.6))
-      drop-shadow(0 0 45px rgba(0, 120, 48, 0.4));
-  }
-}
-
 // Apply animation to all primary logo images
 // Animation: 15s total cycle (10s spin + 5s pause), 5s initial delay, infinite loop
 .primary-logo-animated,
@@ -61,13 +47,8 @@
   display: block;
   border-radius: 50%;
   object-fit: contain;
-  animation: logo-glow-spin 15s ease-in-out 5s infinite,
-    glow-pulse 2s ease-in-out infinite;
-  will-change: transform, filter;
-
-  // Enhanced glow effect for all logos with pulsing animation
-  filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6))
-    drop-shadow(0 0 20px rgba(0, 120, 48, 0.4));
+  animation: logo-glow-spin 15s ease-in-out 5s infinite;
+  will-change: transform;
 
   // Circular glow effect using pseudo-element
   &::before {
@@ -82,11 +63,11 @@
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(0, 140, 56, 1) 0%,
-      rgba(0, 130, 52, 0.7) 20%,
-      rgba(0, 120, 48, 0.6) 40%,
-      rgba(0, 110, 44, 0.4) 60%,
-      rgba(0, 100, 40, 0.2) 80%,
+      rgba(0, 201, 80, 1) 0%,
+      rgba(0, 201, 80, 0.8) 20%,
+      rgba(0, 201, 80, 0.6) 40%,
+      rgba(0, 201, 80, 0.4) 60%,
+      rgba(0, 201, 80, 0.2) 80%,
       transparent 95%
     );
     animation: logo-glow-pulse 15s ease-in-out 5s infinite;
@@ -100,14 +81,14 @@
   &::before {
     background: radial-gradient(
       circle,
-      rgba(0, 160, 64, 1) 0%,
-      rgba(0, 150, 60, 0.9) 20%,
-      rgba(0, 140, 56, 0.7) 40%,
-      rgba(0, 130, 52, 0.5) 60%,
-      rgba(0, 120, 48, 0.3) 80%,
+      rgba(0, 201, 80, 1) 0%,
+      rgba(0, 201, 80, 0.9) 20%,
+      rgba(0, 201, 80, 0.7) 40%,
+      rgba(0, 201, 80, 0.5) 60%,
+      rgba(0, 201, 80, 0.3) 80%,
       transparent 95%
     );
     filter: blur(15px);
-    box-shadow: 0 0 40px rgba(0, 140, 56, 0.8), 0 0 80px rgba(0, 120, 48, 0.6);
+    box-shadow: 0 0 40px rgba(0, 201, 80, 0.8), 0 0 80px rgba(0, 201, 80, 0.6);
   }
 }

@@ -12,20 +12,6 @@ import {
   publicStatsApi,
 } from "../services/publicLandingPageApi";
 
-// Helper function to map relative image paths to imported images
-const getImageUrl = (imageUrl: string): string => {
-  if (typeof imageUrl === "string" && imageUrl.startsWith("/image/")) {
-    if (imageUrl.includes("hero-image.png")) {
-      return heroImage1;
-    } else if (imageUrl.includes("plateau-legs.png")) {
-      return heroImage2;
-    } else if (imageUrl.includes("terminus.png")) {
-      return heroImage3;
-    }
-  }
-  return imageUrl;
-};
-
 interface HeroSlide {
   id: string;
   image_url: string;
@@ -36,7 +22,7 @@ interface HeroSlide {
   is_active: boolean;
 }
 
-// Fallback slides if API fails - use imported images directly
+// Fallback slides if API fails
 const fallbackSlides = [
   {
     id: "1",
@@ -129,18 +115,9 @@ function Hero() {
     if (currentSlideData && currentSlideData.image_url) {
       // Preload current slide image
       const currentImage = new Image();
-      const imageSrc = getImageUrl(currentSlideData.image_url);
-      currentImage.src = imageSrc;
+      currentImage.src = currentSlideData.image_url;
       currentImage.onerror = () => {
-        // Only log errors for non-fallback images to avoid console spam
-        const imageStr = imageSrc.toString();
-        if (
-          !imageStr.includes("hero-image") &&
-          !imageStr.includes("plateau-legs") &&
-          !imageStr.includes("terminus")
-        ) {
-          console.error(`Failed to load image: ${currentSlideData.image_url}`);
-        }
+        console.error(`Failed to load image: ${currentSlideData.image_url}`);
       };
     }
 
@@ -149,18 +126,9 @@ function Hero() {
     const nextSlideData = heroSlides[nextIndex];
     if (nextSlideData && nextSlideData.image_url) {
       const nextImage = new Image();
-      const imageSrc = getImageUrl(nextSlideData.image_url);
-      nextImage.src = imageSrc;
+      nextImage.src = nextSlideData.image_url;
       nextImage.onerror = () => {
-        // Only log errors for non-fallback images to avoid console spam
-        const imageStr = imageSrc.toString();
-        if (
-          !imageStr.includes("hero-image") &&
-          !imageStr.includes("plateau-legs") &&
-          !imageStr.includes("terminus")
-        ) {
-          console.error(`Failed to load image: ${nextSlideData.image_url}`);
-        }
+        console.error(`Failed to load image: ${nextSlideData.image_url}`);
       };
     }
   }, [currentSlide, heroSlides]);
@@ -254,7 +222,7 @@ function Hero() {
       <div id="home" className="hero">
         {heroSlides.map((slide, index) => {
           // Always show image if URL exists (browser will handle loading)
-          const imageUrl = getImageUrl(slide.image_url);
+          const imageUrl = slide.image_url;
           const isCurrentSlide = index === currentSlide;
 
           return (

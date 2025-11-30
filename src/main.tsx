@@ -19,10 +19,6 @@ import ComingSoon from "./pages/ComingSoon";
 import NewsFeed from "./pages/NewsFeed";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-import CookiePolicy from "./pages/CookiePolicy";
-import Accessibility from "./pages/Accessibility";
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (
@@ -55,10 +51,6 @@ if (rootElement) {
           <Route path="/newsfeed" element={<NewsFeed />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/cookie-policy" element={<CookiePolicy />} />
-          <Route path="/accessibility" element={<Accessibility />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

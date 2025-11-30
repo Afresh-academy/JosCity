@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import skyImage from "../image/sky.png";
+import welcomeVideo from "../vid/welcome-vid.mp4";
 import primaryLogo from "../image/primary-logo.png";
-import { Mail, Lock, Eye, EyeOff, ShieldCheck, AlertCircle } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  AlertCircle,
+} from "lucide-react";
 import { adminApi } from "../services/adminApi";
 import "../main.css";
 
@@ -60,9 +67,7 @@ function AdminLogin() {
       }
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Login failed. Please try again."
+        err instanceof Error ? err.message : "Login failed. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -72,7 +77,10 @@ function AdminLogin() {
   return (
     <div className="signin-page">
       <div className="signin-background">
-        <img src={skyImage} alt="Sky background" className="sky-image" />
+        <video autoPlay loop muted playsInline className="signin-video">
+          <source src={welcomeVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       <div className="signin-container">
@@ -82,20 +90,34 @@ function AdminLogin() {
           </div>
 
           <h2 className="signin-title">Admin Login</h2>
+          <p
+            className="signin-subtitle"
+            style={{
+              marginTop: "0.5rem",
+              marginBottom: "1.5rem",
+              color: "#666",
+              fontSize: "0.9rem",
+            }}
+          >
+            Sign in to access the admin dashboard
+          </p>
 
           {error && (
-            <div className="signin-error" style={{
-              backgroundColor: '#fee',
-              border: '1px solid #fcc',
-              color: '#c33',
-              padding: '0.75rem 1rem',
-              borderRadius: '8px',
-              marginBottom: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.9rem'
-            }}>
+            <div
+              className="signin-error"
+              style={{
+                backgroundColor: "#fee",
+                border: "1px solid #fcc",
+                color: "#c33",
+                padding: "0.75rem 1rem",
+                borderRadius: "8px",
+                marginBottom: "1.5rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                fontSize: "0.9rem",
+              }}
+            >
               <AlertCircle size={18} />
               <span>{error}</span>
             </div>
@@ -112,7 +134,7 @@ function AdminLogin() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="email"
+                  placeholder="admin@joscity.com"
                   disabled={isLoading}
                   required
                 />
@@ -148,13 +170,13 @@ function AdminLogin() {
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="signin-submit-button"
               disabled={isLoading}
               style={{
                 opacity: isLoading ? 0.7 : 1,
-                cursor: isLoading ? 'not-allowed' : 'pointer'
+                cursor: isLoading ? "not-allowed" : "pointer",
               }}
             >
               {isLoading ? "LOGGING IN..." : "LOGIN"}
@@ -166,7 +188,7 @@ function AdminLogin() {
               Regular user?{" "}
               <button
                 className="signin-register-link-button"
-                onClick={() => navigate("/coming-soon")}
+                onClick={() => navigate("/signin")}
                 type="button"
                 disabled={isLoading}
               >
@@ -175,21 +197,31 @@ function AdminLogin() {
             </p>
           </div>
 
-          <div style={{
-            marginTop: '1rem',
-            padding: '1rem',
-            backgroundColor: '#f0f7ff',
-            borderRadius: '8px',
-            fontSize: '0.85rem',
-            color: '#555',
-            border: '1px solid #d0e7ff'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+          <div
+            style={{
+              marginTop: "1rem",
+              padding: "1rem",
+              backgroundColor: "#f0f7ff",
+              borderRadius: "8px",
+              fontSize: "0.85rem",
+              color: "#555",
+              border: "1px solid #d0e7ff",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginBottom: "0.5rem",
+              }}
+            >
               <ShieldCheck size={16} color="#0066cc" />
               <strong>Admin Access Required</strong>
             </div>
-            <p style={{ margin: 0, lineHeight: '1.4' }}>
-              This area is restricted to administrators only. Please use your admin credentials to access the dashboard.
+            <p style={{ margin: 0, lineHeight: "1.4" }}>
+              This area is restricted to administrators only. Please use your
+              admin credentials to access the dashboard.
             </p>
           </div>
         </div>
@@ -199,4 +231,3 @@ function AdminLogin() {
 }
 
 export default AdminLogin;
-

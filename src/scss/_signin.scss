@@ -27,6 +27,13 @@
     object-fit: cover;
     object-position: center;
   }
+
+  .signin-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 }
 
 .signin-container {
@@ -106,13 +113,12 @@
   gap: 1rem;
 
   .signin-logo {
-    width: 58px;
-    height: 58px;
+    width: 72px;
+    height: 72px;
     margin-bottom: 0px;
     margin-top: 1.5rem;
     object-fit: contain;
-    animation: glow-pulse 2s ease-in-out infinite;
-    filter: drop-shadow(0 0 10px rgba(0, 140, 56, 0.6)) drop-shadow(0 0 20px rgba(0, 120, 48, 0.4)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   }
 }
 
