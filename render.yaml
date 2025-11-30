@@ -4,8 +4,8 @@ services:
     env: node
     region: oregon
     plan: starter
-    buildCommand: cd JosCity-Backend && npm install && npm run build
-    startCommand: cd JosCity-Backend && npm start
+    buildCommand: cd JosCity-Backend-backup && npm install && npm run build
+    startCommand: cd JosCity-Backend-backup && npm start
     healthCheckPath: /api/ping
     envVars:
       - key: NODE_ENV
