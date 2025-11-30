@@ -46,7 +46,7 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: https://joscity-backend.onrender.com/api
+        value: https://new-joscity.onrender.com/api
       - key: NODE_ENV
         value: production
 
@@ -56,4 +56,3 @@ databases:
     user: joscity_user
     plan: starter
     region: oregon
-
