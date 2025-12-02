@@ -11,6 +11,7 @@ import {
   Trash2,
   Pin,
 } from "lucide-react";
+import LazyImage from "../LazyImage";
 
 interface Comment {
   id: number;
@@ -155,15 +156,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <article className="newsfeed-post">
       <div className="newsfeed-post__header">
         <div className="newsfeed-post__user-info">
-          <img
+          <LazyImage
             src={post.userAvatar || "/placeholder-avatar.png"}
             alt={post.userName}
             className="newsfeed-post__avatar"
-            onError={(e) => {
-              // Hide avatar if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = "none";
-            }}
           />
           <div className="newsfeed-post__user-details">
             <h3 className="newsfeed-post__user-name">{post.userName}</h3>
@@ -228,15 +224,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
       {post.image && post.image.trim() && (
         <div className="newsfeed-post__image-wrapper">
-          <img
+          <LazyImage
             src={post.image}
             alt={post.action || caption || "Post image"}
             className="newsfeed-post__image"
-            onError={(e) => {
-              // Hide image if it fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = "none";
-            }}
           />
         </div>
       )}
@@ -323,15 +314,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               ) : (
                 comments.map((comment) => (
                   <div key={comment.id} className="newsfeed-post__comment">
-                    <img
+                    <LazyImage
                       src={comment.userAvatar}
                       alt={comment.userName}
                       className="newsfeed-post__comment-avatar"
-                      onError={(e) => {
-                        // Hide avatar if image fails to load
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = "none";
-                      }}
                     />
                     <div className="newsfeed-post__comment-content">
                       <div className="newsfeed-post__comment-header">

@@ -1,5 +1,6 @@
 import React from "react";
 import { UserPlus } from "lucide-react";
+import LazyImage from "../LazyImage";
 
 interface Friend {
   id: number;
@@ -24,15 +25,10 @@ const SuggestedFriends: React.FC<SuggestedFriendsProps> = ({ friends }) => {
       <div className="newsfeed-suggested-friends__list">
         {friends.map((friend) => (
           <div key={friend.id} className="newsfeed-suggested-friends__item">
-            <img
+            <LazyImage
               src={friend.avatar || "/placeholder-avatar.png"}
               alt={friend.name}
               className="newsfeed-suggested-friends__avatar"
-              onError={(e) => {
-                // Hide avatar if image fails to load
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-              }}
             />
             <div className="newsfeed-suggested-friends__info">
               <p className="newsfeed-suggested-friends__name">{friend.name}</p>

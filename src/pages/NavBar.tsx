@@ -92,23 +92,23 @@ function App() {
     }
   };
 
-  const scrollToTestimonials = () => {
+  const scrollToGuidlines = () => {
     setIsMenuOpen(false);
     if (window.location.pathname !== "/") {
       navigate("/");
       setTimeout(() => {
-        const testimonialsSection = document.getElementById("testimonials");
-        if (testimonialsSection) {
-          testimonialsSection.scrollIntoView({
+        const guidelinesSection = document.getElementById("guidelines");
+        if (guidelinesSection) {
+          guidelinesSection.scrollIntoView({
             behavior: "smooth",
             block: "start",
           });
         }
       }, 100);
     } else {
-      const testimonialsSection = document.getElementById("testimonials");
-      if (testimonialsSection) {
-        testimonialsSection.scrollIntoView({
+      const guidelinesSection = document.getElementById("guidelines");
+      if (guidelinesSection) {
+        guidelinesSection.scrollIntoView({
           behavior: "smooth",
           block: "start",
         });
@@ -148,8 +148,8 @@ function App() {
           <li className="navbar__nav-item" onClick={scrollToAbout}>
             About
           </li>
-          <li className="navbar__nav-item" onClick={scrollToTestimonials}>
-            Testimonials
+          <li className="navbar__nav-item" onClick={scrollToGuidlines}>
+            Guidelines
           </li>
           <li className="navbar__nav-item" onClick={scrollToServices}>
             Services

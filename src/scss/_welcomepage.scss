@@ -43,6 +43,14 @@
     object-position: center;
     will-change: transform;
   }
+
+  .welcome-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    will-change: transform;
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -131,12 +139,17 @@
   gap: $spacing-sm;
 
   .logo-image {
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     margin-bottom: 0;
     object-fit: contain;
-    filter: drop-shadow(0 4px 8px $shadow-light);
     @include smooth-transition(transform);
+    
+    // Remove white background and box-shadow from lazy loading wrapper
+    &.lazy-image-wrapper {
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
   }
 
   .logo-text {
@@ -286,8 +299,8 @@
 
   .logo-container {
     .logo-image {
-      width: 60px;
-      height: 60px;
+      width: 44px;
+      height: 44px;
     }
 
     .logo-text {
@@ -455,8 +468,8 @@
     gap: 0.75rem;
 
     .logo-image {
-      width: 50px;
-      height: 50px;
+      width: 46px;
+      height: 46px;
     }
 
     .logo-text {
@@ -530,8 +543,8 @@
     margin-bottom: 1.25rem;
 
     .logo-image {
-      width: 65px;
-      height: 65px;
+      width: 53px;
+      height: 53px;
     }
 
     .logo-text {
@@ -581,8 +594,8 @@
     margin-top: -2.5rem;
 
     .logo-image {
-      width: 75px;
-      height: 75px;
+      width: 63px;
+      height: 63px;
     }
 
     .logo-text {
@@ -641,7 +654,7 @@
 @media (orientation: landscape) and (max-height: 600px) {
   .welcome-page {
     padding-top: $spacing-sm;
-    min-height: auto;
+    min-height: 0;
   }
 
   .registration-panel {
@@ -656,8 +669,8 @@
     margin-bottom: 0.75rem;
 
     .logo-image {
-      width: 50px;
-      height: 50px;
+      width: 46px;
+      height: 46px;
     }
 
     .logo-text {
@@ -676,6 +689,7 @@
 // ----------------------------------------------------------------------------
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .logo-image {
+    image-rendering: -webkit-optimize-contrast;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }

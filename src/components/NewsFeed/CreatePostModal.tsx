@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { X, Image as ImageIcon, Video, Mic } from "lucide-react";
+import LazyImage from "../LazyImage";
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -89,15 +90,10 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
         <div className="newsfeed-modal__content">
           <div className="newsfeed-modal__user-info">
-            <img
+            <LazyImage
               src={userAvatar || "/placeholder-avatar.png"}
               alt={userName}
               className="newsfeed-modal__avatar"
-              onError={(e) => {
-                // Hide avatar if image fails to load
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-              }}
             />
             <span className="newsfeed-modal__user-name">{userName}</span>
           </div>

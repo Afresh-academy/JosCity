@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import logoImage from '../image/primary-logo.png';
-import successLogo from '../image/success-logo.png';
-import skyImage from '../image/sky.png';
-import '../main.css';
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import logoImage from "../image/primary-logo.png";
+import successLogo from "../image/success-logo.png";
+import welcomeVideo from "../vid/welcome-vid.mp4";
+import "../main.css";
 
 const Success: React.FC = () => {
   const navigate = useNavigate();
@@ -14,10 +14,10 @@ const Success: React.FC = () => {
   useEffect(() => {
     // Check if user came from a successful form submission
     const submitted = location.state?.submitted;
-    
+
     if (!submitted) {
       // Redirect to business form if accessed directly without submission
-      navigate('/business-form', { replace: true });
+      navigate("/business-form", { replace: true });
       return;
     }
 
@@ -30,8 +30,8 @@ const Success: React.FC = () => {
     }, 50);
   }, [location.state, navigate]);
 
-  const handleSignIn = () => {
-    navigate('/welcome');
+  const handleBackHome = () => {
+    navigate("/");
   };
 
   // Don't render content if not authorized (prevents flash before redirect)
@@ -42,10 +42,13 @@ const Success: React.FC = () => {
   return (
     <div className="success-page">
       <div className="success-background">
-        <img src={skyImage} alt="Sky background" className="sky-image" />
+        <video autoPlay loop muted playsInline className="success-video">
+          <source src={welcomeVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
-      <div className={`success-container ${isVisible ? 'fade-in' : ''}`}>
+      <div className={`success-container ${isVisible ? "fade-in" : ""}`}>
         <div className="success-card">
           <div className="success-top-section">
             <div className="success-logo-container">
@@ -72,16 +75,17 @@ const Success: React.FC = () => {
           <div className="success-bottom-section">
             <div className="success-message">
               <p className="success-text">
-                Your request has been successfully submitted. you will receive an email when your details has been verified
+                Your request has been successfully submitted. you will receive a
+                second email when your details have been verified
               </p>
             </div>
 
             <button
               type="button"
               className="success-signin-button"
-              onClick={handleSignIn}
+              onClick={handleBackHome}
             >
-              Sign In
+              Back home
             </button>
           </div>
         </div>
@@ -104,4 +108,3 @@ const Success: React.FC = () => {
 };
 
 export default Success;
-

@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import skyImage from "../image/sky.png";
+import welcomeVideo from "../vid/welcome-vid.mp4";
 import primaryLogo from "../image/primary-logo.png";
 import RegistrationTabs from "../components/RegistrationTabs";
 import PersonalFormFields from "../components/PersonalFormFields";
 import BusinessFormFields from "../components/BusinessFormFields";
 import SignInLink from "../components/SignInLink";
+import { 
+  validatePersonalForm, 
+  validateBusinessForm, 
+  type PersonalFormData,
+  type BusinessFormData,
+  type ValidationError 
+} from "../utils/validationSchemas";
 import "../main.css";
 
 function Register() {
@@ -14,7 +21,7 @@ function Register() {
     "personal" | "business"
   >("personal");
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PersonalFormData>({
     firstName: "",
     lastName: "",
     gender: "",
@@ -24,7 +31,7 @@ function Register() {
     address: "",
     password: "",
   });
-  const [businessFormData, setBusinessFormData] = useState({
+  const [businessFormData, setBusinessFormData] = useState<BusinessFormData>({
     businessName: "",
     businessType: "",
     businessEmail: "",
@@ -33,6 +40,9 @@ function Register() {
     businessAddress: "",
     businessPassword: "",
   });
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -42,6 +52,9 @@ function Register() {
       ...prev,
       [name]: value,
     }));
+    // Clear validation error for this field when user starts typing
+    setValidationErrors((prev) => prev.filter((err) => err.field !== name));
+    setError(null);
   };
 
   const handleBusinessInputChange = (
@@ -52,23 +65,76 @@ function Register() {
       ...prev,
       [name]: value,
     }));
+    // Clear validation error for this field when user starts typing
+    setValidationErrors((prev) => prev.filter((err) => err.field !== name));
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setValidationErrors([]);
+
     if (registrationType === "personal") {
-      console.log("Personal form submitted:", formData);
+      // Validate personal form
+      const errors = validatePersonalForm(formData);
+      if (errors.length > 0) {
+        setValidationErrors(errors);
+        setError("Please fix the errors in the form before submitting.");
+        return;
+      }
+
+      // Submit personal form
+      setIsLoading(true);
+      // Simulate form submission
+      setTimeout(() => {
+        navigate("/success", { 
+          state: { 
+            submitted: true,
+            accountType: "personal",
+            email: formData.email 
+          } 
+        });
+        setIsLoading(false);
+      }, 500);
     } else {
-      console.log("Business form submitted:", businessFormData);
+      // Validate business form
+      const errors = validateBusinessForm(businessFormData);
+      if (errors.length > 0) {
+        setValidationErrors(errors);
+        setError("Please fix the errors in the form before submitting.");
+        return;
+      }
+
+      // Submit business form
+      setIsLoading(true);
+      // Simulate form submission
+      setTimeout(() => {
+        navigate("/success", { 
+          state: { 
+            submitted: true,
+            accountType: "business",
+            email: businessFormData.businessEmail 
+          } 
+        });
+        setIsLoading(false);
+      }, 500);
     }
-    // Navigate to success page after submission
-    navigate("/success");
   };
 
   return (
     <div className="register-page">
       <div className="register-background">
-        <img src={skyImage} alt="Sky background" className="sky-image" />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="register-video"
+        >
+          <source src={welcomeVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       <div className="register-container">
@@ -100,8 +166,48 @@ function Register() {
                   onTogglePassword={() => setShowPassword(!showPassword)}
                 />
 
-                <button type="submit" className="register-submit-button">
-                  SUBMIT
+                {validationErrors.length > 0 && (
+                  <div className="register-error-message" style={{
+                    color: "#ff4444",
+                    fontSize: "14px",
+                    marginTop: "10px",
+                    textAlign: "center",
+                    padding: "10px",
+                    backgroundColor: "rgba(255, 68, 68, 0.1)",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(255, 68, 68, 0.3)",
+                  }}>
+                    {validationErrors.map((err, idx) => (
+                      <div key={idx}>{err.message}</div>
+                    ))}
+                  </div>
+                )}
+
+                {error && (
+                  <div className="register-error-message" style={{
+                    color: "#ff4444",
+                    fontSize: "14px",
+                    marginTop: "10px",
+                    textAlign: "center",
+                    padding: "10px",
+                    backgroundColor: "rgba(255, 68, 68, 0.1)",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(255, 68, 68, 0.3)",
+                  }}>
+                    {error}
+                  </div>
+                )}
+
+                <button 
+                  type="submit" 
+                  className="register-submit-button"
+                  disabled={isLoading}
+                  style={{
+                    opacity: isLoading ? 0.6 : 1,
+                    cursor: isLoading ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {isLoading ? "SUBMITTING..." : "SUBMIT"}
                 </button>
               </form>
 
@@ -130,8 +236,48 @@ function Register() {
                   onTogglePassword={() => setShowPassword(!showPassword)}
                 />
 
-                <button type="submit" className="register-submit-button">
-                  SUBMIT
+                {validationErrors.length > 0 && (
+                  <div className="register-error-message" style={{
+                    color: "#ff4444",
+                    fontSize: "14px",
+                    marginTop: "10px",
+                    textAlign: "center",
+                    padding: "10px",
+                    backgroundColor: "rgba(255, 68, 68, 0.1)",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(255, 68, 68, 0.3)",
+                  }}>
+                    {validationErrors.map((err, idx) => (
+                      <div key={idx}>{err.message}</div>
+                    ))}
+                  </div>
+                )}
+
+                {error && (
+                  <div className="register-error-message" style={{
+                    color: "#ff4444",
+                    fontSize: "14px",
+                    marginTop: "10px",
+                    textAlign: "center",
+                    padding: "10px",
+                    backgroundColor: "rgba(255, 68, 68, 0.1)",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(255, 68, 68, 0.3)",
+                  }}>
+                    {error}
+                  </div>
+                )}
+
+                <button 
+                  type="submit" 
+                  className="register-submit-button"
+                  disabled={isLoading}
+                  style={{
+                    opacity: isLoading ? 0.6 : 1,
+                    cursor: isLoading ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {isLoading ? "SUBMITTING..." : "SUBMIT"}
                 </button>
               </form>
 

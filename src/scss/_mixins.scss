@@ -3,8 +3,8 @@
 // Glassmorphism Effect
 // ----------------------------------------------------------------------------
 @mixin glassmorphism($blur: 20px, $saturate: 180%) {
-  backdrop-filter: blur($blur) saturate($saturate);
   -webkit-backdrop-filter: blur($blur) saturate($saturate);
+  backdrop-filter: blur($blur) saturate($saturate);
 }
 
 // ----------------------------------------------------------------------------

@@ -2,43 +2,60 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lightbulb, Shield, Zap, User, Info } from "lucide-react";
 import "../main.css";
-// Import images as modules for Vite build compatibility
+// Import images as modules for Vite build compatibility (fallback)
 import heroImage1 from "../image/hero-image.png";
 import heroImage2 from "../image/plateau-legs.png";
 import heroImage3 from "../image/terminus.png";
 import aboutImage from "../image/3dwOMAN.png";
 
-const heroSlides = [
+interface HeroSlide {
+  id: string;
+  image_url: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  slide_order: number;
+  is_active: boolean;
+}
+
+// Fallback slides if API fails
+const fallbackSlides = [
   {
-    id: 1,
-    image: heroImage1,
+    id: "1",
+    image_url: heroImage1,
     title: "Welcome to ",
     subtitle: "Jos Smart City, The-Digital Economy",
     description:
       "Access all municipal services, pay bills, and engage with your city - all in one place.",
+    slide_order: 0,
+    is_active: true,
   },
   {
-    id: 2,
-    image: heroImage2,
+    id: "2",
+    image_url: heroImage2,
     title: "Anticipate",
     subtitle: "Jos City Carnival!",
     description:
       "Purchase tickets, manage bookings, and connect with your event - all in one convenient location",
+    slide_order: 1,
+    is_active: true,
   },
   {
-    id: 3,
-    image: heroImage3,
+    id: "3",
+    image_url: heroImage3,
     title: "Exciting Event Ahead at",
     subtitle: "Jos Central Market!",
     description:
       "Join us for an ourdoor event where you can explore all municipal services, settle your bills, and connect with your communityall in one exciting location!",
+    slide_order: 2,
+    is_active: true,
   },
 ];
 
 function Hero() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set([0])); // Preload first image
+  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>(fallbackSlides);
   const [visibleElements, setVisibleElements] = useState<Set<string>>(
     new Set()
   );
@@ -48,34 +65,46 @@ function Hero() {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
 
+  // Use fallback slides (no API calls)
+  useEffect(() => {
+    setHeroSlides(fallbackSlides);
+  }, []);
+
   // Lazy load images - preload current and next slide
   useEffect(() => {
-    // Preload current slide image
-    const currentImage = new Image();
-    currentImage.src = heroSlides[currentSlide].image;
+    if (heroSlides.length === 0) return;
+
+    const currentSlideData = heroSlides[currentSlide];
+    if (currentSlideData && currentSlideData.image_url) {
+      // Preload current slide image
+      const currentImage = new Image();
+      currentImage.src = currentSlideData.image_url;
+      currentImage.onerror = () => {
+        console.error(`Failed to load image: ${currentSlideData.image_url}`);
+      };
+    }
 
     // Preload next slide image for smooth transition
     const nextIndex = (currentSlide + 1) % heroSlides.length;
-    const nextImage = new Image();
-    nextImage.src = heroSlides[nextIndex].image;
-
-    // Mark images as loaded when they finish loading
-    currentImage.onload = () => {
-      setLoadedImages((prev) => new Set(prev).add(currentSlide));
-    };
-
-    nextImage.onload = () => {
-      setLoadedImages((prev) => new Set(prev).add(nextIndex));
-    };
-  }, [currentSlide]);
+    const nextSlideData = heroSlides[nextIndex];
+    if (nextSlideData && nextSlideData.image_url) {
+      const nextImage = new Image();
+      nextImage.src = nextSlideData.image_url;
+      nextImage.onerror = () => {
+        console.error(`Failed to load image: ${nextSlideData.image_url}`);
+      };
+    }
+  }, [currentSlide, heroSlides]);
 
   useEffect(() => {
+    if (heroSlides.length === 0) return;
+
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [heroSlides.length]);
 
   // Reset fade-in on slide change with different directions
   useEffect(() => {
@@ -154,19 +183,26 @@ function Hero() {
   return (
     <>
       <div id="home" className="hero">
-        {heroSlides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`hero__slide ${index === currentSlide ? "active" : ""}`}
-            style={{
-              backgroundImage: loadedImages.has(index)
-                ? `url(${slide.image})`
-                : "none",
-            }}
-          >
-            <div className="hero__overlay"></div>
-          </div>
-        ))}
+        {heroSlides.map((slide, index) => {
+          // Always show image if URL exists (browser will handle loading)
+          const imageUrl = slide.image_url;
+          const isCurrentSlide = index === currentSlide;
+
+          return (
+            <div
+              key={slide.id}
+              className={`hero__slide ${isCurrentSlide ? "active" : ""}`}
+              style={{
+                backgroundImage: imageUrl ? `url(${imageUrl})` : "none",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              <div className="hero__overlay"></div>
+            </div>
+          );
+        })}
 
         <div className="hero__content">
           <div
@@ -250,8 +286,15 @@ function Hero() {
 function AboutSection() {
   const [visibleStats, setVisibleStats] = useState<Set<number>>(new Set());
   const [visibleAbout, setVisibleAbout] = useState(false);
+  const [registeredCitizensCount, setRegisteredCitizensCount] =
+    useState<string>("0");
   const statsRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+
+  // Use default count (no API calls)
+  useEffect(() => {
+    setRegisteredCitizensCount("0");
+  }, []);
 
   useEffect(() => {
     const statsObserver = new IntersectionObserver(
@@ -298,10 +341,10 @@ function AboutSection() {
   }, []);
 
   const stats = [
-    { number: "500K+", label: "Registered Citizens" },
+    { number: registeredCitizensCount, label: "Registered Citizens" },
     { number: "12+", label: "Digital Services" },
     { number: "24/7", label: "Support Available" },
-    { number: "98%", label: "Satisfaction Rate" },
+    { number: "PND", label: "Satisfaction Rate" },
   ];
 
   const features = [

@@ -33,6 +33,7 @@ import story2 from "../image/newsfeed/will.jpg";
 import story3 from "../image/newsfeed/e5f8b4388d3deb306d42aea5d2375206896e93e7.png";
 import story4 from "../image/newsfeed/tiana.jpg";
 import "../main.css";
+import LazyImage from "../components/LazyImage";
 
 const NewsFeed: React.FC = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
@@ -165,7 +166,7 @@ const NewsFeed: React.FC = () => {
               {isLeftSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
             <div className="newsfeed-header__logo">
-              <img src={primaryLogo} alt="JOSCity Logo" />
+              <LazyImage src={primaryLogo} alt="JOSCity Logo" />
               <span>JOSCity</span>
             </div>
           </div>
@@ -186,7 +187,7 @@ const NewsFeed: React.FC = () => {
               <Bell size={20} />
             </button>
             <button className="newsfeed-header__join-btn">
-              <img
+              <LazyImage
                 src={headerAvatar}
                 alt="Join"
                 className="newsfeed-header__join-avatar"

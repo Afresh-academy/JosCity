@@ -9,7 +9,7 @@ import Footer from "./pages/Footer";
 import "./main.scss";
 import Hero from "./pages/Hero";
 import Pricing from "./pages/Pricing";
-import Testimonials from "./pages/Testimonials";
+import Guidelines from "./pages/Guidlines";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 import BusinessForm from "./pages/BusinessForm";
@@ -17,7 +17,12 @@ import WelcomePage from "./pages/welcomepage";
 import Success from "./pages/Success";
 import ComingSoon from "./pages/ComingSoon";
 import NewsFeed from "./pages/NewsFeed";
-import Admin from "./components/Admin";
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import CookiePolicy from "./pages/CookiePolicy";
+import Accessibility from "./pages/Accessibility";
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (
@@ -27,7 +32,7 @@ export function LandingPage() {
       <Services />
       <Events />
       <Pricing />
-      <Testimonials />
+      <Guidelines />
       <Contact />
       <Footer />
     </>
@@ -48,7 +53,12 @@ if (rootElement) {
           <Route path="/business-form" element={<BusinessForm />} />
           <Route path="/success" element={<Success />} />
           <Route path="/newsfeed" element={<NewsFeed />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
+          <Route path="/accessibility" element={<Accessibility />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

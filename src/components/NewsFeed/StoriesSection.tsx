@@ -1,5 +1,6 @@
 import React from "react";
 import { Plus } from "lucide-react";
+import LazyImage from "../LazyImage";
 
 interface Story {
   id: number;
@@ -24,15 +25,10 @@ const StoriesSection: React.FC<StoriesSectionProps> = ({ stories }) => {
               </div>
             )}
             <div className="newsfeed-stories__avatar-wrapper">
-              <img
+              <LazyImage
                 src={story.avatar || "/placeholder-avatar.png"}
                 alt={story.userName}
                 className="newsfeed-stories__avatar"
-                onError={(e) => {
-                  // Hide avatar if image fails to load
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = "none";
-                }}
               />
             </div>
             <p className="newsfeed-stories__name">{story.userName}</p>
