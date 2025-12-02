@@ -7,10 +7,6 @@ import heroImage1 from "../image/hero-image.png";
 import heroImage2 from "../image/plateau-legs.png";
 import heroImage3 from "../image/terminus.png";
 import aboutImage from "../image/3dwOMAN.png";
-import {
-  publicHeroApi,
-  publicStatsApi,
-} from "../services/publicLandingPageApi";
 
 interface HeroSlide {
   id: string;
@@ -69,42 +65,9 @@ function Hero() {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch hero slides from API
+  // Use fallback slides (no API calls)
   useEffect(() => {
-    const fetchHeroSlides = async () => {
-      try {
-        const response = await publicHeroApi.getSlides();
-        if (response.success && response.data && response.data.length > 0) {
-          // Filter only active slides and sort by order
-          const activeSlides = response.data
-            .filter((slide: HeroSlide) => slide.is_active)
-            .sort(
-              (a: HeroSlide, b: HeroSlide) => a.slide_order - b.slide_order
-            );
-
-          if (activeSlides.length > 0) {
-            setHeroSlides(activeSlides);
-            // Preload first image for better performance
-            if (activeSlides[0].image_url) {
-              const img = new Image();
-              img.src = activeSlides[0].image_url;
-            }
-          } else {
-            // No active slides from API, use fallback
-            setHeroSlides(fallbackSlides);
-          }
-        } else {
-          // No data from API, use fallback
-          setHeroSlides(fallbackSlides);
-        }
-      } catch (error) {
-        console.error("Failed to fetch hero slides:", error);
-        // Use fallback slides if API fails
-        setHeroSlides(fallbackSlides);
-      }
-    };
-
-    fetchHeroSlides();
+    setHeroSlides(fallbackSlides);
   }, []);
 
   // Lazy load images - preload current and next slide
@@ -328,21 +291,9 @@ function AboutSection() {
   const statsRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
 
-  // Fetch registered citizens count
+  // Use default count (no API calls)
   useEffect(() => {
-    const fetchRegisteredCitizensCount = async () => {
-      try {
-        const response = await publicStatsApi.getRegisteredCitizensCount();
-        if (response.success && response.data) {
-          setRegisteredCitizensCount(response.data.formatted || "0");
-        }
-      } catch (error) {
-        console.error("Failed to fetch registered citizens count:", error);
-        // Keep default value of "0" if API fails
-      }
-    };
-
-    fetchRegisteredCitizensCount();
+    setRegisteredCitizensCount("0");
   }, []);
 
   useEffect(() => {

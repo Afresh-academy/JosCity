@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { adminApi } from "../services/adminApi";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -23,8 +22,8 @@ export default function ProtectedRoute({
     const checkAuth = async () => {
       try {
         if (requireAdmin) {
-          const loggedIn = adminApi.isLoggedIn();
-          setIsAuthenticated(loggedIn);
+          const adminToken = localStorage.getItem("adminToken");
+          setIsAuthenticated(!!adminToken);
         } else {
           // For non-admin routes, you can add other checks here
           setIsAuthenticated(true);

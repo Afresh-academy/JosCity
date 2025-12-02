@@ -6,7 +6,6 @@ import RegistrationTabs from "../components/RegistrationTabs";
 import PersonalFormFields from "../components/PersonalFormFields";
 import BusinessFormFields from "../components/BusinessFormFields";
 import SignInLink from "../components/SignInLink";
-import { BASE_URL } from "../api/config";
 import {
   validatePersonalForm,
   validateBusinessForm,
@@ -87,53 +86,8 @@ function BusinessForm() {
 
       // Personal form submission
       setIsLoading(true);
-      try {
-        // Map frontend fields to backend expected fields
-        const requestData = {
-          first_name: formData.firstName.trim(),
-          last_name: formData.lastName.trim(),
-          gender: formData.gender,
-          phone_number: formData.phoneNumber.trim(),
-          email: formData.email.trim(),
-          nin_number: formData.ninNumber.trim(),
-          address: formData.address.trim(),
-          password: formData.password,
-        };
-
-        const response = await fetch(`${BASE_URL}/auth/personal/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        });
-
-        // Check if response is JSON before parsing
-        const contentType = response.headers.get("content-type");
-        let data;
-
-        if (contentType && contentType.includes("application/json")) {
-          data = await response.json();
-        } else {
-          // If not JSON, read as text to see what we got
-          const text = await response.text();
-          console.error("Non-JSON response received:", text.substring(0, 200));
-          throw new Error(
-            response.status === 404
-              ? "API endpoint not found. Please check if the backend server is running."
-              : `Server error (${response.status}). Please try again later.`
-          );
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            data.message ||
-              data.error ||
-              "Registration failed. Please try again."
-          );
-        }
-
-        // Only navigate to success page after successful backend confirmation
+      // Simulate form submission
+      setTimeout(() => {
         navigate("/success", {
           state: {
             submitted: true,
@@ -141,14 +95,8 @@ function BusinessForm() {
             email: formData.email,
           },
         });
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "An error occurred. Please try again."
-        );
         setIsLoading(false);
-      }
+      }, 500);
       return;
     }
 
@@ -162,51 +110,8 @@ function BusinessForm() {
 
     // Business form submission
     setIsLoading(true);
-    try {
-      // Map frontend fields to backend expected fields
-      const requestData = {
-        business_name: businessFormData.businessName.trim(),
-        business_location: businessFormData.businessAddress.trim(),
-        phone_number: businessFormData.businessPhone.trim(),
-        email: businessFormData.businessEmail.trim(),
-        CAC_number: businessFormData.cacNumber.trim(), // Required for business accounts
-        address: businessFormData.businessAddress.trim(),
-        password: businessFormData.businessPassword,
-        business_type: businessFormData.businessType,
-      };
-
-      const response = await fetch(`${BASE_URL}/auth/business/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      // Check if response is JSON before parsing
-      const contentType = response.headers.get("content-type");
-      let data;
-
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-      } else {
-        // If not JSON, read as text to see what we got
-        const text = await response.text();
-        console.error("Non-JSON response received:", text.substring(0, 200));
-        throw new Error(
-          response.status === 404
-            ? "API endpoint not found. Please check if the backend server is running."
-            : `Server error (${response.status}). Please try again later.`
-        );
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || data.error || "Registration failed. Please try again."
-        );
-      }
-
-      // Only navigate to success page after successful backend confirmation
+    // Simulate form submission
+    setTimeout(() => {
       navigate("/success", {
         state: {
           submitted: true,
@@ -214,14 +119,8 @@ function BusinessForm() {
           email: businessFormData.businessEmail,
         },
       });
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "An error occurred. Please try again."
-      );
       setIsLoading(false);
-    }
+    }, 500);
   };
 
   return (

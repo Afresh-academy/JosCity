@@ -4,7 +4,6 @@ import "../scss/_guidelines.scss";
 import primaryLogo from "../image/primary-logo.png"; // Fallback
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 import LazyImage from "../components/LazyImage";
-import { publicGuidelinesApi } from "../services/publicLandingPageApi";
 
 interface Guideline {
   id: string;
@@ -52,39 +51,10 @@ const Guidelines: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchGuidelines = async () => {
-      try {
-        // Fetch settings
-        const settingsResponse = await publicGuidelinesApi.getSettings();
-        if (settingsResponse.success && settingsResponse.data) {
-          if (settingsResponse.data.badge_text) {
-            setBadgeText(settingsResponse.data.badge_text);
-          }
-          if (settingsResponse.data.heading) {
-            setHeading(settingsResponse.data.heading);
-          }
-        }
-
-        // Fetch guidelines
-        const guidelinesResponse = await publicGuidelinesApi.getGuidelines();
-        if (guidelinesResponse.success && guidelinesResponse.data) {
-          const activeGuidelines = guidelinesResponse.data
-            .filter((g: Guideline) => g.is_active)
-            .sort(
-              (a: Guideline, b: Guideline) => a.display_order - b.display_order
-            );
-
-          if (activeGuidelines.length > 0) {
-            setGuidelines(activeGuidelines);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch guidelines:", error);
-        // Use fallback data if API fails
-      }
-    };
-
-    fetchGuidelines();
+    // Use default values (no API calls)
+    setBadgeText("Guidelines");
+    setHeading("PWA Guidelines");
+    // Guidelines state already has default value
   }, []);
 
   const goToPrevious = () => {

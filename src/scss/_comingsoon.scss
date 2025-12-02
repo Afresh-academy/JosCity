@@ -57,7 +57,7 @@
   backdrop-filter: blur(20px) saturate(180%);
   border-radius: 24px;
   padding: 48px 64px;
-  max-width: 1200px;
+  max-width: 800px;
   width: 100%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
     0 0 0 1px rgba(255, 255, 255, 0.2) inset;
@@ -98,10 +98,54 @@
   max-width: 112px;
   object-fit: contain;
 
-  // Remove white background and box-shadow from lazy loading wrapper
+  // Remove any background from lazy loading wrapper
   &.lazy-image-wrapper {
     background-color: transparent !important;
+    background: transparent !important;
     box-shadow: none !important;
+
+    // Override LazyImage default background (inline style)
+    &[style*="background-color"] {
+      background-color: transparent !important;
+    }
+
+    // Remove placeholder background
+    .lazy-image-placeholder {
+      background: transparent !important;
+    }
+  }
+
+  // Remove background from the image itself
+  img,
+  .lazy-image {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+}
+
+// Ensure the logo container doesn't have any background
+.coming-soon-logo-container {
+  .lazy-image-wrapper {
+    background-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+
+    // Override LazyImage default background (inline style)
+    &[style*="background-color"] {
+      background-color: transparent !important;
+    }
+
+    // Remove placeholder background
+    .lazy-image-placeholder {
+      background: transparent !important;
+    }
+
+    // Remove background from the image itself
+    img,
+    .lazy-image {
+      background-color: transparent !important;
+      background: transparent !important;
+    }
   }
 }
 

@@ -1,20 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../main.css";
 import "../scss/_events.scss";
-import Christmas from "../image/Christmas.jpg"; // Fallback image
+import Christmas from "../image/Christmas.webp"; // Fallback image
 import LazyImage from "../components/LazyImage";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
-import { publicEventsApi } from "../services/publicLandingPageApi";
-
-interface Event {
-  id: string;
-  title: string;
-  description?: string;
-  event_date: string;
-  image_url?: string;
-  location?: string;
-  status?: "upcoming" | "ongoing" | "completed" | "cancelled";
-}
 
 const Events: React.FC = () => {
   const [defaultImage, setDefaultImage] = useState<string>(Christmas);
@@ -30,46 +19,9 @@ const Events: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        // Fetch events settings for default image and badge text
-        const settingsResponse = await publicEventsApi.getSettings();
-        if (settingsResponse.success && settingsResponse.data) {
-          if (settingsResponse.data.default_image_url) {
-            setDefaultImage(settingsResponse.data.default_image_url);
-          }
-          if (settingsResponse.data.badge_text) {
-            setBadgeText(settingsResponse.data.badge_text);
-          }
-        }
-
-        // Fetch events
-        const eventsResponse = await publicEventsApi.getEvents();
-        if (eventsResponse.success && eventsResponse.data) {
-          // Filter upcoming/ongoing events and sort by date
-          const upcomingEvents = eventsResponse.data
-            .filter(
-              (event: Event) =>
-                event.status === "upcoming" || event.status === "ongoing"
-            )
-            .sort(
-              (a: Event, b: Event) =>
-                new Date(a.event_date).getTime() -
-                new Date(b.event_date).getTime()
-            )
-            .slice(0, 1); // Get the first upcoming event
-
-          if (upcomingEvents.length > 0 && upcomingEvents[0].image_url) {
-            setDefaultImage(upcomingEvents[0].image_url);
-          }
-        }
-      } catch (error: unknown) {
-        console.error("Failed to fetch events data:", error);
-        // Use fallback image if API fails
-      }
-    };
-
-    fetchEventsData();
+    // Use default values (no API calls)
+    setDefaultImage(Christmas);
+    setBadgeText("Upcoming Events in Jos");
   }, []);
 
   return (
