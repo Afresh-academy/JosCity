@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   AlertCircle,
 } from "lucide-react";
-import { adminApi } from "../services/adminApi";
 import "../main.css";
 
 function AdminLogin() {
@@ -25,7 +24,9 @@ function AdminLogin() {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (adminApi.isLoggedIn()) {
+    // Check localStorage for admin token
+    const adminToken = localStorage.getItem("adminToken");
+    if (adminToken) {
       navigate("/admin");
     }
   }, [navigate]);
@@ -53,18 +54,16 @@ function AdminLogin() {
         return;
       }
 
-      // Attempt admin login
-      const response = await adminApi.login({
-        email: formData.email.trim(),
-        password: formData.password,
-      });
-
-      if (response.success && response.token) {
-        // Redirect to admin dashboard
-        navigate("/admin");
-      } else {
-        setError("Login failed. Please check your credentials.");
-      }
+      // Simulate admin login
+      // Store token in localStorage for demo purposes
+      localStorage.setItem("adminToken", "demo-token");
+      localStorage.setItem("adminData", JSON.stringify({
+        email: formData.email,
+        display_name: "Admin User"
+      }));
+      
+      // Redirect to admin dashboard
+      navigate("/admin");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Login failed. Please try again."

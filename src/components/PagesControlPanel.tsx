@@ -15,36 +15,225 @@ import {
   AlertCircle,
   Navigation,
 } from "lucide-react";
-import {
-  navbarApi,
-  contactApi,
-  eventsApi,
-  servicesApi,
-  pricingApi,
-  guidelinesApi,
-  heroApi,
-  footerApi,
-  type NavbarMenuItem,
-  type NavbarSettings,
-  type ContactPageSettings,
-  type ContactMessage,
-  type ContactInformation,
-  type EventsPageSettings,
-  type Event,
-  type EventRegistration,
-  type ServicesPageSettings,
-  type Service,
-  type ServiceRequest,
-  type PricingPageSettings,
-  type PricingPlan,
-  type PricingPlanFeature,
-  type GuidelinesPageSettings,
-  type Guideline,
-  type HeroPageSettings,
-  type HeroSlide,
-  type FooterLink,
-  type FooterSettings,
-} from "../services/landingPageApi";
+// Type definitions (no API imports)
+interface NavbarMenuItem {
+  id?: string;
+  label: string;
+  link_type: "scroll" | "route" | "external";
+  link_target?: string;
+  scroll_target_id?: string;
+  display_order: number;
+  is_active: boolean;
+  requires_auth: boolean;
+  icon_name?: string;
+}
+
+interface NavbarSettings {
+  id?: string;
+  logo_url?: string;
+  logo_alt?: string;
+  get_started_button_text?: string;
+  get_started_button_route?: string;
+  is_active: boolean;
+}
+
+interface ContactPageSettings {
+  id?: string;
+  badge_text?: string;
+  heading: string;
+  subheading?: string;
+}
+
+interface ContactMessage {
+  id?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject?: string;
+  message: string;
+  status?: "pending" | "read" | "replied" | "archived";
+  reply_message?: string;
+}
+
+interface ContactInformation {
+  id?: string;
+  contact_type: "phone" | "email" | "location";
+  title: string;
+  primary_value: string;
+  secondary_value?: string;
+  icon_color?: string;
+  icon_background?: string;
+  is_active: boolean;
+  display_order: number;
+}
+
+interface EventsPageSettings {
+  id?: string;
+  badge_text?: string;
+  heading?: string;
+  subheading?: string;
+  default_image_url?: string;
+}
+
+interface Event {
+  id?: string;
+  title: string;
+  description?: string;
+  event_date: string;
+  event_time?: string;
+  end_date?: string;
+  end_time?: string;
+  location?: string;
+  venue?: string;
+  image_url?: string;
+  event_type?: string;
+  status?: "upcoming" | "ongoing" | "completed" | "cancelled";
+  max_attendees?: number;
+  current_attendees?: number;
+  ticket_price?: number;
+  ticket_currency?: string;
+  registration_required?: boolean;
+  registration_deadline?: string;
+  tags?: string[];
+}
+
+interface EventRegistration {
+  id?: string;
+  event_id: string;
+  user_id?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  status?: "pending" | "confirmed" | "cancelled" | "attended";
+  payment_status?: "pending" | "paid" | "refunded";
+  payment_amount?: number;
+  payment_reference?: string;
+}
+
+interface ServicesPageSettings {
+  id?: string;
+  badge_text?: string;
+  heading: string;
+  subheading?: string;
+  view_all_button_text?: string;
+}
+
+interface Service {
+  id?: string;
+  service_key: string;
+  title: string;
+  description: string;
+  icon_color: string;
+  icon_svg?: string;
+  category?: string;
+  is_active: boolean;
+  display_order: number;
+  service_url?: string;
+  requires_authentication?: boolean;
+}
+
+interface ServiceRequest {
+  id?: string;
+  service_id: string;
+  user_id?: string;
+  request_type?: string;
+  description: string;
+  status?: "pending" | "in_progress" | "completed" | "rejected" | "cancelled";
+  priority?: "low" | "medium" | "high" | "urgent";
+  assigned_to?: string;
+  response?: string;
+}
+
+interface PricingPageSettings {
+  id?: string;
+  badge_text?: string;
+  heading: string;
+  subheading?: string;
+  subscribe_button_text?: string;
+}
+
+interface PricingPlan {
+  id?: string;
+  plan_key: string;
+  name: string;
+  price: number;
+  currency?: string;
+  billing_period?: "monthly" | "yearly" | "one-time";
+  is_popular?: boolean;
+  is_active: boolean;
+  display_order: number;
+  description?: string;
+}
+
+interface PricingPlanFeature {
+  id?: string;
+  plan_id: string;
+  feature_name: string;
+  is_included: boolean;
+  display_order: number;
+}
+
+interface GuidelinesPageSettings {
+  id?: string;
+  badge_text?: string;
+  heading?: string;
+}
+
+interface Guideline {
+  id?: string;
+  quote: string;
+  author_name: string;
+  author_role?: string;
+  rating?: number;
+  author_image_url?: string;
+  display_order: number;
+  is_active: boolean;
+}
+
+interface HeroPageSettings {
+  id?: string;
+  slide_duration_seconds?: number;
+  auto_advance?: boolean;
+  show_navigation_dots?: boolean;
+  show_prev_next_arrows?: boolean;
+  default_badge_text?: string;
+  primary_button_text?: string;
+  primary_button_route?: string;
+  secondary_button_text?: string;
+  secondary_button_route?: string;
+}
+
+interface HeroSlide {
+  id?: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  image_url: string;
+  image_alt?: string;
+  slide_order: number;
+  is_active: boolean;
+  link_url?: string;
+  link_text?: string;
+  button_text?: string;
+}
+
+interface FooterLink {
+  id?: string;
+  link_text: string;
+  link_url: string;
+  section: "quick_links" | "services" | "legal" | "social";
+  display_order: number;
+  is_active: boolean;
+  opens_in_new_tab?: boolean;
+}
+
+interface FooterSettings {
+  id?: string;
+  logo_url?: string;
+  tagline?: string;
+  copyright_text?: string;
+  social_media?: Record<string, string>;
+}
 
 interface ControlPanelProps {
   onClose: () => void;
@@ -202,150 +391,55 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
   };
 
   const loadNavbarData = async () => {
-    try {
-      const [menuItemsResponse, settingsResponse] = await Promise.all([
-        navbarApi.getMenuItems(),
-        navbarApi.getSettings(),
-      ]);
-      setNavbarMenuItems(menuItemsResponse.data || menuItemsResponse || []);
-      setNavbarSettings(settingsResponse.data || settingsResponse || null);
-    } catch (err) {
-      console.error("Load navbar data error:", err);
-      // If API doesn't exist yet, use empty data
-      setNavbarMenuItems([]);
-      setNavbarSettings(null);
-    }
+    // No API calls - use empty data
+    setNavbarMenuItems([]);
+    setNavbarSettings(null);
   };
 
   const loadContactData = async () => {
-    try {
-      const [settingsResponse, messagesResponse, informationResponse] = await Promise.all([
-        contactApi.getSettings(),
-        contactApi.getMessages(),
-        contactApi.getInformation(),
-      ]);
-      setContactSettings(settingsResponse.data || settingsResponse || null);
-      setContactMessages(messagesResponse.data || messagesResponse || []);
-      setContactInformation(informationResponse.data || informationResponse || []);
-    } catch (err) {
-      console.error("Load contact data error:", err);
-      setContactSettings(null);
-      setContactMessages([]);
-      setContactInformation([]);
-    }
+    // No API calls - use empty data
+    setContactSettings(null);
+    setContactMessages([]);
+    setContactInformation([]);
   };
 
   const loadEventsData = async () => {
-    try {
-      const [settingsResponse, eventsResponse, registrationsResponse] = await Promise.all([
-        eventsApi.getSettings(),
-        eventsApi.getEvents(),
-        eventsApi.getRegistrations(),
-      ]);
-      setEventsSettings(settingsResponse.data || settingsResponse || null);
-      setEvents(eventsResponse.data || eventsResponse || []);
-      setEventRegistrations(registrationsResponse.data || registrationsResponse || []);
-    } catch (err) {
-      console.error("Load events data error:", err);
-      setEventsSettings(null);
-      setEvents([]);
-      setEventRegistrations([]);
-    }
+    // No API calls - use empty data
+    setEventsSettings(null);
+    setEvents([]);
+    setEventRegistrations([]);
   };
 
   const loadServicesData = async () => {
-    try {
-      const [settingsResponse, servicesResponse, requestsResponse] = await Promise.all([
-        servicesApi.getSettings(),
-        servicesApi.getServices(),
-        servicesApi.getRequests(),
-      ]);
-      setServicesSettings(settingsResponse.data || settingsResponse || null);
-      setServices(servicesResponse.data || servicesResponse || []);
-      setServiceRequests(requestsResponse.data || requestsResponse || []);
-    } catch (err) {
-      console.error("Load services data error:", err);
-      setServicesSettings(null);
-      setServices([]);
-      setServiceRequests([]);
-    }
+    // No API calls - use empty data
+    setServicesSettings(null);
+    setServices([]);
+    setServiceRequests([]);
   };
 
   const loadPricingData = async () => {
-    try {
-      const [settingsResponse, plansResponse] = await Promise.all([
-        pricingApi.getSettings(),
-        pricingApi.getPlans(),
-      ]);
-      setPricingSettings(settingsResponse.data || settingsResponse || null);
-      const plans = plansResponse.data || plansResponse || [];
-      setPricingPlans(plans);
-
-      // Load features for each plan
-      const featuresMap: Record<string, PricingPlanFeature[]> = {};
-      for (const plan of plans) {
-        if (plan.id) {
-          try {
-            const featuresResponse = await pricingApi.getPlanFeatures(plan.id);
-            featuresMap[plan.id] = featuresResponse.data || featuresResponse || [];
-          } catch (err) {
-            console.error(`Load features for plan ${plan.id} error:`, err);
-            featuresMap[plan.id] = [];
-          }
-        }
-      }
-      setPlanFeatures(featuresMap);
-    } catch (err) {
-      console.error("Load pricing data error:", err);
-      setPricingSettings(null);
-      setPricingPlans([]);
-      setPlanFeatures({});
-    }
+    // No API calls - use empty data
+    setPricingSettings(null);
+    setPricingPlans([]);
+    setPlanFeatures({});
   };
 
   const loadGuidelinesData = async () => {
-    try {
-      const [settingsResponse, guidelinesResponse] = await Promise.all([
-        guidelinesApi.getSettings(),
-        guidelinesApi.getGuidelines(),
-      ]);
-      setGuidelinesSettings(settingsResponse.data || settingsResponse || null);
-      setGuidelines(guidelinesResponse.data || guidelinesResponse || []);
-    } catch (err) {
-      console.error("Load guidelines data error:", err);
-      setGuidelinesSettings(null);
-      setGuidelines([]);
-    }
+    // No API calls - use empty data
+    setGuidelinesSettings(null);
+    setGuidelines([]);
   };
 
   const loadHeroData = async () => {
-    try {
-      const [settingsResponse, slidesResponse] = await Promise.all([
-        heroApi.getSettings(),
-        heroApi.getSlides(),
-      ]);
-      setHeroSettings(settingsResponse.data || settingsResponse || null);
-      setHeroSlides(slidesResponse.data || slidesResponse || []);
-    } catch (err) {
-      console.error("Load hero data error:", err);
-      setHeroSettings(null);
-      setHeroSlides([]);
-    }
+    // No API calls - use empty data
+    setHeroSettings(null);
+    setHeroSlides([]);
   };
 
   const loadFooterData = async () => {
-    try {
-      const [settingsResponse, linksResponse] = await Promise.all([
-        footerApi.getSettings(),
-        footerApi.getLinks(),
-      ]);
-      setFooterSettings(settingsResponse.data || settingsResponse || null);
-      setFooterLinks(linksResponse.data || linksResponse || []);
-    } catch (err) {
-      console.error("Load footer data error:", err);
-      setFooterSettings(null);
-      setFooterLinks([]);
-    }
+    // No API calls - use empty data
+    setFooterSettings(null);
+    setFooterLinks([]);
   };
 
   // Render functions for each tab
@@ -475,13 +569,15 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         {contactSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
-              <strong>Badge Text:</strong> {contactSettings.badge_text || "Not set"}
+              <strong>Badge Text:</strong>{" "}
+              {contactSettings.badge_text || "Not set"}
             </p>
             <p>
               <strong>Heading:</strong> {contactSettings.heading || "Not set"}
             </p>
             <p>
-              <strong>Subheading:</strong> {contactSettings.subheading || "Not set"}
+              <strong>Subheading:</strong>{" "}
+              {contactSettings.subheading || "Not set"}
             </p>
             <button
               className="control-panel__button control-panel__button--secondary"
@@ -492,7 +588,9 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>No settings configured</p>
+          <p style={{ marginTop: "16px", color: "#666" }}>
+            No settings configured
+          </p>
         )}
       </div>
       <div className="control-panel__section">
@@ -573,40 +671,42 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         </div>
         <div className="control-panel__grid">
           {contactInformation.length === 0 ? (
-            <div className="control-panel__empty">No contact information yet</div>
+            <div className="control-panel__empty">
+              No contact information yet
+            </div>
           ) : (
             contactInformation.map((info) => (
-            <div key={info.id} className="control-panel__card">
-              <div className="control-panel__card-header">
-                <h4>{info.title}</h4>
-                <div className="control-panel__card-actions">
-                  <button
-                    className="control-panel__icon-button"
-                    onClick={() => setEditingContactInfo(info)}
-                  >
-                    <Edit size={16} />
-                  </button>
-                  <button
-                    className="control-panel__icon-button"
-                    onClick={() => handleDeleteContactInfo(info.id!)}
-                  >
-                    <Trash2 size={16} />
-                  </button>
+              <div key={info.id} className="control-panel__card">
+                <div className="control-panel__card-header">
+                  <h4>{info.title}</h4>
+                  <div className="control-panel__card-actions">
+                    <button
+                      className="control-panel__icon-button"
+                      onClick={() => setEditingContactInfo(info)}
+                    >
+                      <Edit size={16} />
+                    </button>
+                    <button
+                      className="control-panel__icon-button"
+                      onClick={() => handleDeleteContactInfo(info.id!)}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
+                <p className="control-panel__card-description">
+                  {info.primary_value}
+                </p>
+                <span
+                  className={`control-panel__badge ${
+                    info.is_active
+                      ? "control-panel__badge--active"
+                      : "control-panel__badge--inactive"
+                  }`}
+                >
+                  {info.contact_type}
+                </span>
               </div>
-              <p className="control-panel__card-description">
-                {info.primary_value}
-              </p>
-              <span
-                className={`control-panel__badge ${
-                  info.is_active
-                    ? "control-panel__badge--active"
-                    : "control-panel__badge--inactive"
-                }`}
-              >
-                {info.contact_type}
-              </span>
-            </div>
             ))
           )}
         </div>
@@ -628,16 +728,19 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         {eventsSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
-              <strong>Badge Text:</strong> {eventsSettings.badge_text || "Not set"}
+              <strong>Badge Text:</strong>{" "}
+              {eventsSettings.badge_text || "Not set"}
             </p>
             <p>
               <strong>Heading:</strong> {eventsSettings.heading || "Not set"}
             </p>
             <p>
-              <strong>Subheading:</strong> {eventsSettings.subheading || "Not set"}
+              <strong>Subheading:</strong>{" "}
+              {eventsSettings.subheading || "Not set"}
             </p>
             <p>
-              <strong>Default Image URL:</strong> {eventsSettings.default_image_url || "Not set"}
+              <strong>Default Image URL:</strong>{" "}
+              {eventsSettings.default_image_url || "Not set"}
             </p>
             <button
               className="control-panel__button control-panel__button--secondary"
@@ -648,12 +751,16 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>No settings configured</p>
+          <p style={{ marginTop: "16px", color: "#666" }}>
+            No settings configured
+          </p>
         )}
       </div>
       {eventRegistrations.length > 0 && (
         <div className="control-panel__section">
-          <h3 className="control-panel__section-title">Event Registrations ({eventRegistrations.length})</h3>
+          <h3 className="control-panel__section-title">
+            Event Registrations ({eventRegistrations.length})
+          </h3>
           <div className="control-panel__table-wrapper">
             <table className="control-panel__table">
               <thead>
@@ -791,16 +898,19 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         {servicesSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
-              <strong>Badge Text:</strong> {servicesSettings.badge_text || "Not set"}
+              <strong>Badge Text:</strong>{" "}
+              {servicesSettings.badge_text || "Not set"}
             </p>
             <p>
               <strong>Heading:</strong> {servicesSettings.heading || "Not set"}
             </p>
             <p>
-              <strong>Subheading:</strong> {servicesSettings.subheading || "Not set"}
+              <strong>Subheading:</strong>{" "}
+              {servicesSettings.subheading || "Not set"}
             </p>
             <p>
-              <strong>View All Button Text:</strong> {servicesSettings.view_all_button_text || "Not set"}
+              <strong>View All Button Text:</strong>{" "}
+              {servicesSettings.view_all_button_text || "Not set"}
             </p>
             <button
               className="control-panel__button control-panel__button--secondary"
@@ -811,12 +921,16 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>No settings configured</p>
+          <p style={{ marginTop: "16px", color: "#666" }}>
+            No settings configured
+          </p>
         )}
       </div>
       {serviceRequests.length > 0 && (
         <div className="control-panel__section">
-          <h3 className="control-panel__section-title">Service Requests ({serviceRequests.length})</h3>
+          <h3 className="control-panel__section-title">
+            Service Requests ({serviceRequests.length})
+          </h3>
           <div className="control-panel__table-wrapper">
             <table className="control-panel__table">
               <thead>
@@ -831,7 +945,13 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
                 {serviceRequests.map((req) => (
                   <tr key={req.id}>
                     <td>{req.service_id}</td>
-                    <td style={{ maxWidth: "300px", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <td
+                      style={{
+                        maxWidth: "300px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
                       {req.description}
                     </td>
                     <td>
@@ -881,7 +1001,12 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         </div>
         <div className="control-panel__grid">
           {services.length === 0 ? (
-            <div className="control-panel__empty" style={{ gridColumn: "1 / -1" }}>No services yet</div>
+            <div
+              className="control-panel__empty"
+              style={{ gridColumn: "1 / -1" }}
+            >
+              No services yet
+            </div>
           ) : (
             services.map((service) => (
               <div key={service.id} className="control-panel__card">
@@ -936,16 +1061,19 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         {pricingSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
-              <strong>Badge Text:</strong> {pricingSettings.badge_text || "Not set"}
+              <strong>Badge Text:</strong>{" "}
+              {pricingSettings.badge_text || "Not set"}
             </p>
             <p>
               <strong>Heading:</strong> {pricingSettings.heading || "Not set"}
             </p>
             <p>
-              <strong>Subheading:</strong> {pricingSettings.subheading || "Not set"}
+              <strong>Subheading:</strong>{" "}
+              {pricingSettings.subheading || "Not set"}
             </p>
             <p>
-              <strong>Subscribe Button Text:</strong> {pricingSettings.subscribe_button_text || "Not set"}
+              <strong>Subscribe Button Text:</strong>{" "}
+              {pricingSettings.subscribe_button_text || "Not set"}
             </p>
             <button
               className="control-panel__button control-panel__button--secondary"
@@ -956,7 +1084,9 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>No settings configured</p>
+          <p style={{ marginTop: "16px", color: "#666" }}>
+            No settings configured
+          </p>
         )}
       </div>
       <div className="control-panel__section">
@@ -982,7 +1112,12 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         </div>
         <div className="control-panel__grid">
           {pricingPlans.length === 0 ? (
-            <div className="control-panel__empty" style={{ gridColumn: "1 / -1" }}>No pricing plans yet</div>
+            <div
+              className="control-panel__empty"
+              style={{ gridColumn: "1 / -1" }}
+            >
+              No pricing plans yet
+            </div>
           ) : (
             pricingPlans.map((plan) => (
               <div key={plan.id} className="control-panel__card">
@@ -1027,14 +1162,18 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Guidelines Page Settings</h3>
+        <h3 className="control-panel__section-title">
+          Guidelines Page Settings
+        </h3>
         {guidelinesSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
-              <strong>Badge Text:</strong> {guidelinesSettings.badge_text || "Not set"}
+              <strong>Badge Text:</strong>{" "}
+              {guidelinesSettings.badge_text || "Not set"}
             </p>
             <p>
-              <strong>Heading:</strong> {guidelinesSettings.heading || "Not set"}
+              <strong>Heading:</strong>{" "}
+              {guidelinesSettings.heading || "Not set"}
             </p>
             <button
               className="control-panel__button control-panel__button--secondary"
@@ -1045,7 +1184,9 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>No settings configured</p>
+          <p style={{ marginTop: "16px", color: "#666" }}>
+            No settings configured
+          </p>
         )}
       </div>
       <div className="control-panel__section">
@@ -1150,31 +1291,40 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         {heroSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
-              <strong>Slide Duration (seconds):</strong> {heroSettings.slide_duration_seconds || "Not set"}
+              <strong>Slide Duration (seconds):</strong>{" "}
+              {heroSettings.slide_duration_seconds || "Not set"}
             </p>
             <p>
-              <strong>Auto Advance:</strong> {heroSettings.auto_advance ? "Yes" : "No"}
+              <strong>Auto Advance:</strong>{" "}
+              {heroSettings.auto_advance ? "Yes" : "No"}
             </p>
             <p>
-              <strong>Show Navigation Dots:</strong> {heroSettings.show_navigation_dots ? "Yes" : "No"}
+              <strong>Show Navigation Dots:</strong>{" "}
+              {heroSettings.show_navigation_dots ? "Yes" : "No"}
             </p>
             <p>
-              <strong>Show Prev/Next Arrows:</strong> {heroSettings.show_prev_next_arrows ? "Yes" : "No"}
+              <strong>Show Prev/Next Arrows:</strong>{" "}
+              {heroSettings.show_prev_next_arrows ? "Yes" : "No"}
             </p>
             <p>
-              <strong>Default Badge Text:</strong> {heroSettings.default_badge_text || "Not set"}
+              <strong>Default Badge Text:</strong>{" "}
+              {heroSettings.default_badge_text || "Not set"}
             </p>
             <p>
-              <strong>Primary Button Text:</strong> {heroSettings.primary_button_text || "Not set"}
+              <strong>Primary Button Text:</strong>{" "}
+              {heroSettings.primary_button_text || "Not set"}
             </p>
             <p>
-              <strong>Primary Button Route:</strong> {heroSettings.primary_button_route || "Not set"}
+              <strong>Primary Button Route:</strong>{" "}
+              {heroSettings.primary_button_route || "Not set"}
             </p>
             <p>
-              <strong>Secondary Button Text:</strong> {heroSettings.secondary_button_text || "Not set"}
+              <strong>Secondary Button Text:</strong>{" "}
+              {heroSettings.secondary_button_text || "Not set"}
             </p>
             <p>
-              <strong>Secondary Button Route:</strong> {heroSettings.secondary_button_route || "Not set"}
+              <strong>Secondary Button Route:</strong>{" "}
+              {heroSettings.secondary_button_route || "Not set"}
             </p>
             <button
               className="control-panel__button control-panel__button--secondary"
@@ -1185,7 +1335,9 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>No settings configured</p>
+          <p style={{ marginTop: "16px", color: "#666" }}>
+            No settings configured
+          </p>
         )}
       </div>
       <div className="control-panel__section">
@@ -1208,7 +1360,12 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         </div>
         <div className="control-panel__grid">
           {heroSlides.length === 0 ? (
-            <div className="control-panel__empty" style={{ gridColumn: "1 / -1" }}>No slides yet</div>
+            <div
+              className="control-panel__empty"
+              style={{ gridColumn: "1 / -1" }}
+            >
+              No slides yet
+            </div>
           ) : (
             heroSlides.map((slide) => (
               <div key={slide.id} className="control-panel__card">
@@ -1282,20 +1439,24 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
               <strong>Tagline:</strong> {footerSettings.tagline || "Not set"}
             </p>
             <p>
-              <strong>Copyright Text:</strong> {footerSettings.copyright_text || "Not set"}
+              <strong>Copyright Text:</strong>{" "}
+              {footerSettings.copyright_text || "Not set"}
             </p>
-            {footerSettings.social_media && Object.keys(footerSettings.social_media).length > 0 && (
-              <div style={{ marginTop: "12px" }}>
-                <strong>Social Media:</strong>
-                <ul style={{ marginTop: "8px", paddingLeft: "20px" }}>
-                  {Object.entries(footerSettings.social_media).map(([platform, url]) => (
-                    <li key={platform}>
-                      {platform}: {url}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {footerSettings.social_media &&
+              Object.keys(footerSettings.social_media).length > 0 && (
+                <div style={{ marginTop: "12px" }}>
+                  <strong>Social Media:</strong>
+                  <ul style={{ marginTop: "8px", paddingLeft: "20px" }}>
+                    {Object.entries(footerSettings.social_media).map(
+                      ([platform, url]) => (
+                        <li key={platform}>
+                          {platform}: {url}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
@@ -1305,7 +1466,9 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>No settings configured</p>
+          <p style={{ marginTop: "16px", color: "#666" }}>
+            No settings configured
+          </p>
         )}
       </div>
       <div className="control-panel__section">
@@ -1425,861 +1588,115 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
   };
 
   // Handler functions
-  const handleDeleteNavbarItem = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this menu item?")) {
-      try {
-        await navbarApi.deleteMenuItem(id);
-        await loadNavbarData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete menu item");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteNavbarItem = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleSaveNavbarItem = async (item: NavbarMenuItem) => {
-    try {
-      if (!item.label || !item.link_type) {
-        alert("Please fill in all required fields (Label and Link Type)");
-        return;
-      }
-
-      if (item.id) {
-        await navbarApi.updateMenuItem(item.id, item);
-      } else {
-        await navbarApi.createMenuItem(item);
-      }
-      setEditingNavbarItem(null);
-      await loadNavbarData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save menu item");
-      console.error("Save navbar item error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSaveNavbarItem = async (_item: NavbarMenuItem) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingNavbarItem(null);
   };
 
-  const handleDeleteContactMessage = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this message?")) {
-      try {
-        await contactApi.deleteMessage(id);
-        await loadContactData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete message");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteContactMessage = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleDeleteContactInfo = async (id: string) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this contact information?"
-      )
-    ) {
-      try {
-        await contactApi.deleteInformation(id);
-        await loadContactData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete contact information");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteContactInfo = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleDeleteEvent = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this event?")) {
-      try {
-        await eventsApi.deleteEvent(id);
-        await loadEventsData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete event");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteEvent = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleDeleteService = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this service?")) {
-      try {
-        await servicesApi.deleteService(id);
-        await loadServicesData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete service");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteService = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleDeleteGuideline = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this guideline?")) {
-      try {
-        await guidelinesApi.deleteGuideline(id);
-        await loadGuidelinesData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete guideline");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteGuideline = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleDeleteSlide = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this slide?")) {
-      try {
-        await heroApi.deleteSlide(id);
-        await loadHeroData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete slide");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteSlide = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleDeleteFooterLink = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this link?")) {
-      try {
-        await footerApi.deleteLink(id);
-        await loadFooterData();
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err, "Failed to delete link");
-        alert(errorMessage);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeleteFooterLink = async (_id: string) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
   };
 
-  const handleSaveContactInfo = async (info: ContactInformation) => {
-    try {
-      if (!info.title || !info.primary_value || !info.contact_type) {
-        alert("Please fill in all required fields (Title, Primary Value, and Contact Type)");
-        return;
-      }
-
-      if (info.id) {
-        await contactApi.updateInformation(info.id, info);
-      } else {
-        await contactApi.createInformation(info);
-      }
-      setEditingContactInfo(null);
-      await loadContactData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save contact information");
-      console.error("Save contact info error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSaveContactInfo = async (_info: ContactInformation) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingContactInfo(null);
   };
 
-  const handleSaveEvent = async (event: Event) => {
-    try {
-      if (!event.title || !event.event_date) {
-        alert("Please fill in all required fields (Title and Event Date)");
-        return;
-      }
-
-      if (event.id) {
-        await eventsApi.updateEvent(event.id, event);
-      } else {
-        await eventsApi.createEvent(event);
-      }
-      setEditingEvent(null);
-      await loadEventsData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save event");
-      console.error("Save event error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSaveEvent = async (_event: Event) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingEvent(null);
   };
 
-  const handleSaveService = async (service: Service) => {
-    try {
-      if (!service.service_key || !service.title || !service.description || !service.icon_color) {
-        alert("Please fill in all required fields (Service Key, Title, Description, and Icon Color)");
-        return;
-      }
-
-      if (service.id) {
-        await servicesApi.updateService(service.id, service);
-      } else {
-        await servicesApi.createService(service);
-      }
-      setEditingService(null);
-      await loadServicesData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save service");
-      console.error("Save service error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSaveService = async (_service: Service) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingService(null);
   };
 
-  const handleSavePlan = async (plan: PricingPlan) => {
-    try {
-      if (!plan.plan_key || !plan.name || plan.price === undefined || plan.price === null) {
-        alert("Please fill in all required fields (Plan Key, Name, and Price)");
-        return;
-      }
-
-      if (plan.id) {
-        await pricingApi.updatePlan(plan.id, plan);
-      } else {
-        await pricingApi.createPlan(plan);
-      }
-      setEditingPlan(null);
-      await loadPricingData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save pricing plan");
-      console.error("Save pricing plan error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSavePlan = async (_plan: PricingPlan) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingPlan(null);
   };
 
-  const handleSaveGuideline = async (guideline: Guideline) => {
-    try {
-      if (!guideline.quote || !guideline.author_name) {
-        alert("Please fill in all required fields (Quote and Author Name)");
-        return;
-      }
-
-      if (guideline.id) {
-        await guidelinesApi.updateGuideline(guideline.id, guideline);
-      } else {
-        await guidelinesApi.createGuideline(guideline);
-      }
-      setEditingGuideline(null);
-      await loadGuidelinesData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save guideline");
-      console.error("Save guideline error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSaveGuideline = async (_guideline: Guideline) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingGuideline(null);
   };
 
-  const handleSaveSlide = async (slide: HeroSlide) => {
-    try {
-      if (!slide.title || !slide.image_url) {
-        alert("Please fill in all required fields (Title and Image URL)");
-        return;
-      }
-
-      if (slide.id) {
-        await heroApi.updateSlide(slide.id, slide);
-      } else {
-        await heroApi.createSlide(slide);
-      }
-      setEditingSlide(null);
-      await loadHeroData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save slide");
-      console.error("Save slide error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSaveSlide = async (_slide: HeroSlide) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingSlide(null);
   };
 
-  const handleSaveFooterLink = async (link: FooterLink) => {
-    try {
-      if (!link.link_text || !link.link_url || !link.section) {
-        alert("Please fill in all required fields (Link Text, Link URL, and Section)");
-        return;
-      }
-
-      if (link.id) {
-        await footerApi.updateLink(link.id, link);
-      } else {
-        await footerApi.createLink(link);
-      }
-      setEditingFooterLink(null);
-      await loadFooterData();
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to save footer link");
-      console.error("Save footer link error:", err);
-      alert(errorMessage);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSaveFooterLink = async (_link: FooterLink) => {
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    setEditingFooterLink(null);
   };
 
   // Export current hardcoded elements to database
   const handleExportCurrentElements = async () => {
-    if (
-      !window.confirm(
-        "This will save all current landing page elements to the database. Continue?"
-      )
-    ) {
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Helper function to create or update items
-      const upsertMenuItem = async (item: NavbarMenuItem) => {
-        try {
-          // Try to get existing items to check for duplicates
-          const existing = await navbarApi.getMenuItems();
-          const existingItems = existing.data || existing || [];
-          const existingItem = existingItems.find((i: NavbarMenuItem) => i.label === item.label);
-          
-          if (existingItem?.id) {
-            await navbarApi.updateMenuItem(existingItem.id, item);
-            console.log(`Updated navbar item: ${item.label}`);
-          } else {
-            await navbarApi.createMenuItem(item);
-            console.log(`Created navbar item: ${item.label}`);
-          }
-        } catch (err) {
-          console.error(`Error upserting navbar item ${item.label}:`, err);
-          throw err;
-        }
-      };
-
-      // 1. Export Navbar Menu Items
-      const navbarMenuItems = [
-        {
-          label: "Home",
-          link_type: "scroll" as const,
-          scroll_target_id: "home",
-          display_order: 1,
-          is_active: true,
-          requires_auth: false,
-        },
-        {
-          label: "About",
-          link_type: "scroll" as const,
-          scroll_target_id: "about",
-          display_order: 2,
-          is_active: true,
-          requires_auth: false,
-        },
-        {
-          label: "Guidelines",
-          link_type: "scroll" as const,
-          scroll_target_id: "guidelines",
-          display_order: 3,
-          is_active: true,
-          requires_auth: false,
-        },
-        {
-          label: "Services",
-          link_type: "scroll" as const,
-          scroll_target_id: "services",
-          display_order: 4,
-          is_active: true,
-          requires_auth: false,
-        },
-        {
-          label: "Contact Us",
-          link_type: "scroll" as const,
-          scroll_target_id: "contact",
-          display_order: 5,
-          is_active: true,
-          requires_auth: false,
-        },
-      ];
-
-      for (const item of navbarMenuItems) {
-        await upsertMenuItem(item);
-      }
-
-      // 2. Export Navbar Settings
-      await navbarApi.updateSettings({
-        logo_url: "/image/primary-logo.png",
-        get_started_button_text: "Get Started",
-        get_started_button_route: "/welcome",
-        is_active: true,
-      });
-      console.log("Navbar settings exported");
-
-      // Helper function to upsert service
-      const upsertService = async (service: Service) => {
-        try {
-          const existing = await servicesApi.getServices();
-          const existingServices = existing.data || existing || [];
-          const existingService = existingServices.find((s: Service) => s.service_key === service.service_key);
-          
-          if (existingService?.id) {
-            await servicesApi.updateService(existingService.id, service);
-            console.log(`Updated service: ${service.service_key}`);
-          } else {
-            await servicesApi.createService(service);
-            console.log(`Created service: ${service.service_key}`);
-          }
-        } catch (err) {
-          console.error(`Error upserting service ${service.service_key}:`, err);
-          throw err;
-        }
-      };
-
-      // 3. Export Services
-      const services = [
-        {
-          service_key: "electricity",
-          title: "Electricity Services",
-          description: "Pay bills, report outages, and track consumption online",
-          icon_color: "#FFC107",
-          is_active: true,
-          display_order: 1,
-        },
-        {
-          service_key: "water",
-          title: "Water Services",
-          description: "Manage water bills and service requests efficiently",
-          icon_color: "#2196F3",
-          is_active: true,
-          display_order: 2,
-        },
-        {
-          service_key: "transportation",
-          title: "Transportation",
-          description: "Access public transport schedules and smart ticketing",
-          icon_color: "#00C950",
-          is_active: true,
-          display_order: 3,
-        },
-        {
-          service_key: "egovernance",
-          title: "E-Governance",
-          description: "Digital government services and documentation",
-          icon_color: "#9C27B0",
-          is_active: true,
-          display_order: 4,
-        },
-        {
-          service_key: "permits",
-          title: "Permits & Licenses",
-          description: "Apply for permits, licenses, and certifications online",
-          icon_color: "#FF9800",
-          is_active: true,
-          display_order: 5,
-        },
-        {
-          service_key: "tax",
-          title: "Tax & Revenue",
-          description: "Pay taxes, fees, and levies securely online",
-          icon_color: "#F44336",
-          is_active: true,
-          display_order: 6,
-        },
-        {
-          service_key: "wifi",
-          title: "Smart City WiFi",
-          description: "Free public WiFi hotspots across the city",
-          icon_color: "#9C27B0",
-          is_active: true,
-          display_order: 7,
-        },
-        {
-          service_key: "traffic",
-          title: "Traffic Management",
-          description: "Real-time traffic updates and road safety info",
-          icon_color: "#00BCD4",
-          is_active: true,
-          display_order: 8,
-        },
-        {
-          service_key: "property",
-          title: "Property Services",
-          description: "Land registry, property tax, and building approvals",
-          icon_color: "#E91E63",
-          is_active: true,
-          display_order: 9,
-        },
-        {
-          service_key: "emergency",
-          title: "Emergency Services",
-          description: "Quick access to fire, police, and medical services",
-          icon_color: "#F44336",
-          is_active: true,
-          display_order: 10,
-        },
-        {
-          service_key: "citizen",
-          title: "Citizen Engagement",
-          description: "Participate in city planning and community forums",
-          icon_color: "#03A9F4",
-          is_active: true,
-          display_order: 11,
-        },
-        {
-          service_key: "payments",
-          title: "Digital Payments",
-          description: "Unified payment gateway for all city services",
-          icon_color: "#00C950",
-          is_active: true,
-          display_order: 12,
-        },
-      ];
-
-      for (const service of services) {
-        await upsertService(service);
-      }
-
-      // 4. Export Services Settings
-      await servicesApi.updateSettings({
-        badge_text: "Our Services",
-        heading: "Comprehensive City Services",
-        subheading:
-          "Everything you need to interact with city services, all digitized and accessible 24/7",
-        view_all_button_text: "View All",
-      });
-      console.log("Services settings exported");
-
-      // Helper function to upsert pricing plan
-      const upsertPricingPlan = async (plan: PricingPlan) => {
-        try {
-          const existing = await pricingApi.getPlans();
-          const existingPlans = existing.data || existing || [];
-          const existingPlan = existingPlans.find((p: PricingPlan) => p.plan_key === plan.plan_key);
-          
-          let planId: string;
-          if (existingPlan?.id) {
-            await pricingApi.updatePlan(existingPlan.id, plan);
-            planId = existingPlan.id;
-            console.log(`Updated pricing plan: ${plan.plan_key}`);
-          } else {
-            const createdPlan = await pricingApi.createPlan(plan);
-            planId = createdPlan.data?.id || existingPlan?.id || "";
-            console.log(`Created pricing plan: ${plan.plan_key}`);
-          }
-
-          // Create/update features for each plan
-          if (planId) {
-            const features = [
-              { feature_name: "10% Discount", is_included: true },
-              { feature_name: "Premium Partners", is_included: plan.plan_key !== "bronze" },
-              { feature_name: "Free Monthly Service", is_included: plan.plan_key === "platinum" || plan.plan_key === "gold" },
-              { feature_name: "Unlimited brands/users", is_included: plan.plan_key === "platinum" },
-              { feature_name: "VIP perks", is_included: plan.plan_key === "platinum" },
-            ];
-
-            // Get existing features
-            const existingFeatures = await pricingApi.getPlanFeatures(planId);
-            const existingFeaturesList = existingFeatures.data || existingFeatures || [];
-
-            for (const feature of features) {
-              try {
-                const existingFeature = existingFeaturesList.find(
-                  (f: PricingPlanFeature) => f.feature_name === feature.feature_name && f.plan_id === planId
-                );
-                
-                if (existingFeature?.id) {
-                  await pricingApi.updatePlanFeature(existingFeature.id, {
-                    is_included: feature.is_included,
-                    display_order: features.indexOf(feature),
-                  });
-                } else {
-                  await pricingApi.createPlanFeature({
-                    plan_id: planId,
-                    feature_name: feature.feature_name,
-                    is_included: feature.is_included,
-                    display_order: features.indexOf(feature),
-                  });
-                }
-              } catch (err) {
-                console.error(`Error upserting feature ${feature.feature_name}:`, err);
-              }
-            }
-          }
-        } catch (err) {
-          console.error(`Error upserting pricing plan ${plan.plan_key}:`, err);
-          throw err;
-        }
-      };
-
-      // 5. Export Pricing Plans
-      const pricingPlans = [
-        {
-          plan_key: "platinum",
-          name: "Platinium Membership Package",
-          price: 20000,
-          currency: "NGN",
-          billing_period: "monthly" as const,
-          is_popular: true,
-          is_active: true,
-          display_order: 1,
-          description: "Billed monthly Pause / Cancel anytime",
-        },
-        {
-          plan_key: "gold",
-          name: "Gold Membership Package",
-          price: 10000,
-          currency: "NGN",
-          billing_period: "monthly" as const,
-          is_popular: false,
-          is_active: true,
-          display_order: 2,
-          description: "Billed monthly Pause / Cancel anytime",
-        },
-        {
-          plan_key: "silver",
-          name: "Silver Membership Package",
-          price: 5000,
-          currency: "NGN",
-          billing_period: "monthly" as const,
-          is_popular: false,
-          is_active: true,
-          display_order: 3,
-          description: "Billed monthly Pause / Cancel anytime",
-        },
-        {
-          plan_key: "bronze",
-          name: "Bronze Membership Package",
-          price: 2000,
-          currency: "NGN",
-          billing_period: "monthly" as const,
-          is_popular: false,
-          is_active: true,
-          display_order: 4,
-          description: "Billed monthly Pause / Cancel anytime",
-        },
-      ];
-
-      for (const plan of pricingPlans) {
-        await upsertPricingPlan(plan);
-      }
-
-      // 6. Export Pricing Settings
-      await pricingApi.updateSettings({
-        badge_text: "Jos Smart City Pricing",
-        heading: "Our Pricing Plans",
-        subheading:
-          "Join Jos Smart City and unlock a world of exclusive discounts, rewards, and seamless access to essential services — connecting residents, businesses, and visitors through one powerful digital membership platform that brings your city's marketplace, wallet, and community together.",
-        subscribe_button_text: "Subscribe Now",
-      });
-      console.log("Pricing settings exported");
-
-      // Helper function to upsert contact information
-      const upsertContactInfo = async (info: ContactInformation) => {
-        try {
-          const existing = await contactApi.getInformation();
-          const existingInfo = existing.data || existing || [];
-          const existingItem = existingInfo.find((i: ContactInformation) => 
-            i.title === info.title && i.contact_type === info.contact_type
-          );
-          
-          if (existingItem?.id) {
-            await contactApi.updateInformation(existingItem.id, info);
-            console.log(`Updated contact info: ${info.title}`);
-          } else {
-            await contactApi.createInformation(info);
-            console.log(`Created contact info: ${info.title}`);
-          }
-        } catch (err) {
-          console.error(`Error upserting contact info ${info.title}:`, err);
-          throw err;
-        }
-      };
-
-      // 7. Export Contact Information
-      const contactInfo = [
-        {
-          contact_type: "phone" as const,
-          title: "Phone",
-          primary_value: "+234 7067621916",
-          secondary_value: "Mon - Sat 24/7",
-          icon_color: "#2196F3",
-          is_active: true,
-          display_order: 1,
-        },
-        {
-          contact_type: "email" as const,
-          title: "Email",
-          primary_value: "support@afresh.academy",
-          secondary_value: "Response in 24 hours",
-          icon_color: "#00C950",
-          is_active: true,
-          display_order: 2,
-        },
-        {
-          contact_type: "location" as const,
-          title: "Location",
-          primary_value: "Jos City Center",
-          secondary_value: "Plateau State, Nigeria",
-          icon_color: "#9C27B0",
-          is_active: true,
-          display_order: 3,
-        },
-      ];
-
-      for (const info of contactInfo) {
-        await upsertContactInfo(info);
-      }
-
-      // 8. Export Contact Settings
-      await contactApi.updateSettings({
-        badge_text: "Contact Us",
-        heading: "Get in Touch",
-        subheading: "Our support team is available 24/7 to assist you",
-      });
-      console.log("Contact settings exported");
-
-      // Helper function to upsert footer link
-      const upsertFooterLink = async (link: FooterLink) => {
-        try {
-          const existing = await footerApi.getLinks();
-          const existingLinks = existing.data || existing || [];
-          const existingLink = existingLinks.find((l: FooterLink) => 
-            l.link_text === link.link_text && l.section === link.section
-          );
-          
-          if (existingLink?.id) {
-            await footerApi.updateLink(existingLink.id, link);
-            console.log(`Updated footer link: ${link.link_text}`);
-          } else {
-            await footerApi.createLink(link);
-            console.log(`Created footer link: ${link.link_text}`);
-          }
-        } catch (err) {
-          console.error(`Error upserting footer link ${link.link_text}:`, err);
-          throw err;
-        }
-      };
-
-      // 9. Export Footer Links
-      const footerLinks = [
-        // Quick Links
-        {
-          link_text: "Services",
-          link_url: "#services",
-          section: "quick_links" as const,
-          display_order: 1,
-          is_active: true,
-        },
-        {
-          link_text: "About Us",
-          link_url: "#about",
-          section: "quick_links" as const,
-          display_order: 2,
-          is_active: true,
-        },
-        {
-          link_text: "Contact",
-          link_url: "#contact",
-          section: "quick_links" as const,
-          display_order: 3,
-          is_active: true,
-        },
-        {
-          link_text: "FAQs",
-          link_url: "#",
-          section: "quick_links" as const,
-          display_order: 4,
-          is_active: true,
-        },
-        // Services
-        {
-          link_text: "Bill Payments",
-          link_url: "#",
-          section: "services" as const,
-          display_order: 1,
-          is_active: true,
-        },
-        {
-          link_text: "Permits",
-          link_url: "#",
-          section: "services" as const,
-          display_order: 2,
-          is_active: true,
-        },
-        {
-          link_text: "Licenses",
-          link_url: "#",
-          section: "services" as const,
-          display_order: 3,
-          is_active: true,
-        },
-        {
-          link_text: "Complaints",
-          link_url: "#",
-          section: "services" as const,
-          display_order: 4,
-          is_active: true,
-        },
-        // Legal
-        {
-          link_text: "Privacy Policy",
-          link_url: "#",
-          section: "legal" as const,
-          display_order: 1,
-          is_active: true,
-        },
-        {
-          link_text: "Terms of Service",
-          link_url: "#",
-          section: "legal" as const,
-          display_order: 2,
-          is_active: true,
-        },
-        {
-          link_text: "Cookie Policy",
-          link_url: "#",
-          section: "legal" as const,
-          display_order: 3,
-          is_active: true,
-        },
-        {
-          link_text: "Accessibility",
-          link_url: "#",
-          section: "legal" as const,
-          display_order: 4,
-          is_active: true,
-        },
-      ];
-
-      for (const link of footerLinks) {
-        await upsertFooterLink(link);
-      }
-
-      // 10. Export Footer Settings
-      await footerApi.updateSettings({
-        logo_url: "/image/primary-logo.png",
-        tagline: "Your gateway to smart city services and digital governance.",
-        copyright_text: "© 2025 JosCity Smart Services. All rights reserved. Developed by AfrESH",
-      });
-      console.log("Footer settings exported");
-
-      // 11. Export Guidelines Settings
-      await guidelinesApi.updateSettings({
-        badge_text: "Guidelines",
-        heading: "PWA Guidelines",
-      });
-      console.log("Guidelines settings exported");
-
-      // 12. Export Default Guideline
-      try {
-        const existing = await guidelinesApi.getGuidelines();
-        const existingGuidelines = existing.data || existing || [];
-        const defaultGuideline = existingGuidelines.find((g: Guideline) => 
-          g.author_name === "AfrESH Support" && g.display_order === 0
-        );
-
-        const guidelineData = {
-          quote:
-            "Welcome to the Jos Smart City PWA! We're here to help you navigate and enjoy your city with ease. In this phase of the app, kindly click on the green 'Get Started' button to redirect you to an account type panel, select your type of account, carefully fill in your details, an email would be sent to you if submitted successfully, with a login button, your email address and an OTP, kindly change your password after logging in. Your Information is protected and will not be shared with anyone.",
-          author_name: "AfrESH Support",
-          rating: 5,
-          display_order: 0,
-          is_active: true,
-        };
-
-        if (defaultGuideline?.id) {
-          await guidelinesApi.updateGuideline(defaultGuideline.id, guidelineData);
-          console.log("Updated default guideline");
-        } else {
-          await guidelinesApi.createGuideline(guidelineData);
-          console.log("Created default guideline");
-        }
-      } catch (err) {
-        console.error("Error upserting guideline:", err);
-        throw err;
-      }
-
-      alert("Successfully exported all current elements to the database!");
-      
-      // Reload all data
-      await loadTabData(activeTab);
-    } catch (err: unknown) {
-      const errorMessage = getErrorMessage(err, "Failed to export elements");
-      setError(errorMessage);
-      alert(`Error exporting elements: ${errorMessage}`);
-    } finally {
-      setLoading(false);
-    }
+    // No API calls - functionality disabled
+    alert("Backend API removed. This functionality is no longer available.");
+    return;
   };
 
   return (
@@ -2539,7 +1956,10 @@ const ContactInfoModal: React.FC<{
           <select
             value={formData.contact_type}
             onChange={(e) => {
-              const contactType = e.target.value as "phone" | "email" | "location";
+              const contactType = e.target.value as
+                | "phone"
+                | "email"
+                | "location";
               setFormData({ ...formData, contact_type: contactType });
             }}
             style={{
@@ -3124,9 +2544,7 @@ const PricingPlanModal: React.FC<{
             type="text"
             placeholder="Plan Name"
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             style={{
               padding: "8px",
               borderRadius: "4px",

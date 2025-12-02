@@ -6,7 +6,6 @@ import RegistrationTabs from "../components/RegistrationTabs";
 import PersonalFormFields from "../components/PersonalFormFields";
 import BusinessFormFields from "../components/BusinessFormFields";
 import SignInLink from "../components/SignInLink";
-import { BASE_URL } from "../api/config";
 import { 
   validatePersonalForm, 
   validateBusinessForm, 
@@ -87,48 +86,8 @@ function Register() {
 
       // Submit personal form
       setIsLoading(true);
-      try {
-        const requestData = {
-          first_name: formData.firstName.trim(),
-          last_name: formData.lastName.trim(),
-          gender: formData.gender,
-          phone_number: formData.phoneNumber.trim(),
-          email: formData.email.trim(),
-          nin_number: formData.ninNumber.trim(),
-          address: formData.address.trim(),
-          password: formData.password,
-        };
-
-        const response = await fetch(`${BASE_URL}/auth/personal/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        });
-
-        const contentType = response.headers.get("content-type");
-        let data;
-
-        if (contentType && contentType.includes("application/json")) {
-          data = await response.json();
-        } else {
-          const text = await response.text();
-          console.error("Non-JSON response received:", text.substring(0, 200));
-          throw new Error(
-            response.status === 404
-              ? "API endpoint not found. Please check if the backend server is running."
-              : `Server error (${response.status}). Please try again later.`
-          );
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || data.error || "Registration failed. Please try again."
-          );
-        }
-
-        // Navigate to success page after successful registration
+      // Simulate form submission
+      setTimeout(() => {
         navigate("/success", { 
           state: { 
             submitted: true,
@@ -136,14 +95,8 @@ function Register() {
             email: formData.email 
           } 
         });
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "An error occurred. Please try again."
-        );
         setIsLoading(false);
-      }
+      }, 500);
     } else {
       // Validate business form
       const errors = validateBusinessForm(businessFormData);
@@ -155,48 +108,8 @@ function Register() {
 
       // Submit business form
       setIsLoading(true);
-      try {
-        const requestData = {
-          business_name: businessFormData.businessName.trim(),
-          business_type: businessFormData.businessType,
-          email: businessFormData.businessEmail.trim(),
-          CAC_number: businessFormData.cacNumber.trim(), // Required for business accounts
-          phone_number: businessFormData.businessPhone.trim(),
-          business_location: businessFormData.businessAddress.trim(),
-          address: businessFormData.businessAddress.trim(),
-          password: businessFormData.businessPassword,
-        };
-
-        const response = await fetch(`${BASE_URL}/auth/business/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        });
-
-        const contentType = response.headers.get("content-type");
-        let data;
-
-        if (contentType && contentType.includes("application/json")) {
-          data = await response.json();
-        } else {
-          const text = await response.text();
-          console.error("Non-JSON response received:", text.substring(0, 200));
-          throw new Error(
-            response.status === 404
-              ? "API endpoint not found. Please check if the backend server is running."
-              : `Server error (${response.status}). Please try again later.`
-          );
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || data.error || "Registration failed. Please try again."
-          );
-        }
-
-        // Navigate to success page after successful registration
+      // Simulate form submission
+      setTimeout(() => {
         navigate("/success", { 
           state: { 
             submitted: true,
@@ -204,14 +117,8 @@ function Register() {
             email: businessFormData.businessEmail 
           } 
         });
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "An error occurred. Please try again."
-        );
         setIsLoading(false);
-      }
+      }, 500);
     }
   };
 

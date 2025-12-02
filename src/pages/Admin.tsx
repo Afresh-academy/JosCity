@@ -54,7 +54,6 @@ import {
 import primaryLogo from "../image/primary-logo.png";
 import userAvatar from "../image/sky.png";
 import PagesControlPanel from "../components/PagesControlPanel";
-import { adminApi } from "../services/adminApi";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 const Admin: React.FC = () => {
@@ -76,14 +75,21 @@ const Admin: React.FC = () => {
 
   // Load admin data on mount
   useEffect(() => {
-    const admin = adminApi.getCurrentAdmin();
-    setAdminData(admin);
+    const adminDataStr = localStorage.getItem("adminData");
+    if (adminDataStr) {
+      try {
+        setAdminData(JSON.parse(adminDataStr));
+      } catch (e) {
+        console.error("Failed to parse admin data:", e);
+      }
+    }
   }, []);
 
   // Handle logout
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
-      adminApi.logout();
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminData");
       navigate("/admin/login");
     }
   };
