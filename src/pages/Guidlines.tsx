@@ -18,7 +18,7 @@ interface Guideline {
 
 const Guidelines: React.FC = () => {
   const [currentGuidelines, setCurrentGuidelines] = useState(0);
-  const [guidelines, setGuidelines] = useState<Guideline[]>([
+  const guidelines: Guideline[] = [
     {
       id: "1",
       quote:
@@ -28,7 +28,7 @@ const Guidelines: React.FC = () => {
       display_order: 0,
       is_active: true,
     },
-  ]);
+  ];
   const [badgeText, setBadgeText] = useState<string>("Guidelines");
   const [heading, setHeading] = useState<string>("PWA Guidelines");
 
