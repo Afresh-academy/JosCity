@@ -1,6 +1,6 @@
-import React from 'react';
-import { Plus } from 'lucide-react';
-import LazyImage from '../LazyImage';
+import React from "react";
+import { Plus } from "lucide-react";
+import LazyImage from "../../components/LazyImage";
 
 interface Story {
   id: number;
@@ -26,7 +26,7 @@ const StoriesSection: React.FC<StoriesSectionProps> = ({ stories }) => {
             )}
             <div className="newsfeed-stories__avatar-wrapper">
               <LazyImage
-                src={story.avatar || '/placeholder-avatar.png'}
+                src={story.avatar || "/placeholder-avatar.png"}
                 alt={story.userName}
                 className="newsfeed-stories__avatar"
               />
@@ -40,4 +40,3 @@ const StoriesSection: React.FC<StoriesSectionProps> = ({ stories }) => {
 };
 
 export default StoriesSection;
-

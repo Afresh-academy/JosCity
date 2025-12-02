@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Image, Video, Mic } from 'lucide-react';
-import primaryLogo from '../../image/primary-logo.png';
-import CreatePostModal from './CreatePostModal';
-import LazyImage from '../LazyImage';
+import React, { useState } from "react";
+import { Image, Video, Mic } from "lucide-react";
+import primaryLogo from "../../image/primary-logo.png";
+import CreatePostModal from "./CreatePostModal";
+import LazyImage from "../../components/LazyImage";
 
 interface CreatePostInputProps {
   userName: string;
@@ -73,4 +73,3 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
 };
 
 export default CreatePostInput;
-
