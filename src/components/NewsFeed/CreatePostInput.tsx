@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Image, Video, Mic } from 'lucide-react';
-import primaryLogo from '../../image/primary-logo.png';
-import CreatePostModal from './CreatePostModal';
+import React, { useState } from "react";
+import { Image, Video, Mic } from "lucide-react";
+import primaryLogo from "../../image/primary-logo.png";
+import CreatePostModal from "./CreatePostModal";
 
 interface CreatePostInputProps {
   userName: string;
@@ -54,6 +54,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
           </button>
           <button
             className="newsfeed-create-post__action-btn"
+            onClick={() => setIsModalOpen(true)}
             title="Add Audio"
           >
             <Mic size={20} />
@@ -72,4 +73,3 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
 };
 
 export default CreatePostInput;
-

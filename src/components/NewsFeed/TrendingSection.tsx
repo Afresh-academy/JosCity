@@ -1,5 +1,5 @@
-import React from 'react';
-import { Flame } from 'lucide-react';
+import React from "react";
+import { Flame } from "lucide-react";
 
 interface Trending {
   hashtag: string;
@@ -18,11 +18,11 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ trending }) => {
         <span>Trending</span>
       </h3>
       <div className="newsfeed-trending__list">
-        {trending.map((item, index) => (
-          <div key={index} className="newsfeed-trending__item">
+        {trending.map((item) => (
+          <div key={item.hashtag} className="newsfeed-trending__item">
             <span className="newsfeed-trending__hashtag">{item.hashtag}</span>
             <span className="newsfeed-trending__count">
-              ({item.posts} Post{item.posts !== 1 ? 's' : ''})
+              ({item.posts} Post{item.posts !== 1 ? "s" : ""})
             </span>
           </div>
         ))}
@@ -32,4 +32,3 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ trending }) => {
 };
 
 export default TrendingSection;
-

@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
-import { ThumbsUp, MessageCircle, Eye, Star, Share2, Bookmark } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  ThumbsUp,
+  MessageCircle,
+  Eye,
+  Star,
+  Share2,
+  Bookmark,
+  MoreVertical,
+  Edit,
+  Trash2,
+  Pin,
+} from "lucide-react";
 
 interface Comment {
   id: number;
@@ -15,7 +26,7 @@ interface Post {
   userAvatar: string;
   action: string;
   timeAgo: string;
-  image: string;
+  image?: string;
   likes: number;
   comments: number;
   views: number;
@@ -35,17 +46,24 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState('');
-  const MAX_CAPTION_LENGTH = 150; // Characters to show before "See more"
-  
-  const shouldTruncate = post.caption && post.caption.length > MAX_CAPTION_LENGTH;
-  const displayCaption = shouldTruncate && !isExpanded
-    ? post.caption.substring(0, MAX_CAPTION_LENGTH) + '...'
-    : post.caption;
+  const [newComment, setNewComment] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const MAX_CAPTION_LENGTH = 150;
+
+  // Fixed caption handling with null checks
+  const caption = post.caption || "";
+  const shouldTruncate = caption.length > MAX_CAPTION_LENGTH;
+
+  const displayCaption =
+    shouldTruncate && !isExpanded
+      ? `${caption.substring(0, MAX_CAPTION_LENGTH)}...`
+      : caption;
 
   const handleLike = () => {
     setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
   };
 
   const handleSave = () => {
@@ -61,51 +79,137 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     if (newComment.trim()) {
       const comment: Comment = {
         id: Date.now(),
-        userName: 'You', // This would come from auth context
-        userAvatar: post.userAvatar, // This would come from auth context
+        userName: "You",
+        userAvatar: post.userAvatar,
         text: newComment,
-        timeAgo: 'Just now',
+        timeAgo: "Just now",
       };
       setComments([...comments, comment]);
-      setNewComment('');
+      setNewComment("");
     }
   };
 
-  const handleShare = () => {
-    // Share functionality
-    if (navigator.share) {
-      navigator.share({
-        title: `${post.userName}'s post`,
-        text: post.caption || '',
-        url: window.location.href,
-      }).catch(() => {
-        // Fallback: copy to clipboard
-        navigator.clipboard.writeText(window.location.href);
-      });
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `${post.userName}'s post`,
+          text: caption || post.hashtags || "",
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        // You might want to show a toast notification here
+        console.log("Link copied to clipboard");
+      }
+    } catch (error) {
+      // User cancelled share or error occurred
+      if ((error as Error).name !== "AbortError") {
+        console.error("Error sharing:", error);
+      }
+      // Fallback to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        console.log("Link copied to clipboard");
+      } catch (clipboardError) {
+        console.error("Clipboard error:", clipboardError);
+      }
     }
   };
+
+  const handleEdit = () => {
+    setShowMenu(false);
+    console.log("Edit post:", post.id);
+  };
+
+  const handleDelete = () => {
+    setShowMenu(false);
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      console.log("Delete post:", post.id);
+    }
+  };
+
+  const handlePin = () => {
+    setShowMenu(false);
+    setIsPinned(!isPinned);
+    console.log("Pin post:", post.id, !isPinned);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showMenu]);
 
   return (
     <article className="newsfeed-post">
       <div className="newsfeed-post__header">
         <div className="newsfeed-post__user-info">
           <img
-            src={post.userAvatar || '/placeholder-avatar.png'}
+            src={post.userAvatar || "/placeholder-avatar.png"}
             alt={post.userName}
             className="newsfeed-post__avatar"
+            onError={(e) => {
+              // Hide avatar if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = "none";
+            }}
           />
           <div className="newsfeed-post__user-details">
             <h3 className="newsfeed-post__user-name">{post.userName}</h3>
-            <p className="newsfeed-post__action">{post.action}</p>
+            {post.action && (
+              <p className="newsfeed-post__action">{post.action}</p>
+            )}
             <span className="newsfeed-post__time">{post.timeAgo}</span>
           </div>
         </div>
+        <div className="newsfeed-post__menu-wrapper" ref={menuRef}>
+          <button
+            className="newsfeed-post__menu-btn"
+            onClick={() => setShowMenu(!showMenu)}
+            aria-label="Post options"
+            title="More options"
+          >
+            <MoreVertical size={20} />
+          </button>
+          {showMenu && (
+            <div className="newsfeed-post__menu-dropdown">
+              <button className="newsfeed-post__menu-item" onClick={handleEdit}>
+                <Edit size={18} />
+                <span>Edit Post</span>
+              </button>
+              <button
+                className="newsfeed-post__menu-item"
+                onClick={handleDelete}
+              >
+                <Trash2 size={18} />
+                <span>Delete Post</span>
+              </button>
+              <button
+                className={`newsfeed-post__menu-item ${
+                  isPinned ? "newsfeed-post__menu-item--active" : ""
+                }`}
+                onClick={handlePin}
+              >
+                <Pin size={18} />
+                <span>{isPinned ? "Unpin Post" : "Pin Post"}</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      {post.caption && (
+      {caption && (
         <div className="newsfeed-post__caption">
           <p>
             {displayCaption}
@@ -113,20 +217,26 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               <button
                 className="newsfeed-post__see-more"
                 onClick={() => setIsExpanded(!isExpanded)}
+                aria-expanded={isExpanded}
               >
-                {isExpanded ? ' See less' : ' See more'}
+                {isExpanded ? " See less" : " See more"}
               </button>
             )}
           </p>
         </div>
       )}
 
-      {post.image && (
+      {post.image && post.image.trim() && (
         <div className="newsfeed-post__image-wrapper">
           <img
             src={post.image}
-            alt={post.action || post.caption}
+            alt={post.action || caption || "Post image"}
             className="newsfeed-post__image"
+            onError={(e) => {
+              // Hide image if it fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = "none";
+            }}
           />
         </div>
       )}
@@ -162,9 +272,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         {/* Action Buttons */}
         <div className="newsfeed-post__action-buttons">
           <button
-            className={`newsfeed-post__action-btn ${isLiked ? 'newsfeed-post__action-btn--active' : ''}`}
+            className={`newsfeed-post__action-btn ${
+              isLiked ? "newsfeed-post__action-btn--active" : ""
+            }`}
             onClick={handleLike}
             title="Like"
+            aria-pressed={isLiked}
           >
             <ThumbsUp size={20} />
             <span>Like</span>
@@ -173,6 +286,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             className="newsfeed-post__action-btn"
             onClick={handleCommentClick}
             title="Comment"
+            aria-expanded={showComments}
           >
             <MessageCircle size={20} />
             <span>Comment</span>
@@ -186,9 +300,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <span>Share</span>
           </button>
           <button
-            className={`newsfeed-post__action-btn newsfeed-post__action-btn--save ${isSaved ? 'newsfeed-post__action-btn--active' : ''}`}
+            className={`newsfeed-post__action-btn newsfeed-post__action-btn--save ${
+              isSaved ? "newsfeed-post__action-btn--active" : ""
+            }`}
             onClick={handleSave}
             title="Save"
+            aria-pressed={isSaved}
           >
             <Bookmark size={20} />
             <span>Save</span>
@@ -200,7 +317,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <div className="newsfeed-post__comments">
             <div className="newsfeed-post__comments-list">
               {comments.length === 0 ? (
-                <p className="newsfeed-post__no-comments">No comments yet. Be the first to comment!</p>
+                <p className="newsfeed-post__no-comments">
+                  No comments yet. Be the first to comment!
+                </p>
               ) : (
                 comments.map((comment) => (
                   <div key={comment.id} className="newsfeed-post__comment">
@@ -208,25 +327,40 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                       src={comment.userAvatar}
                       alt={comment.userName}
                       className="newsfeed-post__comment-avatar"
+                      onError={(e) => {
+                        // Hide avatar if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = "none";
+                      }}
                     />
                     <div className="newsfeed-post__comment-content">
                       <div className="newsfeed-post__comment-header">
-                        <span className="newsfeed-post__comment-name">{comment.userName}</span>
-                        <span className="newsfeed-post__comment-time">{comment.timeAgo}</span>
+                        <span className="newsfeed-post__comment-name">
+                          {comment.userName}
+                        </span>
+                        <span className="newsfeed-post__comment-time">
+                          {comment.timeAgo}
+                        </span>
                       </div>
-                      <p className="newsfeed-post__comment-text">{comment.text}</p>
+                      <p className="newsfeed-post__comment-text">
+                        {comment.text}
+                      </p>
                     </div>
                   </div>
                 ))
               )}
             </div>
-            <form className="newsfeed-post__comment-form" onSubmit={handleAddComment}>
+            <form
+              className="newsfeed-post__comment-form"
+              onSubmit={handleAddComment}
+            >
               <input
                 type="text"
                 className="newsfeed-post__comment-input"
                 placeholder="Write a comment..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
+                aria-label="Write a comment"
               />
               <button
                 type="submit"
@@ -244,4 +378,3 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 };
 
 export default PostCard;
-

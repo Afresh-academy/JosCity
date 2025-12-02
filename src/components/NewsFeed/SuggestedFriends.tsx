@@ -1,5 +1,5 @@
-import React from 'react';
-import { UserPlus } from 'lucide-react';
+import React from "react";
+import { UserPlus } from "lucide-react";
 
 interface Friend {
   id: number;
@@ -25,16 +25,21 @@ const SuggestedFriends: React.FC<SuggestedFriendsProps> = ({ friends }) => {
         {friends.map((friend) => (
           <div key={friend.id} className="newsfeed-suggested-friends__item">
             <img
-              src={friend.avatar || '/placeholder-avatar.png'}
+              src={friend.avatar || "/placeholder-avatar.png"}
               alt={friend.name}
               className="newsfeed-suggested-friends__avatar"
+              onError={(e) => {
+                // Hide avatar if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+              }}
             />
             <div className="newsfeed-suggested-friends__info">
               <p className="newsfeed-suggested-friends__name">{friend.name}</p>
               {friend.mutualFriends > 0 && (
                 <p className="newsfeed-suggested-friends__mutual">
                   {friend.mutualFriends} Mutual friend
-                  {friend.mutualFriends !== 1 ? 's' : ''}
+                  {friend.mutualFriends !== 1 ? "s" : ""}
                 </p>
               )}
             </div>
@@ -49,4 +54,3 @@ const SuggestedFriends: React.FC<SuggestedFriendsProps> = ({ friends }) => {
 };
 
 export default SuggestedFriends;
-

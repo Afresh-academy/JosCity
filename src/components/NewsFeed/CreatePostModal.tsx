@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { X, Image as ImageIcon, Video, Mic } from 'lucide-react';
+import React, { useState, useRef } from "react";
+import { X, Image as ImageIcon, Video, Mic } from "lucide-react";
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -14,16 +14,41 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
   userName,
   userAvatar,
 }) => {
-  const [caption, setCaption] = useState('');
+  const [caption, setCaption] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
+      // Validate file size (max 10MB)
+      const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+      if (file.size > MAX_FILE_SIZE) {
+        alert("Image size must be less than 10MB");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImage(reader.result as string);
+      };
+      reader.onerror = () => {
+        alert("Error reading file. Please try again.");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -31,16 +56,22 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
   const handlePost = () => {
     // Handle post submission here
-    console.log('Posting:', { caption, image: selectedImage });
+    console.log("Posting:", { caption, image: selectedImage });
     // Reset form
-    setCaption('');
+    setCaption("");
     setSelectedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
     onClose();
   };
 
   const handleClose = () => {
-    setCaption('');
+    setCaption("");
     setSelectedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
     onClose();
   };
 
@@ -59,9 +90,14 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         <div className="newsfeed-modal__content">
           <div className="newsfeed-modal__user-info">
             <img
-              src={userAvatar || '/placeholder-avatar.png'}
+              src={userAvatar || "/placeholder-avatar.png"}
               alt={userName}
               className="newsfeed-modal__avatar"
+              onError={(e) => {
+                // Hide avatar if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+              }}
             />
             <span className="newsfeed-modal__user-name">{userName}</span>
           </div>
@@ -78,15 +114,28 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
           {selectedImage && (
             <div className="newsfeed-modal__image-preview">
-              <img src={selectedImage} alt="Preview" />
+              <img
+                src={selectedImage}
+                alt="Preview"
+                onError={() => {
+                  alert(
+                    "Error loading image preview. Please try selecting the image again."
+                  );
+                  setSelectedImage(null);
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                  }
+                }}
+              />
               <button
                 className="newsfeed-modal__remove-image"
                 onClick={() => {
                   setSelectedImage(null);
                   if (fileInputRef.current) {
-                    fileInputRef.current.value = '';
+                    fileInputRef.current.value = "";
                   }
                 }}
+                aria-label="Remove image"
               >
                 <X size={20} />
               </button>
@@ -99,10 +148,13 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
               ref={fileInputRef}
               accept="image/*"
               onChange={handleImageSelect}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               id="image-upload"
             />
-            <label htmlFor="image-upload" className="newsfeed-modal__action-btn">
+            <label
+              htmlFor="image-upload"
+              className="newsfeed-modal__action-btn"
+            >
               <ImageIcon size={20} />
               <span>Photo</span>
             </label>
