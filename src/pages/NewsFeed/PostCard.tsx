@@ -11,7 +11,7 @@ import {
   Trash2,
   Pin,
 } from "lucide-react";
-import LazyImage from "../LazyImage";
+import LazyImage from "../../components/LazyImage";
 
 interface Comment {
   id: number;
@@ -56,10 +56,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   // Fixed caption handling with null checks
   const caption = post.caption || "";
   const shouldTruncate = caption.length > MAX_CAPTION_LENGTH;
-  
-  const displayCaption = shouldTruncate && !isExpanded
-    ? `${caption.substring(0, MAX_CAPTION_LENGTH)}...`
-    : caption;
+
+  const displayCaption =
+    shouldTruncate && !isExpanded
+      ? `${caption.substring(0, MAX_CAPTION_LENGTH)}...`
+      : caption;
 
   const handleLike = () => {
     setIsLiked(!isLiked);

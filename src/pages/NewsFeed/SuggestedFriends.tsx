@@ -1,6 +1,6 @@
-import React from 'react';
-import { UserPlus } from 'lucide-react';
-import LazyImage from '../LazyImage';
+import React from "react";
+import { UserPlus } from "lucide-react";
+import LazyImage from "../../components/LazyImage";
 
 interface Friend {
   id: number;
@@ -26,7 +26,7 @@ const SuggestedFriends: React.FC<SuggestedFriendsProps> = ({ friends }) => {
         {friends.map((friend) => (
           <div key={friend.id} className="newsfeed-suggested-friends__item">
             <LazyImage
-              src={friend.avatar || '/placeholder-avatar.png'}
+              src={friend.avatar || "/placeholder-avatar.png"}
               alt={friend.name}
               className="newsfeed-suggested-friends__avatar"
             />
@@ -35,7 +35,7 @@ const SuggestedFriends: React.FC<SuggestedFriendsProps> = ({ friends }) => {
               {friend.mutualFriends > 0 && (
                 <p className="newsfeed-suggested-friends__mutual">
                   {friend.mutualFriends} Mutual friend
-                  {friend.mutualFriends !== 1 ? 's' : ''}
+                  {friend.mutualFriends !== 1 ? "s" : ""}
                 </p>
               )}
             </div>
@@ -50,4 +50,3 @@ const SuggestedFriends: React.FC<SuggestedFriendsProps> = ({ friends }) => {
 };
 
 export default SuggestedFriends;
-

@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import "../main.css";
 import "../scss/_events.scss";
 import Christmas from "../image/Christmas.webp"; // Fallback image
+import MultipleLaugh from "../image/multiple-laugh.png";
 import LazyImage from "../components/LazyImage";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const Events: React.FC = () => {
-  const [defaultImage, setDefaultImage] = useState<string>(Christmas);
   const [badgeText, setBadgeText] = useState<string>("Upcoming Events in Jos");
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+
+  const images = [Christmas, MultipleLaugh];
 
   const badgeAnimation = useScrollAnimation({
     threshold: 0.2,
@@ -20,9 +23,20 @@ const Events: React.FC = () => {
 
   useEffect(() => {
     // Use default values (no API calls)
-    setDefaultImage(Christmas);
     setBadgeText("Upcoming Events in Jos");
   }, []);
+
+  const handlePrevious = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
   return (
     <section className="events" id="events">
@@ -50,12 +64,62 @@ const Events: React.FC = () => {
             <span>{badgeText}</span>
           </div>
         </div>
-        <LazyImage
-          src={defaultImage}
-          alt="Upcoming event in Jos"
-          className={`events__image ${imageAnimation.className}`}
+        <div
+          className={`events__image-wrapper ${imageAnimation.className}`}
           ref={imageAnimation.ref as React.RefObject<HTMLDivElement>}
-        />
+        >
+          <LazyImage
+            src={images[currentImageIndex]}
+            alt="Upcoming event in Jos"
+            className="events__image"
+          />
+          {images.length > 1 && (
+            <>
+              <button
+                className="events__nav-button events__nav-button--prev"
+                onClick={handlePrevious}
+                aria-label="Previous image"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 18L9 12L15 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                className="events__nav-button events__nav-button--next"
+                onClick={handleNext}
+                aria-label="Next image"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 18L15 12L9 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </section>
   );

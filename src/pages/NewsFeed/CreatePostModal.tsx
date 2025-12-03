@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { X, Image as ImageIcon, Video, Mic } from 'lucide-react';
-import LazyImage from '../LazyImage';
+import React, { useState, useRef } from "react";
+import { X, Image as ImageIcon, Video, Mic } from "lucide-react";
+import LazyImage from "../../components/LazyImage";
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
   userName,
   userAvatar,
 }) => {
-  const [caption, setCaption] = useState('');
+  const [caption, setCaption] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,15 +32,15 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
   const handlePost = () => {
     // Handle post submission here
-    console.log('Posting:', { caption, image: selectedImage });
+    console.log("Posting:", { caption, image: selectedImage });
     // Reset form
-    setCaption('');
+    setCaption("");
     setSelectedImage(null);
     onClose();
   };
 
   const handleClose = () => {
-    setCaption('');
+    setCaption("");
     setSelectedImage(null);
     onClose();
   };
@@ -60,7 +60,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         <div className="newsfeed-modal__content">
           <div className="newsfeed-modal__user-info">
             <LazyImage
-              src={userAvatar || '/placeholder-avatar.png'}
+              src={userAvatar || "/placeholder-avatar.png"}
               alt={userName}
               className="newsfeed-modal__avatar"
             />
@@ -85,7 +85,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 onClick={() => {
                   setSelectedImage(null);
                   if (fileInputRef.current) {
-                    fileInputRef.current.value = '';
+                    fileInputRef.current.value = "";
                   }
                 }}
               >
@@ -100,10 +100,13 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
               ref={fileInputRef}
               accept="image/*"
               onChange={handleImageSelect}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               id="image-upload"
             />
-            <label htmlFor="image-upload" className="newsfeed-modal__action-btn">
+            <label
+              htmlFor="image-upload"
+              className="newsfeed-modal__action-btn"
+            >
               <ImageIcon size={20} />
               <span>Photo</span>
             </label>
