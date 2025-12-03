@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   SquarePlus,
   UserPlus,
@@ -158,16 +158,16 @@ const NewsFeed: React.FC = () => {
   ];
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        createMenuRef.current &&
-        !createMenuRef.current.contains(event.target as Node)
-      ) {
-        setIsCreateMenuOpen(false);
-      }
-    };
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (
+      createMenuRef.current &&
+      !createMenuRef.current.contains(event.target as Node)
+    ) {
+      setIsCreateMenuOpen(false);
+    }
+  }, []);
 
+  useEffect(() => {
     if (isCreateMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
@@ -175,7 +175,7 @@ const NewsFeed: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isCreateMenuOpen]);
+  }, [isCreateMenuOpen, handleClickOutside]);
 
   const handleCreateClick = () => {
     setIsCreateMenuOpen(!isCreateMenuOpen);
