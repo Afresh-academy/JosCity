@@ -3,6 +3,7 @@ import "../main.css";
 import "../scss/_events.scss";
 import Christmas from "../image/Christmas.webp"; // Fallback image
 import MultipleLaugh from "../image/multiple-laugh.png";
+import smile from "../image/smile.png";
 import LazyImage from "../components/LazyImage";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
@@ -10,7 +11,7 @@ const Events: React.FC = () => {
   const [badgeText, setBadgeText] = useState<string>("Upcoming Events in Jos");
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
-  const images = [Christmas, MultipleLaugh];
+  const images = [Christmas, MultipleLaugh, smile];
 
   const badgeAnimation = useScrollAnimation({
     threshold: 0.2,

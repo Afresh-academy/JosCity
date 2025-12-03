@@ -311,6 +311,24 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
     null
   );
 
+  // Settings editing state
+  const [editingNavbarSettings, setEditingNavbarSettings] =
+    useState<NavbarSettings | null>(null);
+  const [editingHeroSettings, setEditingHeroSettings] =
+    useState<HeroPageSettings | null>(null);
+  const [editingContactSettings, setEditingContactSettings] =
+    useState<ContactPageSettings | null>(null);
+  const [editingEventsSettings, setEditingEventsSettings] =
+    useState<EventsPageSettings | null>(null);
+  const [editingServicesSettings, setEditingServicesSettings] =
+    useState<ServicesPageSettings | null>(null);
+  const [editingPricingSettings, setEditingPricingSettings] =
+    useState<PricingPageSettings | null>(null);
+  const [editingGuidelinesSettings, setEditingGuidelinesSettings] =
+    useState<GuidelinesPageSettings | null>(null);
+  const [editingFooterSettings, setEditingFooterSettings] =
+    useState<FooterSettings | null>(null);
+
   // Helper function to extract error message from any error type
   const getErrorMessage = (err: unknown, defaultMessage: string): string => {
     if (err instanceof Error) {
@@ -525,8 +543,19 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         </div>
       </div>
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Navbar Settings</h3>
-        {navbarSettings && (
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">Navbar Settings</h3>
+          {navbarSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeleteNavbarSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
+        {navbarSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
               <strong>Logo URL:</strong> {navbarSettings.logo_url || "Not set"}
@@ -535,16 +564,57 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
               <strong>Get Started Button:</strong>{" "}
               {navbarSettings.get_started_button_text || "Not set"}
             </p>
+            <p>
+              <strong>Get Started Route:</strong>{" "}
+              {navbarSettings.get_started_button_route || "Not set"}
+            </p>
+            <p>
+              <strong>Status:</strong>{" "}
+              <span
+                className={`control-panel__badge ${
+                  navbarSettings.is_active
+                    ? "control-panel__badge--active"
+                    : "control-panel__badge--inactive"
+                }`}
+              >
+                {navbarSettings.is_active ? "Active" : "Inactive"}
+              </span>
+            </p>
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingNavbarSettings(navbarSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
+        ) : (
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingNavbarSettings({
+                  is_active: true,
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingNavbarSettings && (
+        <NavbarSettingsModal
+          settings={editingNavbarSettings}
+          onClose={() => setEditingNavbarSettings(null)}
+          onSave={handleSaveNavbarSettings}
+        />
+      )}
       {editingNavbarItem && (
         <NavbarItemModal
           item={editingNavbarItem}
@@ -565,7 +635,18 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Contact Page Settings</h3>
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">Contact Page Settings</h3>
+          {contactSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeleteContactSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
         {contactSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
@@ -582,17 +663,38 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingContactSettings(contactSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>
-            No settings configured
-          </p>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingContactSettings({
+                  heading: "",
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingContactSettings && (
+        <ContactSettingsModal
+          settings={editingContactSettings}
+          onClose={() => setEditingContactSettings(null)}
+          onSave={handleSaveContactSettings}
+        />
+      )}
       <div className="control-panel__section">
         <h3 className="control-panel__section-title">Contact Messages</h3>
         <div className="control-panel__table-wrapper">
@@ -724,7 +826,18 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Events Page Settings</h3>
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">Events Page Settings</h3>
+          {eventsSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeleteEventsSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
         {eventsSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
@@ -745,17 +858,39 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingEventsSettings(eventsSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>
-            No settings configured
-          </p>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingEventsSettings({
+                  badge_text: "",
+                  heading: "",
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingEventsSettings && (
+        <EventsSettingsModal
+          settings={editingEventsSettings}
+          onClose={() => setEditingEventsSettings(null)}
+          onSave={handleSaveEventsSettings}
+        />
+      )}
       {eventRegistrations.length > 0 && (
         <div className="control-panel__section">
           <h3 className="control-panel__section-title">
@@ -894,7 +1029,18 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Services Page Settings</h3>
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">Services Page Settings</h3>
+          {servicesSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeleteServicesSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
         {servicesSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
@@ -915,17 +1061,38 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingServicesSettings(servicesSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>
-            No settings configured
-          </p>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingServicesSettings({
+                  heading: "",
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingServicesSettings && (
+        <ServicesSettingsModal
+          settings={editingServicesSettings}
+          onClose={() => setEditingServicesSettings(null)}
+          onSave={handleSaveServicesSettings}
+        />
+      )}
       {serviceRequests.length > 0 && (
         <div className="control-panel__section">
           <h3 className="control-panel__section-title">
@@ -1057,7 +1224,18 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Pricing Page Settings</h3>
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">Pricing Page Settings</h3>
+          {pricingSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeletePricingSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
         {pricingSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
@@ -1078,17 +1256,38 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingPricingSettings(pricingSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>
-            No settings configured
-          </p>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingPricingSettings({
+                  heading: "",
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingPricingSettings && (
+        <PricingSettingsModal
+          settings={editingPricingSettings}
+          onClose={() => setEditingPricingSettings(null)}
+          onSave={handleSavePricingSettings}
+        />
+      )}
       <div className="control-panel__section">
         <div className="control-panel__header">
           <h3 className="control-panel__section-title">Pricing Plans</h3>
@@ -1130,6 +1329,12 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
                     >
                       <Edit size={16} />
                     </button>
+                    <button
+                      className="control-panel__icon-button"
+                      onClick={() => handleDeletePlan(plan.id!)}
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
                 <p className="control-panel__card-price">
@@ -1162,9 +1367,20 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">
-          Guidelines Page Settings
-        </h3>
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">
+            Guidelines Page Settings
+          </h3>
+          {guidelinesSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeleteGuidelinesSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
         {guidelinesSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
@@ -1178,17 +1394,39 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingGuidelinesSettings(guidelinesSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>
-            No settings configured
-          </p>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingGuidelinesSettings({
+                  badge_text: "",
+                  heading: "",
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingGuidelinesSettings && (
+        <GuidelinesSettingsModal
+          settings={editingGuidelinesSettings}
+          onClose={() => setEditingGuidelinesSettings(null)}
+          onSave={handleSaveGuidelinesSettings}
+        />
+      )}
       <div className="control-panel__section">
         <div className="control-panel__header">
           <h3 className="control-panel__section-title">Guidelines</h3>
@@ -1287,7 +1525,18 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Hero Page Settings</h3>
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">Hero Page Settings</h3>
+          {heroSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeleteHeroSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
         {heroSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
@@ -1329,17 +1578,41 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingHeroSettings(heroSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>
-            No settings configured
-          </p>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingHeroSettings({
+                  slide_duration_seconds: 5,
+                  auto_advance: true,
+                  show_navigation_dots: true,
+                  show_prev_next_arrows: true,
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingHeroSettings && (
+        <HeroSettingsModal
+          settings={editingHeroSettings}
+          onClose={() => setEditingHeroSettings(null)}
+          onSave={handleSaveHeroSettings}
+        />
+      )}
       <div className="control-panel__section">
         <div className="control-panel__header">
           <h3 className="control-panel__section-title">Hero Slides</h3>
@@ -1429,7 +1702,18 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
         />
       )}
       <div className="control-panel__section">
-        <h3 className="control-panel__section-title">Footer Settings</h3>
+        <div className="control-panel__header">
+          <h3 className="control-panel__section-title">Footer Settings</h3>
+          {footerSettings && (
+            <button
+              className="control-panel__icon-button"
+              onClick={() => handleDeleteFooterSettings()}
+              title="Delete Settings"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
         {footerSettings ? (
           <div style={{ marginTop: "16px" }}>
             <p>
@@ -1460,17 +1744,40 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
             <button
               className="control-panel__button control-panel__button--secondary"
               style={{ marginTop: "12px" }}
+              onClick={() => setEditingFooterSettings(footerSettings)}
             >
               <Edit size={16} />
               Edit Settings
             </button>
           </div>
         ) : (
-          <p style={{ marginTop: "16px", color: "#666" }}>
-            No settings configured
-          </p>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              No settings configured
+            </p>
+            <button
+              className="control-panel__button control-panel__button--primary"
+              onClick={() =>
+                setEditingFooterSettings({
+                  logo_url: "",
+                  tagline: "",
+                  copyright_text: "",
+                })
+              }
+            >
+              <Plus size={16} />
+              Create Settings
+            </button>
+          </div>
         )}
       </div>
+      {editingFooterSettings && (
+        <FooterSettingsModal
+          settings={editingFooterSettings}
+          onClose={() => setEditingFooterSettings(null)}
+          onSave={handleSaveFooterSettings}
+        />
+      )}
       <div className="control-panel__section">
         <div className="control-panel__header">
           <h3 className="control-panel__section-title">Footer Links</h3>
@@ -1690,6 +1997,110 @@ const PagesControlPanel: React.FC<ControlPanelProps> = ({ onClose }) => {
     // No API calls - functionality disabled
     alert("Backend API removed. This functionality is no longer available.");
     setEditingFooterLink(null);
+  };
+
+  // Settings handlers
+  const handleSaveNavbarSettings = async (settings: NavbarSettings) => {
+    setNavbarSettings(settings);
+    setEditingNavbarSettings(null);
+  };
+
+  const handleDeleteNavbarSettings = async () => {
+    if (window.confirm("Are you sure you want to delete navbar settings?")) {
+      setNavbarSettings(null);
+    }
+  };
+
+  const handleSaveHeroSettings = async (settings: HeroPageSettings) => {
+    setHeroSettings(settings);
+    setEditingHeroSettings(null);
+  };
+
+  const handleDeleteHeroSettings = async () => {
+    if (window.confirm("Are you sure you want to delete hero settings?")) {
+      setHeroSettings(null);
+    }
+  };
+
+  const handleSaveContactSettings = async (settings: ContactPageSettings) => {
+    setContactSettings(settings);
+    setEditingContactSettings(null);
+  };
+
+  const handleDeleteContactSettings = async () => {
+    if (window.confirm("Are you sure you want to delete contact settings?")) {
+      setContactSettings(null);
+    }
+  };
+
+  const handleSaveEventsSettings = async (settings: EventsPageSettings) => {
+    setEventsSettings(settings);
+    setEditingEventsSettings(null);
+  };
+
+  const handleDeleteEventsSettings = async () => {
+    if (window.confirm("Are you sure you want to delete events settings?")) {
+      setEventsSettings(null);
+    }
+  };
+
+  const handleSaveServicesSettings = async (settings: ServicesPageSettings) => {
+    setServicesSettings(settings);
+    setEditingServicesSettings(null);
+  };
+
+  const handleDeleteServicesSettings = async () => {
+    if (window.confirm("Are you sure you want to delete services settings?")) {
+      setServicesSettings(null);
+    }
+  };
+
+  const handleSavePricingSettings = async (settings: PricingPageSettings) => {
+    setPricingSettings(settings);
+    setEditingPricingSettings(null);
+  };
+
+  const handleDeletePricingSettings = async () => {
+    if (window.confirm("Are you sure you want to delete pricing settings?")) {
+      setPricingSettings(null);
+    }
+  };
+
+  const handleSaveGuidelinesSettings = async (
+    settings: GuidelinesPageSettings
+  ) => {
+    setGuidelinesSettings(settings);
+    setEditingGuidelinesSettings(null);
+  };
+
+  const handleDeleteGuidelinesSettings = async () => {
+    if (
+      window.confirm("Are you sure you want to delete guidelines settings?")
+    ) {
+      setGuidelinesSettings(null);
+    }
+  };
+
+  const handleSaveFooterSettings = async (settings: FooterSettings) => {
+    setFooterSettings(settings);
+    setEditingFooterSettings(null);
+  };
+
+  const handleDeleteFooterSettings = async () => {
+    if (window.confirm("Are you sure you want to delete footer settings?")) {
+      setFooterSettings(null);
+    }
+  };
+
+  const handleDeletePlan = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this pricing plan?")) {
+      setPricingPlans((prev) => prev.filter((plan) => plan.id !== id));
+      setPlanFeatures((prev) => {
+        const newFeatures = { ...prev };
+        delete newFeatures[id];
+        return newFeatures;
+      });
+    }
   };
 
   // Export current hardcoded elements to database
@@ -3173,6 +3584,1124 @@ const FooterLinkModal: React.FC<{
             />
             Opens in New Tab
           </label>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Settings Modals
+const NavbarSettingsModal: React.FC<{
+  settings: NavbarSettings;
+  onClose: () => void;
+  onSave: (settings: NavbarSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<NavbarSettings>(settings);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Navbar Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Logo URL"
+            value={formData.logo_url || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, logo_url: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Logo Alt Text"
+            value={formData.logo_alt || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, logo_alt: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Get Started Button Text"
+            value={formData.get_started_button_text || ""}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                get_started_button_text: e.target.value,
+              })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Get Started Button Route"
+            value={formData.get_started_button_route || ""}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                get_started_button_route: e.target.value,
+              })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              checked={formData.is_active}
+              onChange={(e) =>
+                setFormData({ ...formData, is_active: e.target.checked })
+              }
+            />
+            Active
+          </label>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const HeroSettingsModal: React.FC<{
+  settings: HeroPageSettings;
+  onClose: () => void;
+  onSave: (settings: HeroPageSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<HeroPageSettings>(settings);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Hero Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="number"
+            placeholder="Slide Duration (seconds)"
+            value={formData.slide_duration_seconds || ""}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                slide_duration_seconds: parseInt(e.target.value) || undefined,
+              })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              checked={formData.auto_advance || false}
+              onChange={(e) =>
+                setFormData({ ...formData, auto_advance: e.target.checked })
+              }
+            />
+            Auto Advance
+          </label>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              checked={formData.show_navigation_dots || false}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  show_navigation_dots: e.target.checked,
+                })
+              }
+            />
+            Show Navigation Dots
+          </label>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              checked={formData.show_prev_next_arrows || false}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  show_prev_next_arrows: e.target.checked,
+                })
+              }
+            />
+            Show Prev/Next Arrows
+          </label>
+          <input
+            type="text"
+            placeholder="Default Badge Text"
+            value={formData.default_badge_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, default_badge_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Primary Button Text"
+            value={formData.primary_button_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, primary_button_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Primary Button Route"
+            value={formData.primary_button_route || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, primary_button_route: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Secondary Button Text"
+            value={formData.secondary_button_text || ""}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                secondary_button_text: e.target.value,
+              })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Secondary Button Route"
+            value={formData.secondary_button_route || ""}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                secondary_button_route: e.target.value,
+              })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ContactSettingsModal: React.FC<{
+  settings: ContactPageSettings;
+  onClose: () => void;
+  onSave: (settings: ContactPageSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<ContactPageSettings>(settings);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Contact Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Badge Text"
+            value={formData.badge_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, badge_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Heading"
+            value={formData.heading}
+            onChange={(e) =>
+              setFormData({ ...formData, heading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Subheading"
+            value={formData.subheading || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, subheading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const EventsSettingsModal: React.FC<{
+  settings: EventsPageSettings;
+  onClose: () => void;
+  onSave: (settings: EventsPageSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<EventsPageSettings>(settings);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Events Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Badge Text"
+            value={formData.badge_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, badge_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Heading"
+            value={formData.heading || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, heading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Subheading"
+            value={formData.subheading || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, subheading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Default Image URL"
+            value={formData.default_image_url || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, default_image_url: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ServicesSettingsModal: React.FC<{
+  settings: ServicesPageSettings;
+  onClose: () => void;
+  onSave: (settings: ServicesPageSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<ServicesPageSettings>(settings);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Services Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Badge Text"
+            value={formData.badge_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, badge_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Heading"
+            value={formData.heading}
+            onChange={(e) =>
+              setFormData({ ...formData, heading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Subheading"
+            value={formData.subheading || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, subheading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="View All Button Text"
+            value={formData.view_all_button_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, view_all_button_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PricingSettingsModal: React.FC<{
+  settings: PricingPageSettings;
+  onClose: () => void;
+  onSave: (settings: PricingPageSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<PricingPageSettings>(settings);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Pricing Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Badge Text"
+            value={formData.badge_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, badge_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Heading"
+            value={formData.heading}
+            onChange={(e) =>
+              setFormData({ ...formData, heading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Subheading"
+            value={formData.subheading || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, subheading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Subscribe Button Text"
+            value={formData.subscribe_button_text || ""}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                subscribe_button_text: e.target.value,
+              })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const GuidelinesSettingsModal: React.FC<{
+  settings: GuidelinesPageSettings;
+  onClose: () => void;
+  onSave: (settings: GuidelinesPageSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<GuidelinesPageSettings>(settings);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Guidelines Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Badge Text"
+            value={formData.badge_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, badge_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Heading"
+            value={formData.heading || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, heading: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginTop: "20px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            className="control-panel__button control-panel__button--secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="control-panel__button control-panel__button--primary"
+            onClick={() => onSave(formData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FooterSettingsModal: React.FC<{
+  settings: FooterSettings;
+  onClose: () => void;
+  onSave: (settings: FooterSettings) => void;
+}> = ({ settings, onSave, onClose }) => {
+  const [formData, setFormData] = useState<FooterSettings>(settings);
+  const [socialMedia, setSocialMedia] = useState<{
+    platform: string;
+    url: string;
+  }>({ platform: "", url: "" });
+
+  const addSocialMedia = () => {
+    if (socialMedia.platform && socialMedia.url) {
+      setFormData({
+        ...formData,
+        social_media: {
+          ...(formData.social_media || {}),
+          [socialMedia.platform]: socialMedia.url,
+        },
+      });
+      setSocialMedia({ platform: "", url: "" });
+    }
+  };
+
+  const removeSocialMedia = (platform: string) => {
+    const newSocial = { ...(formData.social_media || {}) };
+    delete newSocial[platform];
+    setFormData({ ...formData, social_media: newSocial });
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10002,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "24px",
+          borderRadius: "8px",
+          maxWidth: "500px",
+          width: "90%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 style={{ marginTop: 0 }}>Edit Footer Settings</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginTop: "16px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Logo URL"
+            value={formData.logo_url || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, logo_url: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <textarea
+            placeholder="Tagline"
+            value={formData.tagline || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, tagline: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+              minHeight: "60px",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Copyright Text"
+            value={formData.copyright_text || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, copyright_text: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+          <div style={{ marginTop: "12px" }}>
+            <strong>Social Media:</strong>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "8px",
+                marginBottom: "8px",
+              }}
+            >
+              <input
+                type="text"
+                placeholder="Platform (e.g., facebook)"
+                value={socialMedia.platform}
+                onChange={(e) =>
+                  setSocialMedia({ ...socialMedia, platform: e.target.value })
+                }
+                style={{
+                  padding: "8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                  flex: 1,
+                }}
+              />
+              <input
+                type="text"
+                placeholder="URL"
+                value={socialMedia.url}
+                onChange={(e) =>
+                  setSocialMedia({ ...socialMedia, url: e.target.value })
+                }
+                style={{
+                  padding: "8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                  flex: 2,
+                }}
+              />
+              <button
+                className="control-panel__button control-panel__button--primary"
+                onClick={addSocialMedia}
+                style={{ padding: "8px 12px" }}
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+            {formData.social_media &&
+              Object.entries(formData.social_media).map(([platform, url]) => (
+                <div
+                  key={platform}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "8px",
+                    backgroundColor: "#f5f5f5",
+                    borderRadius: "4px",
+                    marginBottom: "4px",
+                  }}
+                >
+                  <span>
+                    <strong>{platform}:</strong> {url}
+                  </span>
+                  <button
+                    className="control-panel__icon-button"
+                    onClick={() => removeSocialMedia(platform)}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+          </div>
         </div>
         <div
           style={{
