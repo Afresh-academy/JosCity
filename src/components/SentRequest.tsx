@@ -238,7 +238,10 @@ const SentRequest: React.FC = () => {
             className={`people-tabs__tab ${
               activeTab === "sent-requests" ? "people-tabs__tab--active" : ""
             }`}
-            onClick={() => setActiveTab("sent-requests")}
+            onClick={() => {
+              setActiveTab("sent-requests");
+              navigate("/sent-requests");
+            }}
           >
             Sent Requests
             {sentRequests.length > 0 && (

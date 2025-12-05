@@ -26,6 +26,7 @@ import Accessibility from "./pages/Accessibility";
 import People from "./components/People.";
 
 import Request from "./components/Request";
+import SentRequest from "./components/SentRequest";
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (
@@ -63,6 +64,7 @@ if (rootElement) {
           <Route path="/accessibility" element={<Accessibility />} />
           <Route path="/people" element={<People />} />
           <Route path="/request" element={<Request />} />
+          <Route path="/sent-requests" element={<SentRequest />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
