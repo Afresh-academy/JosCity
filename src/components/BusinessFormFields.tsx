@@ -2,13 +2,13 @@ import React from "react";
 import { Mail, MapPin, Lock, Eye, EyeOff, ChevronDown } from "lucide-react";
 
 interface BusinessFormData {
-  businessName: string;
-  businessType: string;
-  businessEmail: string;
-  cacNumber: string;
-  businessPhone: string;
-  businessAddress: string;
-  businessPassword: string;
+  business_name: string;
+  business_type: string;
+  business_email: string;
+  CAC_number: string;
+  business_phone: string;
+  business_location: string;
+  business_password: string;
 }
 
 interface BusinessFormFieldsProps {
@@ -30,23 +30,23 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
     <>
       <div className="register-form-row">
         <div className="register-form-group">
-          <label htmlFor="businessName">Business Name</label>
+          <label htmlFor="business_name">Business Name</label>
           <input
             type="text"
-            id="businessName"
-            name="businessName"
-            value={formData.businessName}
+            id="business_name"
+            name="business_name"
+            value={formData.business_name}
             onChange={onInputChange}
             placeholder="Business Name"
           />
         </div>
         <div className="register-form-group">
-          <label htmlFor="businessType">Business Type</label>
+          <label htmlFor="business_type">Business Type</label>
           <div className="register-select-wrapper">
             <select
-              id="businessType"
-              name="businessType"
-              value={formData.businessType}
+              id="business_type"
+              name="business_type"
+              value={formData.business_type}
               onChange={onInputChange}
             >
               <option value="">Select Type</option>
@@ -60,14 +60,14 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="businessEmail">Business Email</label>
+        <label htmlFor="business_email">Business Email</label>
         <div className="register-input-wrapper">
           <Mail className="register-input-icon" size={20} />
           <input
             type="email"
-            id="businessEmail"
-            name="businessEmail"
-            value={formData.businessEmail}
+            id="business_email"
+            name="business_email"
+            value={formData.business_email}
             onChange={onInputChange}
             placeholder="Business Email"
           />
@@ -75,14 +75,14 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="cacNumber">
+        <label htmlFor="CAC_number">
           CAC Number <span style={{ color: "#ff4444" }}>*</span>
         </label>
         <input
           type="text"
-          id="cacNumber"
-          name="cacNumber"
-          value={formData.cacNumber}
+          id="CAC_number"
+          name="CAC_number"
+          value={formData.CAC_number}
           onChange={onInputChange}
           placeholder="CAC Number (Required)"
           required
@@ -90,26 +90,26 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="businessPhone">Business Phone</label>
+        <label htmlFor="business_phone">Business Phone</label>
         <input
           type="tel"
-          id="businessPhone"
-          name="businessPhone"
-          value={formData.businessPhone}
+          id="business_phone"
+          name="business_phone"
+          value={formData.business_phone}
           onChange={onInputChange}
           placeholder="Business Phone"
         />
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="businessAddress">Business Address</label>
+        <label htmlFor="business_location">Business Address</label>
         <div className="register-input-wrapper">
           <MapPin className="register-input-icon" size={20} />
           <input
             type="text"
-            id="businessAddress"
-            name="businessAddress"
-            value={formData.businessAddress}
+            id="business_location"
+            name="business_location"
+            value={formData.business_location}
             onChange={onInputChange}
             placeholder="Business Address"
           />
@@ -117,14 +117,14 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="businessPassword">Password</label>
+        <label htmlFor="business_password">Password</label>
         <div className="register-input-wrapper">
           <Lock className="register-input-icon" size={20} />
           <input
             type={showPassword ? "text" : "password"}
-            id="businessPassword"
-            name="businessPassword"
-            value={formData.businessPassword}
+            id="business_password"
+            name="business_password"
+            value={formData.business_password}
             onChange={onInputChange}
             placeholder="Password"
           />

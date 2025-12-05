@@ -19,13 +19,13 @@ export interface PersonalFormData {
 
 // Business Form Validation Schema
 export interface BusinessFormData {
-  businessName: string;
-  businessType: string;
-  businessEmail: string;
-  cacNumber: string;
-  businessPhone: string;
-  businessAddress: string;
-  businessPassword: string;
+  business_name: string;
+  business_type: string;
+  business_email: string;
+  CAC_number: string;
+  business_phone: string;
+  business_location: string;
+  business_password: string;
 }
 
 // Validation functions
@@ -133,103 +133,103 @@ export const validateBusinessForm = (
   const errors: ValidationError[] = [];
 
   // Business Name validation
-  if (!data.businessName || data.businessName.trim() === "") {
+  if (!data.business_name || data.business_name.trim() === "") {
     errors.push({
-      field: "businessName",
+      field: "business_name",
       message: "Business name is required",
     });
-  } else if (data.businessName.trim().length < 2) {
+  } else if (data.business_name.trim().length < 2) {
     errors.push({
-      field: "businessName",
+      field: "business_name",
       message: "Business name must be at least 2 characters",
     });
   }
 
   // Business Type validation
-  if (!data.businessType || data.businessType === "") {
+  if (!data.business_type || data.business_type === "") {
     errors.push({
-      field: "businessType",
+      field: "business_type",
       message: "Business type is required",
     });
   } else if (
-    !["retail", "service", "manufacturing", "other"].includes(data.businessType)
+    !["retail", "service", "manufacturing", "other"].includes(data.business_type)
   ) {
     errors.push({
-      field: "businessType",
+      field: "business_type",
       message: "Please select a valid business type",
     });
   }
 
   // Business Email validation
-  if (!data.businessEmail || data.businessEmail.trim() === "") {
+  if (!data.business_email || data.business_email.trim() === "") {
     errors.push({
-      field: "businessEmail",
+      field: "business_email",
       message: "Business email is required",
     });
   } else {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.businessEmail)) {
+    if (!emailRegex.test(data.business_email)) {
       errors.push({
-        field: "businessEmail",
+        field: "business_email",
         message: "Please enter a valid email address",
       });
     }
   }
 
   // CAC Number validation (required for business accounts)
-  if (!data.cacNumber || data.cacNumber.trim() === "") {
+  if (!data.CAC_number || data.CAC_number.trim() === "") {
     errors.push({
-      field: "cacNumber",
+      field: "CAC_number",
       message: "CAC number is required for business accounts",
     });
-  } else if (data.cacNumber.trim().length < 5) {
+  } else if (data.CAC_number.trim().length < 5) {
     errors.push({
-      field: "cacNumber",
+      field: "CAC_number",
       message: "CAC number must be at least 5 characters",
     });
   }
 
   // Business Phone validation
-  if (!data.businessPhone || data.businessPhone.trim() === "") {
+  if (!data.business_phone || data.business_phone.trim() === "") {
     errors.push({
-      field: "businessPhone",
+      field: "business_phone",
       message: "Business phone is required",
     });
   } else {
     const phoneRegex =
       /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/;
-    if (!phoneRegex.test(data.businessPhone.replace(/\s/g, ""))) {
+    if (!phoneRegex.test(data.business_phone.replace(/\s/g, ""))) {
       errors.push({
-        field: "businessPhone",
+        field: "business_phone",
         message: "Please enter a valid phone number",
       });
     }
   }
 
   // Business Address validation
-  if (!data.businessAddress || data.businessAddress.trim() === "") {
+  if (!data.business_location || data.business_location.trim() === "") {
     errors.push({
-      field: "businessAddress",
+      field: "business_location",
       message: "Business address is required",
     });
-  } else if (data.businessAddress.trim().length < 10) {
+  } else if (data.business_location.trim().length < 10) {
     errors.push({
-      field: "businessAddress",
+      field: "business_location",
       message: "Business address must be at least 10 characters",
     });
   }
 
   // Business Password validation
-  if (!data.businessPassword || data.businessPassword === "") {
-    errors.push({ field: "businessPassword", message: "Password is required" });
-  } else if (data.businessPassword.length < 8) {
+  if (!data.business_password || data.business_password === "") {
+    errors.push({ field: "business_password", message: "Password is required" });
+  } else if (data.business_password.length < 8) {
     errors.push({
-      field: "businessPassword",
+      field: "business_password",
       message: "Password must be at least 8 characters",
     });
-  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(data.businessPassword)) {
+  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(data.business_password)) {
     errors.push({
-      field: "businessPassword",
+      field: "business_password",
       message:
         "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     });

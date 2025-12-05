@@ -33,13 +33,13 @@ function Register() {
     user_password: "",
   });
   const [businessFormData, setBusinessFormData] = useState<BusinessFormData>({
-    businessName: "",
-    businessType: "",
-    businessEmail: "",
-    cacNumber: "",
-    businessPhone: "",
-    businessAddress: "",
-    businessPassword: "",
+    business_name: "",
+    business_type: "",
+    business_email: "",
+    CAC_number: "",
+    business_phone: "",
+    business_location: "",
+    business_password: "",
   });
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>(
     []
@@ -141,7 +141,7 @@ function Register() {
         state: {
           submitted: true,
           accountType: "business",
-          email: businessFormData.businessEmail,
+          email: businessFormData.business_email,
         },
       });
     }
