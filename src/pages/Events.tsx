@@ -1,63 +1,143 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import "../main.css";
 import "../scss/_events.scss";
-import Christmas from "../image/Christmas.webp"; // Fallback image
-import LazyImage from "../components/LazyImage";
-import { useScrollAnimation } from "../hooks/useScrollAnimation";
+import multipleLaugh from "../image/multiple-laugh.png";
+import smile from "../image/smile.png";
+import christmas from "../image/Christmas.webp";
 
 const Events: React.FC = () => {
-  const [defaultImage, setDefaultImage] = useState<string>(Christmas);
-  const [badgeText, setBadgeText] = useState<string>("Upcoming Events in Jos");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [visibleElements, setVisibleElements] = useState<Set<string>>(
+    new Set()
+  );
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
 
-  const badgeAnimation = useScrollAnimation({
-    threshold: 0.2,
-    animationClass: "fade-in",
-  });
-  const imageAnimation = useScrollAnimation({
-    threshold: 0.1,
-    animationClass: "fade-in",
-  });
+  // Event images
+  const eventImages = [
+    {
+      id: 1,
+      url: multipleLaugh,
+      alt: "Community Gathering",
+    },
+    {
+      id: 2,
+      url: smile,
+      alt: "Happy Community",
+    },
+    {
+      id: 3,
+      url: christmas,
+      alt: "Christmas Celebration",
+    },
+  ];
 
   useEffect(() => {
-    // Use default values (no API calls)
-    setDefaultImage(Christmas);
-    setBadgeText("Upcoming Events in Jos");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const elementId = entry.target.getAttribute("data-animate-id");
+            if (elementId) {
+              setVisibleElements((prev) => new Set(prev).add(elementId));
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = [badgeRef.current, imageWrapperRef.current];
+
+    elements.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      elements.forEach((el) => {
+        if (el) observer.unobserve(el);
+      });
+    };
   }, []);
 
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? eventImages.length - 1 : prev - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === eventImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  // Auto-advance images every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) =>
+        prev === eventImages.length - 1 ? 0 : prev + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [eventImages.length]);
+
   return (
-    <section className="events" id="events">
+    <section id="events" className="events">
       <div className="events__container">
         <div className="events__heading">
           <div
-            ref={badgeAnimation.ref as React.RefObject<HTMLDivElement>}
-            className={`events__badge ${badgeAnimation.className}`}
+            ref={badgeRef}
+            data-animate-id="events-badge"
+            className={`events__badge ${
+              visibleElements.has("events-badge") ? "fade-in" : ""
+            }`}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8 2V6M16 2V6M3 10H21M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span>{badgeText}</span>
+            <Calendar size={16} />
+            <span>City Events</span>
           </div>
         </div>
-        <LazyImage
-          src={defaultImage}
-          alt="Upcoming event in Jos"
-          className={`events__image ${imageAnimation.className}`}
-          ref={imageAnimation.ref as React.RefObject<HTMLDivElement>}
-        />
+
+        <div
+          ref={imageWrapperRef}
+          data-animate-id="events-image"
+          className={`events__image-wrapper ${
+            visibleElements.has("events-image") ? "fade-in" : ""
+          }`}
+        >
+          {eventImages.length > 0 && (
+            <>
+              <img
+                src={eventImages[currentImageIndex].url}
+                alt={eventImages[currentImageIndex].alt}
+                className="events__image"
+              />
+              {eventImages.length > 1 && (
+                <>
+                  <button
+                    className="events__nav-button events__nav-button--prev"
+                    onClick={handlePrevImage}
+                    aria-label="Previous event"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button
+                    className="events__nav-button events__nav-button--next"
+                    onClick={handleNextImage}
+                    aria-label="Next event"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </section>
   );
 };
+
 export default Events;

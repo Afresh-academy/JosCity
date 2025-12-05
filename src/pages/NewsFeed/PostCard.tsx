@@ -153,7 +153,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   }, [showMenu]);
 
   return (
-    <article className="newsfeed-post">
+    <article className="newsfeed-post" data-post-id={post.id}>
       <div className="newsfeed-post__header">
         <div className="newsfeed-post__user-info">
           <LazyImage

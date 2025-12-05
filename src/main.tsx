@@ -12,7 +12,6 @@ import Pricing from "./pages/Pricing";
 import Guidelines from "./pages/Guidlines";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
-
 import WelcomePage from "./pages/welcomepage";
 import Success from "./pages/Success";
 import ComingSoon from "./pages/ComingSoon";

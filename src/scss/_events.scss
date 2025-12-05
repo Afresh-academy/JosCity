@@ -49,6 +49,7 @@
     transform: translateY(30px);
     transition: opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s;
     overflow: hidden;
+    position: relative;
 
     &.fade-in {
       opacity: 1;
@@ -64,12 +65,72 @@
     max-width: 100%;
   }
 
+  &__nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    svg {
+      color: $color-primary;
+      width: 20px;
+      height: 20px;
+    }
+
+    &--prev {
+      left: 20px;
+    }
+
+    &--next {
+      right: 20px;
+    }
+  }
+
   // Responsive Styles
   @media screen and (max-width: 1024px) {
     padding: 60px 0;
 
     &__heading {
       margin-bottom: 25px;
+    }
+
+    &__nav-button {
+      width: 44px;
+      height: 44px;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      &--prev {
+        left: 15px;
+      }
+
+      &--next {
+        right: 15px;
+      }
     }
   }
 
@@ -84,6 +145,24 @@
     &__badge {
       font-size: 13px;
       padding: 6px 14px;
+    }
+
+    &__nav-button {
+      width: 40px;
+      height: 40px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      &--prev {
+        left: 10px;
+      }
+
+      &--next {
+        right: 10px;
+      }
     }
   }
 
@@ -102,6 +181,24 @@
       svg {
         width: 14px;
         height: 14px;
+      }
+    }
+
+    &__nav-button {
+      width: 36px;
+      height: 36px;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      &--prev {
+        left: 8px;
+      }
+
+      &--next {
+        right: 8px;
       }
     }
   }

@@ -13,6 +13,7 @@ import {
   type BusinessFormData,
   type ValidationError,
 } from "../utils/validationSchemas";
+import { registerPersonal, registerBusiness } from "../api/auth";
 import "../main.css";
 
 function Register() {
@@ -22,14 +23,14 @@ function Register() {
   >("personal");
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<PersonalFormData>({
-    firstName: "",
-    lastName: "",
-    gender: "",
-    phoneNumber: "",
-    email: "",
-    ninNumber: "",
+    user_firstname: "",
+    user_lastname: "",
+    user_gender: "",
+    user_phone: "",
+    user_email: "",
+    nin_number: "",
     address: "",
-    password: "",
+    user_password: "",
   });
   const [businessFormData, setBusinessFormData] = useState<BusinessFormData>({
     businessName: "",
@@ -88,50 +89,28 @@ function Register() {
 
       // Submit personal form
       setIsLoading(true);
-      try {
-        const baseUrl =
-          import.meta.env.VITE_BASE_URL ||
-          import.meta.env.APP_BASE_URL ||
-          "https://new-joscity.onrender.com/api";
 
-        const response = await fetch(`${baseUrl}/auth/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+      // Call API service
+      const result = await registerPersonal(formData);
 
-        let data;
-        try {
-          data = await response.json();
-        } catch (jsonError) {
-          throw new Error("Invalid response from server. Please try again.");
+      if (!result.success) {
+        // Handle errors
+        if (result.errors && result.errors.length > 0) {
+          setValidationErrors(result.errors);
         }
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || "Registration failed. Please try again."
-          );
-        }
-
-        // Success - navigate to success page
-        navigate("/success", {
-          state: {
-            submitted: true,
-            accountType: "personal",
-            email: formData.email,
-          },
-        });
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "An error occurred during registration. Please try again."
-        );
-      } finally {
+        setError(result.message || "Registration failed");
         setIsLoading(false);
+        return;
       }
+
+      // Success - Navigate to success page
+      navigate("/success", {
+        state: {
+          submitted: true,
+          accountType: "personal",
+          email: formData.user_email,
+        },
+      });
     } else {
       // Validate business form
       const errors = validateBusinessForm(businessFormData);
@@ -143,50 +122,28 @@ function Register() {
 
       // Submit business form
       setIsLoading(true);
-      try {
-        const baseUrl =
-          import.meta.env.VITE_BASE_URL ||
-          import.meta.env.APP_BASE_URL ||
-          "https://new-joscity.onrender.com/api";
 
-        const response = await fetch(`${baseUrl}/auth/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(businessFormData),
-        });
+      // Call API service
+      const result = await registerBusiness(businessFormData);
 
-        let data;
-        try {
-          data = await response.json();
-        } catch (jsonError) {
-          throw new Error("Invalid response from server. Please try again.");
+      if (!result.success) {
+        // Handle errors
+        if (result.errors && result.errors.length > 0) {
+          setValidationErrors(result.errors);
         }
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || "Registration failed. Please try again."
-          );
-        }
-
-        // Success - navigate to success page
-        navigate("/success", {
-          state: {
-            submitted: true,
-            accountType: "business",
-            email: businessFormData.businessEmail,
-          },
-        });
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "An error occurred during registration. Please try again."
-        );
-      } finally {
+        setError(result.message || "Registration failed");
         setIsLoading(false);
+        return;
       }
+
+      // Success - Navigate to success page
+      navigate("/success", {
+        state: {
+          submitted: true,
+          accountType: "business",
+          email: businessFormData.businessEmail,
+        },
+      });
     }
   };
 

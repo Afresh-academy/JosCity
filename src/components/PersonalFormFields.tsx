@@ -10,6 +10,12 @@ import {
 } from "lucide-react";
 
 interface PersonalFormData {
+  user_firstname: string;
+  user_lastname: string;
+  user_gender: string;
+  user_phone: string;
+  user_email: string;
+  nin_number: string;
   address: string;
   user_password: string;
 }
@@ -44,12 +50,12 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
           />
         </div>
         <div className="register-form-group">
-          <label htmlFor="lastName">Last Name</label>
+          <label htmlFor="user_lastname">Last Name</label>
           <input
             type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
+            id="user_lastname"
+            name="user_lastname"
+            value={formData.user_lastname}
             onChange={onInputChange}
             placeholder="Last Name"
           />
@@ -58,12 +64,12 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
 
       <div className="register-form-row">
         <div className="register-form-group">
-          <label htmlFor="gender">Gender</label>
+          <label htmlFor="user_gender">Gender</label>
           <div className="register-select-wrapper">
             <select
-              id="gender"
-              name="gender"
-              value={formData.gender}
+              id="user_gender"
+              name="user_gender"
+              value={formData.user_gender}
               onChange={onInputChange}
             >
               <option value="">Gender</option>
@@ -74,12 +80,12 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
           </div>
         </div>
         <div className="register-form-group">
-          <label htmlFor="phoneNumber">Phone Number</label>
+          <label htmlFor="user_phone">Phone Number</label>
           <input
             type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
+            id="user_phone"
+            name="user_phone"
+            value={formData.user_phone}
             onChange={onInputChange}
             placeholder="Phone Number"
           />
@@ -87,14 +93,14 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="email">Email</label>
+        <label htmlFor="user_email">Email</label>
         <div className="register-input-wrapper">
           <Mail className="register-input-icon" size={20} />
           <input
             type="email"
-            id="email"
-            name="email"
-            value={formData.email}
+            id="user_email"
+            name="user_email"
+            value={formData.user_email}
             onChange={onInputChange}
             placeholder="Email"
           />
@@ -102,14 +108,14 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="ninNumber">NIN Number</label>
+        <label htmlFor="nin_number">NIN Number</label>
         <div className="register-input-wrapper">
           <User className="register-input-icon" size={20} />
           <input
             type="text"
-            id="ninNumber"
-            name="ninNumber"
-            value={formData.ninNumber}
+            id="nin_number"
+            name="nin_number"
+            value={formData.nin_number}
             onChange={onInputChange}
             placeholder="NIN Number"
           />
@@ -132,14 +138,14 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="user_password">Password</label>
         <div className="register-input-wrapper">
           <Lock className="register-input-icon" size={20} />
           <input
             type={showPassword ? "text" : "password"}
-            id="password"
-            name="password"
-            value={formData.password}
+            id="user_password"
+            name="user_password"
+            value={formData.user_password}
             onChange={onInputChange}
             placeholder="Password"
           />

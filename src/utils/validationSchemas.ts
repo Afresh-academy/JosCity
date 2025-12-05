@@ -7,14 +7,14 @@ export interface ValidationError {
 
 // Personal Form Validation Schema
 export interface PersonalFormData {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  phoneNumber: string;
-  email: string;
-  ninNumber: string;
+  user_firstname: string;
+  user_lastname: string;
+  user_gender: string;
+  user_phone: string;
+  user_email: string;
+  nin_number: string;
   address: string;
-  password: string;
+  user_password: string;
 }
 
 // Business Form Validation Schema
@@ -35,65 +35,65 @@ export const validatePersonalForm = (
   const errors: ValidationError[] = [];
 
   // First Name validation
-  if (!data.firstName || data.firstName.trim() === "") {
-    errors.push({ field: "firstName", message: "First name is required" });
-  } else if (data.firstName.trim().length < 2) {
+  if (!data.user_firstname || data.user_firstname.trim() === "") {
+    errors.push({ field: "user_firstname", message: "First name is required" });
+  } else if (data.user_firstname.trim().length < 2) {
     errors.push({
-      field: "firstName",
+      field: "user_firstname",
       message: "First name must be at least 2 characters",
     });
   }
 
   // Last Name validation
-  if (!data.lastName || data.lastName.trim() === "") {
-    errors.push({ field: "lastName", message: "Last name is required" });
-  } else if (data.lastName.trim().length < 2) {
+  if (!data.user_lastname || data.user_lastname.trim() === "") {
+    errors.push({ field: "user_lastname", message: "Last name is required" });
+  } else if (data.user_lastname.trim().length < 2) {
     errors.push({
-      field: "lastName",
+      field: "user_lastname",
       message: "Last name must be at least 2 characters",
     });
   }
 
   // Gender validation
-  if (!data.gender || data.gender === "") {
-    errors.push({ field: "gender", message: "Gender is required" });
-  } else if (!["male", "female"].includes(data.gender)) {
-    errors.push({ field: "gender", message: "Please select a valid gender" });
+  if (!data.user_gender || data.user_gender === "") {
+    errors.push({ field: "user_gender", message: "Gender is required" });
+  } else if (!["male", "female"].includes(data.user_gender)) {
+    errors.push({ field: "user_gender", message: "Please select a valid gender" });
   }
 
   // Phone Number validation
-  if (!data.phoneNumber || data.phoneNumber.trim() === "") {
-    errors.push({ field: "phoneNumber", message: "Phone number is required" });
+  if (!data.user_phone || data.user_phone.trim() === "") {
+    errors.push({ field: "user_phone", message: "Phone number is required" });
   } else {
     const phoneRegex =
       /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/;
-    if (!phoneRegex.test(data.phoneNumber.replace(/\s/g, ""))) {
+    if (!phoneRegex.test(data.user_phone.replace(/\s/g, ""))) {
       errors.push({
-        field: "phoneNumber",
+        field: "user_phone",
         message: "Please enter a valid phone number",
       });
     }
   }
 
   // Email validation
-  if (!data.email || data.email.trim() === "") {
-    errors.push({ field: "email", message: "Email is required" });
+  if (!data.user_email || data.user_email.trim() === "") {
+    errors.push({ field: "user_email", message: "Email is required" });
   } else {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
+    if (!emailRegex.test(data.user_email)) {
       errors.push({
-        field: "email",
+        field: "user_email",
         message: "Please enter a valid email address",
       });
     }
   }
 
   // NIN Number validation
-  if (!data.ninNumber || data.ninNumber.trim() === "") {
-    errors.push({ field: "ninNumber", message: "NIN number is required" });
-  } else if (data.ninNumber.trim().length < 11) {
+  if (!data.nin_number || data.nin_number.trim() === "") {
+    errors.push({ field: "nin_number", message: "NIN number is required" });
+  } else if (data.nin_number.trim().length < 11) {
     errors.push({
-      field: "ninNumber",
+      field: "nin_number",
       message: "NIN number must be at least 11 characters",
     });
   }
@@ -109,16 +109,16 @@ export const validatePersonalForm = (
   }
 
   // Password validation
-  if (!data.password || data.password === "") {
-    errors.push({ field: "password", message: "Password is required" });
-  } else if (data.password.length < 8) {
+  if (!data.user_password || data.user_password === "") {
+    errors.push({ field: "user_password", message: "Password is required" });
+  } else if (data.user_password.length < 8) {
     errors.push({
-      field: "password",
+      field: "user_password",
       message: "Password must be at least 8 characters",
     });
-  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(data.password)) {
+  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(data.user_password)) {
     errors.push({
-      field: "password",
+      field: "user_password",
       message:
         "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     });
