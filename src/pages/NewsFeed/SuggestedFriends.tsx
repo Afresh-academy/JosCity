@@ -1,6 +1,6 @@
 import React from "react";
 import { UserPlus } from "lucide-react";
-import LazyImage from "../LazyImage";
+import LazyImage from "../../components/LazyImage";
 
 interface Friend {
   id: number;

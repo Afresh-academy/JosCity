@@ -6,12 +6,12 @@ import RegistrationTabs from "../components/RegistrationTabs";
 import PersonalFormFields from "../components/PersonalFormFields";
 import BusinessFormFields from "../components/BusinessFormFields";
 import SignInLink from "../components/SignInLink";
-import { 
-  validatePersonalForm, 
-  validateBusinessForm, 
+import {
+  validatePersonalForm,
+  validateBusinessForm,
   type PersonalFormData,
   type BusinessFormData,
-  type ValidationError 
+  type ValidationError,
 } from "../utils/validationSchemas";
 import "../main.css";
 
@@ -40,7 +40,9 @@ function Register() {
     businessAddress: "",
     businessPassword: "",
   });
-  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -86,17 +88,50 @@ function Register() {
 
       // Submit personal form
       setIsLoading(true);
-      // Simulate form submission
-      setTimeout(() => {
-        navigate("/success", { 
-          state: { 
+      try {
+        const baseUrl =
+          import.meta.env.VITE_BASE_URL ||
+          import.meta.env.APP_BASE_URL ||
+          "https://new-joscity.onrender.com/api";
+
+        const response = await fetch(`${baseUrl}/auth/signup`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          throw new Error("Invalid response from server. Please try again.");
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Registration failed. Please try again."
+          );
+        }
+
+        // Success - navigate to success page
+        navigate("/success", {
+          state: {
             submitted: true,
             accountType: "personal",
-            email: formData.email 
-          } 
+            email: formData.email,
+          },
         });
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "An error occurred during registration. Please try again."
+        );
+      } finally {
         setIsLoading(false);
-      }, 500);
+      }
     } else {
       // Validate business form
       const errors = validateBusinessForm(businessFormData);
@@ -108,30 +143,57 @@ function Register() {
 
       // Submit business form
       setIsLoading(true);
-      // Simulate form submission
-      setTimeout(() => {
-        navigate("/success", { 
-          state: { 
+      try {
+        const baseUrl =
+          import.meta.env.VITE_BASE_URL ||
+          import.meta.env.APP_BASE_URL ||
+          "https://new-joscity.onrender.com/api";
+
+        const response = await fetch(`${baseUrl}/auth/signup`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(businessFormData),
+        });
+
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          throw new Error("Invalid response from server. Please try again.");
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Registration failed. Please try again."
+          );
+        }
+
+        // Success - navigate to success page
+        navigate("/success", {
+          state: {
             submitted: true,
             accountType: "business",
-            email: businessFormData.businessEmail 
-          } 
+            email: businessFormData.businessEmail,
+          },
         });
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "An error occurred during registration. Please try again."
+        );
+      } finally {
         setIsLoading(false);
-      }, 500);
+      }
     }
   };
 
   return (
     <div className="register-page">
       <div className="register-background">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="register-video"
-        >
+        <video autoPlay loop muted playsInline className="register-video">
           <source src={welcomeVideo} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -167,16 +229,19 @@ function Register() {
                 />
 
                 {validationErrors.length > 0 && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {validationErrors.map((err, idx) => (
                       <div key={idx}>{err.message}</div>
                     ))}
@@ -184,22 +249,25 @@ function Register() {
                 )}
 
                 {error && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {error}
                   </div>
                 )}
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="register-submit-button"
                   disabled={isLoading}
                   style={{
@@ -237,16 +305,19 @@ function Register() {
                 />
 
                 {validationErrors.length > 0 && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {validationErrors.map((err, idx) => (
                       <div key={idx}>{err.message}</div>
                     ))}
@@ -254,22 +325,25 @@ function Register() {
                 )}
 
                 {error && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {error}
                   </div>
                 )}
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="register-submit-button"
                   disabled={isLoading}
                   style={{

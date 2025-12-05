@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   SquarePlus,
@@ -20,159 +20,36 @@ import {
   Briefcase as Jobs,
   Video,
   Search,
-  AlertCircle,
 } from "lucide-react";
 import primaryLogo from "../image/primary-logo.png";
 import headerAvatar from "../image/newsfeed/blessing.jpg";
-import blessingImg from "../image/newsfeed/blessing.jpg";
-import davidImg from "../image/newsfeed/David.jpg";
-import chistyImg from "../image/newsfeed/chisty.jpg";
-import tianaImg from "../image/newsfeed/tiana.jpg";
-import willImg from "../image/newsfeed/will.jpg";
-import josephImg from "../image/newsfeed/joseph.png";
+import davidAvatar from "../image/newsfeed/David.jpg";
 import LazyImage from "./LazyImage";
 import "../main.css";
 
-interface User {
-  id: number;
-  name: string;
-  avatar: string;
-  location?: string;
-  mutualFriends?: number;
-}
-
-// Mock user data
-const mockUsers: User[] = [
-  {
-    id: 1,
-    name: "Blessing Matthias",
-    avatar: blessingImg,
-    location: "Jos, Nigeria",
-    mutualFriends: 5,
-  },
-  {
-    id: 2,
-    name: "David Gabriel",
-    avatar: davidImg,
-    location: "Abuja, Nigeria",
-    mutualFriends: 3,
-  },
-  {
-    id: 3,
-    name: "Chisty Ola",
-    avatar: chistyImg,
-    location: "Lagos, Nigeria",
-    mutualFriends: 8,
-  },
-  {
-    id: 4,
-    name: "Tiana James",
-    avatar: tianaImg,
-    location: "Kaduna, Nigeria",
-    mutualFriends: 2,
-  },
-  {
-    id: 5,
-    name: "Will Smith",
-    avatar: willImg,
-    location: "Plateau, Nigeria",
-    mutualFriends: 12,
-  },
-  {
-    id: 6,
-    name: "Joseph Azumara",
-    avatar: josephImg,
-    location: "Jos, Nigeria",
-    mutualFriends: 7,
-  },
-  {
-    id: 7,
-    name: "Sarah Johnson",
-    avatar: primaryLogo,
-    location: "Abuja, Nigeria",
-    mutualFriends: 4,
-  },
-  {
-    id: 8,
-    name: "Michael Brown",
-    avatar: primaryLogo,
-    location: "Lagos, Nigeria",
-    mutualFriends: 6,
-  },
-  {
-    id: 9,
-    name: "Emily Davis",
-    avatar: primaryLogo,
-    location: "Kano, Nigeria",
-    mutualFriends: 9,
-  },
-  {
-    id: 10,
-    name: "James Wilson",
-    avatar: primaryLogo,
-    location: "Port Harcourt, Nigeria",
-    mutualFriends: 1,
-  },
-];
-
-const People: React.FC = () => {
+const SentRequest: React.FC = () => {
   const navigate = useNavigate();
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("find");
+  const [activeTab, setActiveTab] = useState("sent-requests");
   const [distance, setDistance] = useState(100);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showNotification, setShowNotification] = useState(false);
 
-  // Filter users based on search query
-  const filteredUsers = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return [];
-    }
-    const query = searchQuery.toLowerCase().trim();
-    return mockUsers.filter(
-      (user) =>
-        user.name.toLowerCase().includes(query) ||
-        user.location?.toLowerCase().includes(query)
+  // Mock data for sent friend requests - using state so we can remove items
+  const [sentRequests, setSentRequests] = useState([
+    { id: 1, name: "David Peter", mutualFriends: 1, avatar: davidAvatar },
+    { id: 2, name: "David Peter", mutualFriends: 1, avatar: davidAvatar },
+    { id: 3, name: "David Peter", mutualFriends: 1, avatar: davidAvatar },
+  ]);
+
+  const handleCancelRequest = (id: number) => {
+    // Remove the request from the list
+    setSentRequests((prevRequests) =>
+      prevRequests.filter((request) => request.id !== id)
     );
-  }, [searchQuery]);
-
-  // Show notification when no users are found
-  useEffect(() => {
-    if (searchQuery.trim() && filteredUsers.length === 0) {
-      setShowNotification(true);
-      const timer = setTimeout(() => {
-        setShowNotification(false);
-      }, 5000); // Hide after 5 seconds
-
-      return () => clearTimeout(timer);
-    } else {
-      setShowNotification(false);
-    }
-  }, [searchQuery, filteredUsers.length]);
+  };
 
   return (
     <div className="people-page">
-      {/* Notification Toast */}
-      {showNotification && (
-        <div className="people-notification">
-          <div className="people-notification__content">
-            <AlertCircle size={20} className="people-notification__icon" />
-            <div className="people-notification__message">
-              <strong>No users found</strong>
-              <span>No users match your search "{searchQuery}"</span>
-            </div>
-            <button
-              className="people-notification__close"
-              onClick={() => setShowNotification(false)}
-              aria-label="Close notification"
-            >
-              <X size={18} />
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Top Navigation Bar */}
       <header className="newsfeed-header">
         <div className="newsfeed-header__container">
@@ -326,10 +203,8 @@ const People: React.FC = () => {
           <div className="people-search-section__input-wrapper">
             <input
               type="text"
-              placeholder="Search for users..."
+              placeholder="Search"
               className="people-search-section__input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Search size={20} className="people-search-section__icon" />
           </div>
@@ -338,16 +213,17 @@ const People: React.FC = () => {
         {/* Tabs - Full Width */}
         <div className="people-tabs">
           <button
-            type="button"
             className={`people-tabs__tab ${
               activeTab === "find" ? "people-tabs__tab--active" : ""
             }`}
-            onClick={() => setActiveTab("find")}
+            onClick={() => {
+              setActiveTab("find");
+              navigate("/people");
+            }}
           >
             Find
           </button>
           <button
-            type="button"
             className={`people-tabs__tab ${
               activeTab === "friend-requests" ? "people-tabs__tab--active" : ""
             }`}
@@ -359,83 +235,63 @@ const People: React.FC = () => {
             Friend Requests
           </button>
           <button
-            type="button"
             className={`people-tabs__tab ${
               activeTab === "sent-requests" ? "people-tabs__tab--active" : ""
             }`}
-            onClick={() => {
-              console.log("Sent Requests button clicked");
-              setActiveTab("sent-requests");
-              navigate("/sent-requests");
-            }}
+            onClick={() => setActiveTab("sent-requests")}
           >
             Sent Requests
-            <span className="people-tabs__badge">7</span>
+            {sentRequests.length > 0 && (
+              <span className="people-tabs__badge">{sentRequests.length}</span>
+            )}
           </button>
         </div>
 
         {/* Main Content Area */}
         <main className="people-main">
-          {/* Search Results Section */}
-          {searchQuery.trim() && (
-            <div className="people-section">
-              <h2 className="people-section__title">
-                Search Results{" "}
-                {filteredUsers.length > 0 && `(${filteredUsers.length})`}
-              </h2>
-              {filteredUsers.length > 0 ? (
-                <div className="people-search-results">
-                  {filteredUsers.map((user) => (
-                    <div key={user.id} className="people-user-card">
-                      <div className="people-user-card__avatar">
-                        <LazyImage
-                          src={user.avatar}
-                          alt={user.name}
-                          className="people-user-card__avatar-img"
-                        />
-                      </div>
-                      <div className="people-user-card__info">
-                        <h3 className="people-user-card__name">{user.name}</h3>
-                        {user.location && (
-                          <p className="people-user-card__location">
-                            {user.location}
-                          </p>
-                        )}
-                        {user.mutualFriends !== undefined && (
-                          <p className="people-user-card__mutual">
-                            {user.mutualFriends} mutual friend
-                            {user.mutualFriends !== 1 ? "s" : ""}
-                          </p>
-                        )}
-                      </div>
-                      <button className="people-user-card__action-btn">
-                        <UserPlus size={18} />
-                        <span>Add Friend</span>
-                      </button>
+          {/* Friend Request Sent Section */}
+          <div className="people-section">
+            <h2 className="people-section__title">Friend Request Sent</h2>
+            {sentRequests.length > 0 ? (
+              <div className="sent-requests-list">
+                {sentRequests.map((request) => (
+                  <div key={request.id} className="sent-request-card">
+                    <div className="sent-request-card__avatar">
+                      <LazyImage
+                        src={request.avatar}
+                        alt={request.name}
+                        className="sent-request-card__avatar-img"
+                      />
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="people-section__empty people-section__empty--search">
-                  <p className="people-section__empty-text people-section__empty-text--search">
-                    No users found matching "{searchQuery}"
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* People You May Know Section - Only show when not searching */}
-          {!searchQuery.trim() && (
-            <div className="people-section">
-              <h2 className="people-section__title">People You May Know</h2>
+                    <div className="sent-request-card__info">
+                      <h3 className="sent-request-card__name">
+                        {request.name}
+                      </h3>
+                      <p className="sent-request-card__mutual">
+                        {request.mutualFriends} Mutual Friend
+                      </p>
+                    </div>
+                    <button
+                      className="sent-request-card__cancel-btn"
+                      onClick={() => handleCancelRequest(request.id)}
+                      aria-label="Cancel request"
+                    >
+                      <span>Sent</span>
+                      <span className="sent-request-card__cancel-icon">
+                        <X size={14} />
+                      </span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
               <div className="people-section__empty">
                 <p className="people-section__empty-text">
-                  No People Available
+                  No Sent Requests Available
                 </p>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </main>
 
         {/* Right Sidebar - Search Filters */}
@@ -551,4 +407,4 @@ const People: React.FC = () => {
   );
 };
 
-export default People;
+export default SentRequest;

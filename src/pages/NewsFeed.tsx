@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   SquarePlus,
   UserPlus,
@@ -7,13 +7,17 @@ import {
   Menu,
   X,
   TrendingUp,
+  FileText,
+  Clock,
+  Users,
+  Calendar,
 } from "lucide-react";
-import NewsFeedSidebar from "../components/NewsFeed/NewsFeedSidebar";
-import StoriesSection from "../components/NewsFeed/StoriesSection";
-import CreatePostInput from "../components/NewsFeed/CreatePostInput";
-import PostCard from "../components/NewsFeed/PostCard";
-import TrendingSection from "../components/NewsFeed/TrendingSection";
-import SuggestedFriends from "../components/NewsFeed/SuggestedFriends";
+import NewsFeedSidebar from "./NewsFeed/NewsFeedSidebar";
+import StoriesSection from "./NewsFeed/StoriesSection";
+import CreatePostInput from "./NewsFeed/CreatePostInput";
+import PostCard from "./NewsFeed/PostCard";
+import TrendingSection from "./NewsFeed/TrendingSection";
+import SuggestedFriends from "./NewsFeed/SuggestedFriends";
 import primaryLogo from "../image/primary-logo.png";
 // Using one of the existing avatars as placeholder for header icons
 import headerAvatar from "../image/newsfeed/blessing.jpg";
@@ -39,6 +43,8 @@ const NewsFeed: React.FC = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
   const [showGoodMorningCard, setShowGoodMorningCard] = useState(true);
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+  const createMenuRef = useRef<HTMLDivElement>(null);
 
   // Mock data - will be replaced with real data later
   const posts = [
@@ -152,6 +158,50 @@ const NewsFeed: React.FC = () => {
     },
   ];
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        createMenuRef.current &&
+        !createMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsCreateMenuOpen(false);
+      }
+    };
+
+    if (isCreateMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCreateMenuOpen]);
+
+  const handleCreateClick = () => {
+    setIsCreateMenuOpen(!isCreateMenuOpen);
+  };
+
+  const handleCreatePost = () => {
+    setIsCreateMenuOpen(false);
+    // Add logic to open create post modal/form
+  };
+
+  const handleCreateStory = () => {
+    setIsCreateMenuOpen(false);
+    // Add logic to open create story modal/form
+  };
+
+  const handleCreateGroup = () => {
+    setIsCreateMenuOpen(false);
+    // Add logic to open create group modal/form
+  };
+
+  const handleCreateEvent = () => {
+    setIsCreateMenuOpen(false);
+    // Add logic to open create event modal/form
+  };
+
   return (
     <div className="newsfeed-page">
       {/* Top Navigation Bar */}
@@ -171,9 +221,50 @@ const NewsFeed: React.FC = () => {
             </div>
           </div>
           <div className="newsfeed-header__actions">
-            <button className="newsfeed-header__icon-btn" title="Create">
-              <SquarePlus size={20} />
-            </button>
+            <div
+              className="newsfeed-header__create-wrapper"
+              ref={createMenuRef}
+            >
+              <button
+                className="newsfeed-header__icon-btn"
+                title="Create"
+                onClick={handleCreateClick}
+              >
+                <SquarePlus size={20} />
+              </button>
+              {isCreateMenuOpen && (
+                <div className="newsfeed-header__create-dropdown">
+                  <button
+                    className="newsfeed-header__create-item"
+                    onClick={handleCreatePost}
+                  >
+                    <FileText size={18} />
+                    <span>Create Post</span>
+                  </button>
+                  <button
+                    className="newsfeed-header__create-item"
+                    onClick={handleCreateStory}
+                  >
+                    <Clock size={18} />
+                    <span>Create Story</span>
+                  </button>
+                  <button
+                    className="newsfeed-header__create-item"
+                    onClick={handleCreateGroup}
+                  >
+                    <Users size={18} />
+                    <span>Create Group</span>
+                  </button>
+                  <button
+                    className="newsfeed-header__create-item"
+                    onClick={handleCreateEvent}
+                  >
+                    <Calendar size={18} />
+                    <span>Create Event</span>
+                  </button>
+                </div>
+              )}
+            </div>
             <button className="newsfeed-header__icon-btn" title="Add Friend">
               <UserPlus size={20} />
             </button>

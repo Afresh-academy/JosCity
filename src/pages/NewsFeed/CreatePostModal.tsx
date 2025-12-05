@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { X, Image as ImageIcon, Video, Mic } from "lucide-react";
-import LazyImage from "../LazyImage";
+import LazyImage from "../../components/LazyImage";
 
 interface CreatePostModalProps {
   isOpen: boolean;

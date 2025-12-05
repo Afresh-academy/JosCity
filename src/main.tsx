@@ -12,7 +12,7 @@ import Pricing from "./pages/Pricing";
 import Guidelines from "./pages/Guidlines";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
-import BusinessForm from "./pages/BusinessForm";
+
 import WelcomePage from "./pages/welcomepage";
 import Success from "./pages/Success";
 import ComingSoon from "./pages/ComingSoon";
@@ -23,6 +23,9 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CookiePolicy from "./pages/CookiePolicy";
 import Accessibility from "./pages/Accessibility";
+import People from "./components/People.";
+
+import Request from "./components/Request";
 // Landing page component (without WelcomePage or Register)
 export function LandingPage() {
   return (
@@ -50,7 +53,6 @@ if (rootElement) {
           <Route path="/registernow" element={<Register />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/coming-soon" element={<ComingSoon />} />
-          <Route path="/business-form" element={<BusinessForm />} />
           <Route path="/success" element={<Success />} />
           <Route path="/newsfeed" element={<NewsFeed />} />
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -59,6 +61,8 @@ if (rootElement) {
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/accessibility" element={<Accessibility />} />
+          <Route path="/people" element={<People />} />
+          <Route path="/request" element={<Request />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

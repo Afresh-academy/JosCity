@@ -1,21 +1,25 @@
 import React from "react";
-import { Mail, User, MapPin, Lock, Eye, EyeOff, ChevronDown } from "lucide-react";
+import {
+  Mail,
+  User,
+  MapPin,
+  Lock,
+  Eye,
+  EyeOff,
+  ChevronDown,
+} from "lucide-react";
 
 interface PersonalFormData {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  phoneNumber: string;
-  email: string;
-  ninNumber: string;
   address: string;
-  password: string;
+  user_password: string;
 }
 
 interface PersonalFormFieldsProps {
   formData: PersonalFormData;
   showPassword: boolean;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
   onTogglePassword: () => void;
 }
 
@@ -29,12 +33,12 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
     <>
       <div className="register-form-row">
         <div className="register-form-group">
-          <label htmlFor="firstName">First Name</label>
+          <label htmlFor="user_firstname">First Name</label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
+            id="user_firstname"
+            name="user_firstname"
+            value={formData.user_firstname}
             onChange={onInputChange}
             placeholder="First Name"
           />
@@ -157,4 +161,3 @@ const PersonalFormFields: React.FC<PersonalFormFieldsProps> = ({
 };
 
 export default PersonalFormFields;
-

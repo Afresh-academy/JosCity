@@ -116,10 +116,27 @@ function App() {
     }
   };
 
+  const handleLogoClick = () => {
+    navigate("/admin/login");
+  };
+
   return (
     <>
       <nav className="navbar">
-        <div className="navbar__logo">
+        <div
+          className="navbar__logo"
+          onClick={handleLogoClick}
+          style={{ cursor: "pointer" }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleLogoClick();
+            }
+          }}
+          aria-label="Navigate to admin login"
+        >
           <img
             src={logoImage}
             alt="Logo"
