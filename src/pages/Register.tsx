@@ -6,12 +6,12 @@ import RegistrationTabs from "../components/RegistrationTabs";
 import PersonalFormFields from "../components/PersonalFormFields";
 import BusinessFormFields from "../components/BusinessFormFields";
 import SignInLink from "../components/SignInLink";
-import { 
-  validatePersonalForm, 
-  validateBusinessForm, 
+import {
+  validatePersonalForm,
+  validateBusinessForm,
   type PersonalFormData,
   type BusinessFormData,
-  type ValidationError 
+  type ValidationError,
 } from "../utils/validationSchemas";
 import { registerPersonal, registerBusiness } from "../api/auth";
 import "../main.css";
@@ -23,14 +23,14 @@ function Register() {
   >("personal");
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<PersonalFormData>({
-    firstName: "",
-    lastName: "",
-    gender: "",
-    phoneNumber: "",
-    email: "",
-    ninNumber: "",
+    user_firstname: "",
+    user_lastname: "",
+    user_gender: "",
+    user_phone: "",
+    user_email: "",
+    nin_number: "",
     address: "",
-    password: "",
+    user_password: "",
   });
   const [businessFormData, setBusinessFormData] = useState<BusinessFormData>({
     businessName: "",
@@ -41,7 +41,9 @@ function Register() {
     businessAddress: "",
     businessPassword: "",
   });
-  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -106,7 +108,7 @@ function Register() {
         state: {
           submitted: true,
           accountType: "personal",
-          email: formData.email,
+          email: formData.user_email,
         },
       });
     } else {
@@ -148,13 +150,7 @@ function Register() {
   return (
     <div className="register-page">
       <div className="register-background">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="register-video"
-        >
+        <video autoPlay loop muted playsInline className="register-video">
           <source src={welcomeVideo} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -190,16 +186,19 @@ function Register() {
                 />
 
                 {validationErrors.length > 0 && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {validationErrors.map((err, idx) => (
                       <div key={idx}>{err.message}</div>
                     ))}
@@ -207,22 +206,25 @@ function Register() {
                 )}
 
                 {error && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {error}
                   </div>
                 )}
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="register-submit-button"
                   disabled={isLoading}
                   style={{
@@ -260,16 +262,19 @@ function Register() {
                 />
 
                 {validationErrors.length > 0 && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {validationErrors.map((err, idx) => (
                       <div key={idx}>{err.message}</div>
                     ))}
@@ -277,22 +282,25 @@ function Register() {
                 )}
 
                 {error && (
-                  <div className="register-error-message" style={{
-                    color: "#ff4444",
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    padding: "10px",
-                    backgroundColor: "rgba(255, 68, 68, 0.1)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255, 68, 68, 0.3)",
-                  }}>
+                  <div
+                    className="register-error-message"
+                    style={{
+                      color: "#ff4444",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      textAlign: "center",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 68, 68, 0.1)",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(255, 68, 68, 0.3)",
+                    }}
+                  >
                     {error}
                   </div>
                 )}
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="register-submit-button"
                   disabled={isLoading}
                   style={{

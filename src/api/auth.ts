@@ -22,14 +22,14 @@ export const registerPersonal = async (
       },
       body: JSON.stringify({
         accountType: "personal",
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        gender: formData.gender,
-        phoneNumber: formData.phoneNumber,
-        email: formData.email,
-        ninNumber: formData.ninNumber,
+        user_firstname: formData.user_firstname,
+        user_lastname: formData.user_lastname,
+        user_gender: formData.user_gender,
+        user_phone: formData.user_phone,
+        user_email: formData.user_email,
+        nin_number: formData.nin_number,
         address: formData.address,
-        password: formData.password,
+        user_password: formData.user_password,
       }),
     });
 

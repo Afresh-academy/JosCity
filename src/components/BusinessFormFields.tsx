@@ -14,7 +14,9 @@ interface BusinessFormData {
 interface BusinessFormFieldsProps {
   formData: BusinessFormData;
   showPassword: boolean;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
   onTogglePassword: () => void;
 }
 
@@ -51,7 +53,6 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
               <option value="retail">Retail</option>
               <option value="service">Service</option>
               <option value="manufacturing">Manufacturing</option>
-              <option value="other">Other</option>
             </select>
             <ChevronDown className="register-select-icon" size={20} />
           </div>
@@ -74,7 +75,9 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
       </div>
 
       <div className="register-form-group">
-        <label htmlFor="cacNumber">CAC Number <span style={{ color: '#ff4444' }}>*</span></label>
+        <label htmlFor="cacNumber">
+          CAC Number <span style={{ color: "#ff4444" }}>*</span>
+        </label>
         <input
           type="text"
           id="cacNumber"
@@ -143,4 +146,3 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
 };
 
 export default BusinessFormFields;
-

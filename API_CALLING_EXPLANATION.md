@@ -86,12 +86,13 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     try {
       // 3. Make API call
-      const response = await fetch(`${API_BASE_URL}/auth/register/personal`, {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          accountType: "personal",
           firstName: formData.firstName,
           lastName: formData.lastName,
           gender: formData.gender,
@@ -188,12 +189,13 @@ export const registerPersonal = async (
   formData: PersonalFormData
 ): Promise<ApiResponse<{ userId: string; email: string }>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/register/personal`, {
+    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        accountType: "personal",
         firstName: formData.firstName,
         lastName: formData.lastName,
         gender: formData.gender,
@@ -233,12 +235,13 @@ export const registerBusiness = async (
   formData: BusinessFormData
 ): Promise<ApiResponse<{ businessId: string; email: string }>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/register/business`, {
+    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        accountType: "business",
         businessName: formData.businessName,
         businessType: formData.businessType,
         businessEmail: formData.businessEmail,
@@ -355,12 +358,13 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 ### Personal Registration Endpoint
 
-**POST** `/api/auth/register/personal`
+**POST** `https://new-joscity.onrender.com/api/auth/signup`
 
 **Request Body:**
 
 ```json
 {
+  "accountType": "personal",
   "firstName": "John",
   "lastName": "Doe",
   "gender": "male",
@@ -404,19 +408,20 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 ### Business Registration Endpoint
 
-**POST** `/api/auth/register/business`
+**POST** `https://new-joscity.onrender.com/api/auth/signup`
 
 **Request Body:**
 
 ```json
 {
-  "businessName": "ABC Company Ltd",
-  "businessType": "retail",
-  "businessEmail": "contact@abccompany.com",
-  "cacNumber": "RC123456",
-  "businessPhone": "+2348123456789",
-  "businessAddress": "456 Business Street, Jos",
-  "businessPassword": "SecurePass123"
+  "accountType": "business",
+  "business_name": "ABC Company Ltd",
+  "business_type": "retail",
+  "user_email": "contact@abccompany.com",
+  "CAC_number": "RC123456",
+  "user_phone": "+2348123456789",
+  "business_location_": "456 Business Street, Jos",
+  "user_password": "SecurePass123"
 }
 ```
 
