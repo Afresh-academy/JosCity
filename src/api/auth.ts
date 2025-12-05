@@ -15,13 +15,12 @@ export const registerPersonal = async (
   formData: PersonalFormData
 ): Promise<ApiResponse<{ userId: string; email: string }>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+    const response = await fetch(`${API_BASE_URL}/auth/personal/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accountType: "personal",
         user_firstname: formData.user_firstname,
         user_lastname: formData.user_lastname,
         user_gender: formData.user_gender,
@@ -61,13 +60,12 @@ export const registerBusiness = async (
   formData: BusinessFormData
 ): Promise<ApiResponse<{ businessId: string; email: string }>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+    const response = await fetch(`${API_BASE_URL}/auth/business/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accountType: "business",
         business_name: formData.business_name,
         business_type: formData.business_type,
         user_email: formData.business_email,

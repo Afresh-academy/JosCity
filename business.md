@@ -1,4 +1,4 @@
-import React from "react";
+<!-- import React from "react";
 import { Mail, MapPin, Lock, Eye, EyeOff, ChevronDown } from "lucide-react";
 
 interface BusinessFormData {
@@ -144,4 +144,4 @@ const BusinessFormFields: React.FC<BusinessFormFieldsProps> = ({
 
 export default BusinessFormFields;
 
-BusinessFormFields.tsx
+BusinessFormFields.tsx -->

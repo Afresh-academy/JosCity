@@ -16,6 +16,7 @@ import {
 import { registerPersonal, registerBusiness } from "../api/auth";
 import "../main.css";
 
+
 function Register() {
   const navigate = useNavigate();
   const [registrationType, setRegistrationType] = useState<
