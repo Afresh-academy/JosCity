@@ -13,6 +13,7 @@ import {
   type BusinessFormData,
   type ValidationError 
 } from "../utils/validationSchemas";
+import { registerPersonal, registerBusiness } from "../api/auth";
 import "../main.css";
 
 function Register() {
@@ -86,17 +87,28 @@ function Register() {
 
       // Submit personal form
       setIsLoading(true);
-      // Simulate form submission
-      setTimeout(() => {
-        navigate("/success", { 
-          state: { 
-            submitted: true,
-            accountType: "personal",
-            email: formData.email 
-          } 
-        });
+
+      // Call API service
+      const result = await registerPersonal(formData);
+
+      if (!result.success) {
+        // Handle errors
+        if (result.errors && result.errors.length > 0) {
+          setValidationErrors(result.errors);
+        }
+        setError(result.message || "Registration failed");
         setIsLoading(false);
-      }, 500);
+        return;
+      }
+
+      // Success - Navigate to success page
+      navigate("/success", {
+        state: {
+          submitted: true,
+          accountType: "personal",
+          email: formData.email,
+        },
+      });
     } else {
       // Validate business form
       const errors = validateBusinessForm(businessFormData);
@@ -108,17 +120,28 @@ function Register() {
 
       // Submit business form
       setIsLoading(true);
-      // Simulate form submission
-      setTimeout(() => {
-        navigate("/success", { 
-          state: { 
-            submitted: true,
-            accountType: "business",
-            email: businessFormData.businessEmail 
-          } 
-        });
+
+      // Call API service
+      const result = await registerBusiness(businessFormData);
+
+      if (!result.success) {
+        // Handle errors
+        if (result.errors && result.errors.length > 0) {
+          setValidationErrors(result.errors);
+        }
+        setError(result.message || "Registration failed");
         setIsLoading(false);
-      }, 500);
+        return;
+      }
+
+      // Success - Navigate to success page
+      navigate("/success", {
+        state: {
+          submitted: true,
+          accountType: "business",
+          email: businessFormData.businessEmail,
+        },
+      });
     }
   };
 
