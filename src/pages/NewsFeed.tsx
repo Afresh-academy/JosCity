@@ -11,6 +11,19 @@ import {
   Clock,
   Users,
   Calendar,
+  Search,
+  Hash,
+  User,
+  Send,
+  MoreVertical,
+  Paperclip,
+  Smile,
+  Heart,
+  MessageSquare,
+  UserCheck,
+  ThumbsUp,
+  CheckCircle,
+  Trash2,
 } from "lucide-react";
 import NewsFeedSidebar from "./NewsFeed/NewsFeedSidebar";
 import StoriesSection from "./NewsFeed/StoriesSection";
@@ -39,11 +52,36 @@ import story4 from "../image/newsfeed/tiana.jpg";
 import "../main.css";
 import LazyImage from "../components/LazyImage";
 
+interface SearchResult {
+  type: "person" | "hashtag" | "post";
+  id: string | number;
+  title: string;
+  subtitle?: string;
+  avatar?: string;
+  postCount?: number;
+}
+
 const NewsFeed: React.FC = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [filteredHashtag, setFilteredHashtag] = useState<string | null>(null);
+  const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
+  const [friendSearchQuery, setFriendSearchQuery] = useState("");
+  const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
+  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+  const [chatSearchQuery, setChatSearchQuery] = useState("");
+  const [messageInput, setMessageInput] = useState("");
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
   const createMenuRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const addFriendModalRef = useRef<HTMLDivElement>(null);
+  const chatPanelRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const notificationPanelRef = useRef<HTMLDivElement>(null);
 
   // Mock data - will be replaced with real data later
   const posts = [
@@ -119,10 +157,31 @@ const NewsFeed: React.FC = () => {
     },
   ];
 
-  const trending = [
-    { hashtag: "#AfrESH", posts: 1 },
-    { hashtag: "#C", posts: 1 },
-  ];
+  // Calculate most common hashtags from posts
+  const calculateTrendingHashtags = () => {
+    const hashtagCounts: Record<string, number> = {};
+    
+    posts.forEach((post) => {
+      if (post.hashtags) {
+        const hashtags = post.hashtags
+          .split(" ")
+          .filter((tag) => tag.startsWith("#") && tag.length > 1);
+        hashtags.forEach((hashtag) => {
+          hashtagCounts[hashtag] = (hashtagCounts[hashtag] || 0) + 1;
+        });
+      }
+    });
+
+    // Convert to array, sort by count, and take top 2
+    const sortedHashtags = Object.entries(hashtagCounts)
+      .map(([hashtag, count]) => ({ hashtag, posts: count }))
+      .sort((a, b) => b.posts - a.posts)
+      .slice(0, 2);
+
+    return sortedHashtags;
+  };
+
+  const trending = calculateTrendingHashtags();
 
   const suggestedFriends = [
     {
@@ -157,6 +216,542 @@ const NewsFeed: React.FC = () => {
     },
   ];
 
+  // Mock chat conversations
+  interface ChatMessage {
+    id: number;
+    senderId: number;
+    text: string;
+    timestamp: string;
+    isRead: boolean;
+  }
+
+  interface ChatConversation {
+    id: number;
+    userId: number;
+    userName: string;
+    userAvatar: string;
+    lastMessage: string;
+    lastMessageTime: string;
+    unreadCount: number;
+    isOnline: boolean;
+    messages: ChatMessage[];
+  }
+
+  const [chatConversations, setChatConversations] = useState<ChatConversation[]>([
+    {
+      id: 1,
+      userId: 1,
+      userName: "Blessing Matthias",
+      userAvatar: avatarBlessing,
+      lastMessage: "Hey! How are you doing?",
+      lastMessageTime: "2m ago",
+      unreadCount: 2,
+      isOnline: true,
+      messages: [
+        {
+          id: 1,
+          senderId: 1,
+          text: "Hey! How are you doing?",
+          timestamp: "10:30 AM",
+          isRead: false,
+        },
+        {
+          id: 2,
+          senderId: 0, // 0 represents current user
+          text: "I'm doing great, thanks for asking!",
+          timestamp: "10:32 AM",
+          isRead: true,
+        },
+        {
+          id: 3,
+          senderId: 1,
+          text: "That's awesome! Want to catch up this weekend?",
+          timestamp: "10:33 AM",
+          isRead: false,
+        },
+      ],
+    },
+    {
+      id: 2,
+      userId: 2,
+      userName: "Joseph Azumara",
+      userAvatar: avatarJoseph,
+      lastMessage: "Thanks for the help earlier!",
+      lastMessageTime: "1h ago",
+      unreadCount: 0,
+      isOnline: false,
+      messages: [
+        {
+          id: 1,
+          senderId: 2,
+          text: "Thanks for the help earlier!",
+          timestamp: "9:15 AM",
+          isRead: true,
+        },
+        {
+          id: 2,
+          senderId: 0,
+          text: "No problem at all! Happy to help.",
+          timestamp: "9:20 AM",
+          isRead: true,
+        },
+      ],
+    },
+    {
+      id: 3,
+      userId: 3,
+      userName: "David Gabriel",
+      userAvatar: avatarDavidGabriel,
+      lastMessage: "See you at the meeting!",
+      lastMessageTime: "3h ago",
+      unreadCount: 0,
+      isOnline: true,
+      messages: [
+        {
+          id: 1,
+          senderId: 0,
+          text: "Are we still meeting today?",
+          timestamp: "8:00 AM",
+          isRead: true,
+        },
+        {
+          id: 2,
+          senderId: 3,
+          text: "Yes, see you at the meeting!",
+          timestamp: "8:05 AM",
+          isRead: true,
+        },
+      ],
+    },
+    {
+      id: 4,
+      userId: 4,
+      userName: "Joy James",
+      userAvatar: avatarJoy,
+      lastMessage: "The event was amazing!",
+      lastMessageTime: "Yesterday",
+      unreadCount: 1,
+      isOnline: false,
+      messages: [
+        {
+          id: 1,
+          senderId: 4,
+          text: "The event was amazing!",
+          timestamp: "Yesterday 6:00 PM",
+          isRead: false,
+        },
+      ],
+    },
+    {
+      id: 5,
+      userId: 5,
+      userName: "Ola Wale",
+      userAvatar: avatarOla,
+      lastMessage: "Can you send me that file?",
+      lastMessageTime: "2 days ago",
+      unreadCount: 0,
+      isOnline: true,
+      messages: [
+        {
+          id: 1,
+          senderId: 5,
+          text: "Can you send me that file?",
+          timestamp: "2 days ago",
+          isRead: true,
+        },
+        {
+          id: 2,
+          senderId: 0,
+          text: "Sure, I'll send it right away.",
+          timestamp: "2 days ago",
+          isRead: true,
+        },
+      ],
+    },
+  ]);
+
+  // Mock notifications
+  interface Notification {
+    id: number;
+    type: "like" | "comment" | "friend_request" | "mention" | "share" | "event";
+    userId: number;
+    userName: string;
+    userAvatar: string;
+    message: string;
+    timestamp: string;
+    isRead: boolean;
+    relatedPostId?: number;
+    relatedEventId?: number;
+  }
+
+  const [notifications, setNotifications] = useState<Notification[]>([
+    {
+      id: 1,
+      type: "like",
+      userId: 1,
+      userName: "Blessing Matthias",
+      userAvatar: avatarBlessing,
+      message: "liked your post",
+      timestamp: "2 minutes ago",
+      isRead: false,
+      relatedPostId: 1,
+    },
+    {
+      id: 2,
+      type: "comment",
+      userId: 2,
+      userName: "Joseph Azumara",
+      userAvatar: avatarJoseph,
+      message: "commented on your post: 'Great post! Thanks for sharing.'",
+      timestamp: "15 minutes ago",
+      isRead: false,
+      relatedPostId: 1,
+    },
+    {
+      id: 3,
+      type: "friend_request",
+      userId: 4,
+      userName: "Joy James",
+      userAvatar: avatarJoy,
+      message: "sent you a friend request",
+      timestamp: "1 hour ago",
+      isRead: false,
+    },
+    {
+      id: 4,
+      type: "like",
+      userId: 3,
+      userName: "David Gabriel",
+      userAvatar: avatarDavidGabriel,
+      message: "liked your post",
+      timestamp: "2 hours ago",
+      isRead: true,
+      relatedPostId: 2,
+    },
+    {
+      id: 5,
+      type: "mention",
+      userId: 5,
+      userName: "Ola Wale",
+      userAvatar: avatarOla,
+      message: "mentioned you in a comment",
+      timestamp: "3 hours ago",
+      isRead: false,
+      relatedPostId: 3,
+    },
+    {
+      id: 6,
+      type: "share",
+      userId: 1,
+      userName: "Blessing Matthias",
+      userAvatar: avatarBlessing,
+      message: "shared your post",
+      timestamp: "5 hours ago",
+      isRead: true,
+      relatedPostId: 1,
+    },
+    {
+      id: 7,
+      type: "event",
+      userId: 2,
+      userName: "Joseph Azumara",
+      userAvatar: avatarJoseph,
+      message: "invited you to an event",
+      timestamp: "Yesterday",
+      isRead: false,
+      relatedEventId: 1,
+    },
+    {
+      id: 8,
+      type: "like",
+      userId: 4,
+      userName: "Joy James",
+      userAvatar: avatarJoy,
+      message: "liked your post",
+      timestamp: "Yesterday",
+      isRead: true,
+      relatedPostId: 2,
+    },
+  ]);
+
+  // Calculate unread notifications count
+  const unreadNotificationsCount = notifications.filter((n) => !n.isRead).length;
+
+  // Mark notification as read
+  const markNotificationAsRead = (notificationId: number) => {
+    setNotifications((prev) =>
+      prev.map((notif) =>
+        notif.id === notificationId ? { ...notif, isRead: true } : notif
+      )
+    );
+  };
+
+  // Mark all notifications as read
+  const markAllAsRead = () => {
+    setNotifications((prev) => prev.map((notif) => ({ ...notif, isRead: true })));
+  };
+
+  // Clear all notifications
+  const clearAllNotifications = () => {
+    setNotifications([]);
+  };
+
+  // Delete notification
+  const deleteNotification = (notificationId: number) => {
+    setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId));
+  };
+
+  // Get notification icon based on type
+  const getNotificationIcon = (type: Notification["type"]) => {
+    switch (type) {
+      case "like":
+        return <Heart size={20} />;
+      case "comment":
+        return <MessageSquare size={20} />;
+      case "friend_request":
+        return <UserCheck size={20} />;
+      case "mention":
+        return <Hash size={20} />;
+      case "share":
+        return <ThumbsUp size={20} />;
+      case "event":
+        return <Calendar size={20} />;
+      default:
+        return <Bell size={20} />;
+    }
+  };
+
+  // Get notification color based on type
+  const getNotificationColor = (type: Notification["type"]) => {
+    switch (type) {
+      case "like":
+        return "#e91e63";
+      case "comment":
+        return "#2196f3";
+      case "friend_request":
+        return "#4caf50";
+      case "mention":
+        return "#ff9800";
+      case "share":
+        return "#9c27b0";
+      case "event":
+        return "#00bcd4";
+      default:
+        return "#666";
+    }
+  };
+
+  // Extract all unique people from posts, stories, and suggested friends
+  const allPeople = [
+    ...new Set([
+      ...posts.map((p) => p.userName),
+      ...stories.map((s) => s.userName),
+      ...suggestedFriends.map((f) => f.name),
+    ]),
+  ].map((name) => {
+    const post = posts.find((p) => p.userName === name);
+    const story = stories.find((s) => s.userName === name);
+    const friend = suggestedFriends.find((f) => f.name === name);
+    return {
+      id: friend?.id || Math.random(),
+      name,
+      avatar: post?.userAvatar || story?.avatar || friend?.avatar || "",
+      mutualFriends: friend?.mutualFriends || 0,
+    };
+  });
+
+  // Filter people based on search query
+  const filteredPeople = allPeople.filter((person) =>
+    person.name.toLowerCase().includes(friendSearchQuery.toLowerCase().trim())
+  );
+
+  // Filter conversations based on search query
+  const filteredConversations = chatConversations.filter((chat) =>
+    chat.userName.toLowerCase().includes(chatSearchQuery.toLowerCase().trim())
+  );
+
+  // Get selected chat
+  const selectedChat = chatConversations.find((chat) => chat.id === selectedChatId);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [selectedChat?.messages]);
+
+  // Handle sending a message
+  const handleSendMessage = () => {
+    if (!messageInput.trim() || !selectedChatId) return;
+
+    const newMessage: ChatMessage = {
+      id: Date.now(),
+      senderId: 0, // Current user
+      text: messageInput.trim(),
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      isRead: false,
+    };
+
+    setChatConversations((prev) =>
+      prev.map((chat) => {
+        if (chat.id === selectedChatId) {
+          return {
+            ...chat,
+            messages: [...chat.messages, newMessage],
+            lastMessage: newMessage.text,
+            lastMessageTime: "Just now",
+          };
+        }
+        return chat;
+      })
+    );
+
+    setMessageInput("");
+  };
+
+  // Handle Enter key to send message
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  // Extract all hashtags from posts
+  const allHashtags = [
+    ...new Set(
+      posts
+        .filter((p) => p.hashtags)
+        .flatMap((p) =>
+          p.hashtags!.split(" ").filter((tag) => tag.startsWith("#"))
+        )
+    ),
+  ];
+
+  // Search function
+  const performSearch = useCallback(
+    (query: string) => {
+      if (!query.trim()) {
+        setSearchResults([]);
+        return;
+      }
+
+      const queryLower = query.toLowerCase().trim();
+      const results: SearchResult[] = [];
+
+      // Search people
+      allPeople.forEach((person) => {
+        if (person.name.toLowerCase().includes(queryLower)) {
+          const postCount = posts.filter((p) => p.userName === person.name)
+            .length;
+          results.push({
+            type: "person",
+            id: person.name,
+            title: person.name,
+            subtitle: postCount > 0 ? `${postCount} post${postCount > 1 ? "s" : ""}` : "User",
+            avatar: person.avatar,
+          });
+        }
+      });
+
+      // Search hashtags
+      allHashtags.forEach((hashtag) => {
+        if (hashtag.toLowerCase().includes(queryLower)) {
+          const postCount = posts.filter(
+            (p) => p.hashtags && p.hashtags.includes(hashtag)
+          ).length;
+          results.push({
+            type: "hashtag",
+            id: hashtag,
+            title: hashtag,
+            subtitle: `${postCount} post${postCount !== 1 ? "s" : ""}`,
+            postCount,
+          });
+        }
+      });
+
+      // Search posts by caption content
+      posts.forEach((post) => {
+        if (
+          post.caption.toLowerCase().includes(queryLower) ||
+          (post.hashtags && post.hashtags.toLowerCase().includes(queryLower))
+        ) {
+          // Check if this post is already represented by a person or hashtag
+          const alreadyIncluded =
+            results.some(
+              (r) =>
+                r.type === "person" &&
+                r.title === post.userName &&
+                r.id === post.userName
+            ) ||
+            (post.hashtags &&
+              results.some(
+                (r) =>
+                  r.type === "hashtag" &&
+                  post.hashtags!.split(" ").some((tag) => tag === r.id)
+              ));
+
+          if (!alreadyIncluded) {
+            results.push({
+              type: "post",
+              id: post.id,
+              title: `Post by ${post.userName}`,
+              subtitle: post.caption.substring(0, 50) + "...",
+              avatar: post.userAvatar,
+            });
+          }
+        }
+      });
+
+      // Limit results to 10
+      setSearchResults(results.slice(0, 10));
+    },
+    [allPeople, allHashtags, posts]
+  );
+
+  // Handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    performSearch(value);
+  };
+
+  // Handle search result click
+  const handleSearchResultClick = (result: SearchResult) => {
+    setSearchQuery("");
+    setSearchResults([]);
+    setIsSearchFocused(false);
+
+    // Scroll to relevant content based on result type
+    if (result.type === "person") {
+      // Find and scroll to first post by this person
+      const userPost = posts.find((p) => p.userName === result.title);
+      if (userPost) {
+        const postElement = document.querySelector(
+          `[data-post-id="${userPost.id}"]`
+        );
+        postElement?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    } else if (result.type === "hashtag") {
+      // Find and scroll to first post with this hashtag
+      const hashtagPost = posts.find(
+        (p) => p.hashtags && p.hashtags.includes(result.title)
+      );
+      if (hashtagPost) {
+        const postElement = document.querySelector(
+          `[data-post-id="${hashtagPost.id}"]`
+        );
+        postElement?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    } else if (result.type === "post") {
+      // Scroll to the specific post
+      const postElement = document.querySelector(
+        `[data-post-id="${result.id}"]`
+      );
+      postElement?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
   // Close dropdown when clicking outside
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (
@@ -165,17 +760,33 @@ const NewsFeed: React.FC = () => {
     ) {
       setIsCreateMenuOpen(false);
     }
+    if (
+      searchRef.current &&
+      !searchRef.current.contains(event.target as Node)
+    ) {
+      setIsSearchFocused(false);
+    }
+    if (
+      addFriendModalRef.current &&
+      !addFriendModalRef.current.contains(event.target as Node)
+    ) {
+      // Don't close if clicking on the overlay itself (it will be handled by overlay onClick)
+      const target = event.target as HTMLElement;
+      if (!target.closest(".newsfeed-add-friend-modal")) {
+        setIsAddFriendModalOpen(false);
+      }
+    }
   }, []);
 
   useEffect(() => {
-    if (isCreateMenuOpen) {
+    if (isCreateMenuOpen || isSearchFocused || isAddFriendModalOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isCreateMenuOpen, handleClickOutside]);
+  }, [isCreateMenuOpen, isSearchFocused, isAddFriendModalOpen, handleClickOutside]);
 
   const handleCreateClick = () => {
     setIsCreateMenuOpen(!isCreateMenuOpen);
@@ -264,17 +875,31 @@ const NewsFeed: React.FC = () => {
                 </div>
               )}
             </div>
-            <button className="newsfeed-header__icon-btn" title="Add Friend">
+            <button
+              className="newsfeed-header__icon-btn"
+              title="Add Friend"
+              onClick={() => setIsAddFriendModalOpen(true)}
+            >
               <UserPlus size={20} />
             </button>
-            <button className="newsfeed-header__icon-btn" title="Messages">
+            <button
+              className="newsfeed-header__icon-btn"
+              title="Messages"
+              onClick={() => setIsChatPanelOpen(true)}
+            >
               <MessageCircle size={20} />
             </button>
             <button
               className="newsfeed-header__icon-btn newsfeed-header__icon-btn--notifications"
               title="Notifications"
+              onClick={() => setIsNotificationPanelOpen(true)}
             >
               <Bell size={20} />
+              {unreadNotificationsCount > 0 && (
+                <span className="newsfeed-header__badge">
+                  {unreadNotificationsCount > 9 ? "9+" : unreadNotificationsCount}
+                </span>
+              )}
             </button>
             <button className="newsfeed-header__join-btn">
               <LazyImage
@@ -317,26 +942,76 @@ const NewsFeed: React.FC = () => {
         {/* Main Content Area */}
         <main className="newsfeed-main">
           {/* Search Section */}
-          <div className="newsfeed-search-section">
+          <div
+            className="newsfeed-search-section"
+            ref={searchRef}
+          >
             <div className="newsfeed-search-section__input-wrapper">
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search people, hashtags, or posts..."
                 className="newsfeed-search-section__input"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onFocus={() => setIsSearchFocused(true)}
               />
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+              <Search
+                size={20}
                 className="newsfeed-search-section__icon"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
+              />
             </div>
+            {isSearchFocused && searchResults.length > 0 && (
+              <div className="newsfeed-search-results">
+                {searchResults.map((result, index) => (
+                  <button
+                    key={`${result.type}-${result.id}-${index}`}
+                    className="newsfeed-search-result"
+                    onClick={() => handleSearchResultClick(result)}
+                  >
+                    <div className="newsfeed-search-result__icon">
+                      {result.type === "person" ? (
+                        <User size={18} />
+                      ) : result.type === "hashtag" ? (
+                        <Hash size={18} />
+                      ) : (
+                        <FileText size={18} />
+                      )}
+                    </div>
+                    {result.avatar && (
+                      <img
+                        src={result.avatar}
+                        alt={result.title}
+                        className="newsfeed-search-result__avatar"
+                      />
+                    )}
+                    <div className="newsfeed-search-result__content">
+                      <div className="newsfeed-search-result__title">
+                        {result.title}
+                      </div>
+                      {result.subtitle && (
+                        <div className="newsfeed-search-result__subtitle">
+                          {result.subtitle}
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+            {isSearchFocused && searchQuery && searchResults.length === 0 && (
+              <div className="newsfeed-search-results">
+                <div className="newsfeed-search-result newsfeed-search-result--empty">
+                  <div className="newsfeed-search-result__content">
+                    <div className="newsfeed-search-result__title">
+                      No results found
+                    </div>
+                    <div className="newsfeed-search-result__subtitle">
+                      Try searching for a different name, hashtag, or keyword
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <StoriesSection stories={stories} />
           <CreatePostInput userName="Olamilekan" />
@@ -355,9 +1030,41 @@ const NewsFeed: React.FC = () => {
 
           {/* Posts */}
           <div className="newsfeed-posts">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
+            {filteredHashtag && (
+              <div className="newsfeed-hashtag-filter">
+                <div className="newsfeed-hashtag-filter__content">
+                  <span className="newsfeed-hashtag-filter__label">
+                    Showing posts for:
+                  </span>
+                  <span className="newsfeed-hashtag-filter__hashtag">
+                    {filteredHashtag}
+                  </span>
+                  <button
+                    className="newsfeed-hashtag-filter__clear"
+                    onClick={() => setFilteredHashtag(null)}
+                    aria-label="Clear filter"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+            )}
+            {posts
+              .filter((post) => {
+                if (!filteredHashtag) return true;
+                return post.hashtags?.includes(filteredHashtag);
+              })
+              .map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
+            {filteredHashtag &&
+              posts.filter((post) =>
+                post.hashtags?.includes(filteredHashtag)
+              ).length === 0 && (
+                <div className="newsfeed-no-posts">
+                  <p>No posts found for {filteredHashtag}</p>
+                </div>
+              )}
           </div>
         </main>
 
@@ -377,7 +1084,17 @@ const NewsFeed: React.FC = () => {
               <X size={20} />
             </button>
           </div>
-          <TrendingSection trending={trending} />
+          <TrendingSection
+            trending={trending}
+            onHashtagClick={(hashtag) => {
+              setFilteredHashtag(hashtag);
+              // Scroll to posts section
+              setTimeout(() => {
+                const postsSection = document.querySelector(".newsfeed-posts");
+                postsSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 100);
+            }}
+          />
           <SuggestedFriends friends={suggestedFriends} />
 
           {/* Footer */}
@@ -393,6 +1110,412 @@ const NewsFeed: React.FC = () => {
           </footer>
         </aside>
       </div>
+
+      {/* Add Friend Modal */}
+      {isAddFriendModalOpen && (
+        <div
+          className="newsfeed-add-friend-modal-overlay"
+          onClick={() => setIsAddFriendModalOpen(false)}
+        >
+          <div
+            ref={addFriendModalRef}
+            className="newsfeed-add-friend-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="newsfeed-add-friend-modal__header">
+              <h3>Find Friends</h3>
+              <button
+                className="newsfeed-add-friend-modal__close"
+                onClick={() => setIsAddFriendModalOpen(false)}
+                aria-label="Close modal"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="newsfeed-add-friend-modal__search">
+              <div className="newsfeed-add-friend-modal__search-wrapper">
+                <Search size={20} className="newsfeed-add-friend-modal__search-icon" />
+                <input
+                  type="text"
+                  className="newsfeed-add-friend-modal__search-input"
+                  placeholder="Search for friends..."
+                  value={friendSearchQuery}
+                  onChange={(e) => setFriendSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="newsfeed-add-friend-modal__content">
+              {filteredPeople.length > 0 ? (
+                <div className="newsfeed-add-friend-modal__list">
+                  {filteredPeople.map((person) => (
+                    <div key={person.id} className="newsfeed-add-friend-modal__item">
+                      <LazyImage
+                        src={person.avatar || "/placeholder-avatar.png"}
+                        alt={person.name}
+                        className="newsfeed-add-friend-modal__avatar"
+                      />
+                      <div className="newsfeed-add-friend-modal__info">
+                        <p className="newsfeed-add-friend-modal__name">{person.name}</p>
+                        {person.mutualFriends > 0 && (
+                          <p className="newsfeed-add-friend-modal__mutual">
+                            {person.mutualFriends} Mutual friend
+                            {person.mutualFriends !== 1 ? "s" : ""}
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        className="newsfeed-add-friend-modal__add-btn"
+                        onClick={() => {
+                          // Handle add friend action
+                          console.log(`Adding ${person.name} as friend`);
+                        }}
+                        aria-label={`Add ${person.name} as friend`}
+                      >
+                        <UserPlus size={18} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="newsfeed-add-friend-modal__empty">
+                  <p>No people found</p>
+                  <p className="newsfeed-add-friend-modal__empty-subtitle">
+                    Try searching with a different name
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Chat Panel */}
+      {isChatPanelOpen && (
+        <div className="newsfeed-chat-panel-overlay" onClick={() => setIsChatPanelOpen(false)}>
+          <div
+            ref={chatPanelRef}
+            className="newsfeed-chat-panel"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="newsfeed-chat-panel__header">
+              <h3>Messages</h3>
+              <button
+                className="newsfeed-chat-panel__close"
+                onClick={() => setIsChatPanelOpen(false)}
+                aria-label="Close chat"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="newsfeed-chat-panel__container">
+              {/* Conversations List */}
+              <div className="newsfeed-chat-panel__conversations">
+                <div className="newsfeed-chat-panel__search-wrapper">
+                  <Search size={18} className="newsfeed-chat-panel__search-icon" />
+                  <input
+                    type="text"
+                    className="newsfeed-chat-panel__search-input"
+                    placeholder="Search conversations..."
+                    value={chatSearchQuery}
+                    onChange={(e) => setChatSearchQuery(e.target.value)}
+                  />
+                </div>
+                <div className="newsfeed-chat-panel__conversations-list">
+                  {filteredConversations.length > 0 ? (
+                    filteredConversations.map((conversation) => (
+                      <div
+                        key={conversation.id}
+                        className={`newsfeed-chat-panel__conversation-item ${
+                          selectedChatId === conversation.id ? "newsfeed-chat-panel__conversation-item--active" : ""
+                        }`}
+                        onClick={() => {
+                          setSelectedChatId(conversation.id);
+                          // Mark messages as read when opening chat
+                          setChatConversations((prev) =>
+                            prev.map((chat) =>
+                              chat.id === conversation.id
+                                ? {
+                                    ...chat,
+                                    messages: chat.messages.map((msg) => ({ ...msg, isRead: true })),
+                                    unreadCount: 0,
+                                  }
+                                : chat
+                            )
+                          );
+                        }}
+                      >
+                        <div className="newsfeed-chat-panel__conversation-avatar-wrapper">
+                          <LazyImage
+                            src={conversation.userAvatar || "/placeholder-avatar.png"}
+                            alt={conversation.userName}
+                            className="newsfeed-chat-panel__conversation-avatar"
+                          />
+                          {conversation.isOnline && (
+                            <span className="newsfeed-chat-panel__online-indicator"></span>
+                          )}
+                        </div>
+                        <div className="newsfeed-chat-panel__conversation-info">
+                          <div className="newsfeed-chat-panel__conversation-header">
+                            <p className="newsfeed-chat-panel__conversation-name">
+                              {conversation.userName}
+                            </p>
+                            <span className="newsfeed-chat-panel__conversation-time">
+                              {conversation.lastMessageTime}
+                            </span>
+                          </div>
+                          <div className="newsfeed-chat-panel__conversation-preview">
+                            <p className="newsfeed-chat-panel__conversation-message">
+                              {conversation.lastMessage}
+                            </p>
+                            {conversation.unreadCount > 0 && (
+                              <span className="newsfeed-chat-panel__unread-badge">
+                                {conversation.unreadCount}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="newsfeed-chat-panel__empty-conversations">
+                      <p>No conversations found</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Chat Window */}
+              <div className="newsfeed-chat-panel__chat-window">
+                {selectedChat ? (
+                  <>
+                    <div className="newsfeed-chat-panel__chat-header">
+                      <div className="newsfeed-chat-panel__chat-user-info">
+                        <div className="newsfeed-chat-panel__chat-avatar-wrapper">
+                          <LazyImage
+                            src={selectedChat.userAvatar || "/placeholder-avatar.png"}
+                            alt={selectedChat.userName}
+                            className="newsfeed-chat-panel__chat-avatar"
+                          />
+                          {selectedChat.isOnline && (
+                            <span className="newsfeed-chat-panel__online-indicator"></span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="newsfeed-chat-panel__chat-user-name">
+                            {selectedChat.userName}
+                          </p>
+                          <p className="newsfeed-chat-panel__chat-status">
+                            {selectedChat.isOnline ? "Online" : "Offline"}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        className="newsfeed-chat-panel__chat-menu-btn"
+                        aria-label="More options"
+                      >
+                        <MoreVertical size={20} />
+                      </button>
+                    </div>
+
+                    <div className="newsfeed-chat-panel__messages">
+                      {selectedChat.messages.map((message) => {
+                        const isCurrentUser = message.senderId === 0;
+                        return (
+                          <div
+                            key={message.id}
+                            className={`newsfeed-chat-panel__message ${
+                              isCurrentUser
+                                ? "newsfeed-chat-panel__message--sent"
+                                : "newsfeed-chat-panel__message--received"
+                            }`}
+                          >
+                            {!isCurrentUser && (
+                              <LazyImage
+                                src={selectedChat.userAvatar || "/placeholder-avatar.png"}
+                                alt={selectedChat.userName}
+                                className="newsfeed-chat-panel__message-avatar"
+                              />
+                            )}
+                            <div className="newsfeed-chat-panel__message-content">
+                              <p className="newsfeed-chat-panel__message-text">{message.text}</p>
+                              <span className="newsfeed-chat-panel__message-time">
+                                {message.timestamp}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      <div ref={messagesEndRef} />
+                    </div>
+
+                    <div className="newsfeed-chat-panel__input-area">
+                      <button
+                        className="newsfeed-chat-panel__input-btn"
+                        aria-label="Attach file"
+                        title="Attach file"
+                      >
+                        <Paperclip size={20} />
+                      </button>
+                      <input
+                        type="text"
+                        className="newsfeed-chat-panel__input"
+                        placeholder="Type a message..."
+                        value={messageInput}
+                        onChange={(e) => setMessageInput(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                      />
+                      <button
+                        className="newsfeed-chat-panel__input-btn"
+                        aria-label="Add emoji"
+                        title="Add emoji"
+                      >
+                        <Smile size={20} />
+                      </button>
+                      <button
+                        className="newsfeed-chat-panel__send-btn"
+                        onClick={handleSendMessage}
+                        disabled={!messageInput.trim()}
+                        aria-label="Send message"
+                        title="Send message"
+                      >
+                        <Send size={20} />
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="newsfeed-chat-panel__no-chat-selected">
+                    <MessageCircle size={64} />
+                    <p>Select a conversation to start chatting</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notification Panel */}
+      {isNotificationPanelOpen && (
+        <div
+          className="newsfeed-notification-panel-overlay"
+          onClick={() => setIsNotificationPanelOpen(false)}
+        >
+          <div
+            ref={notificationPanelRef}
+            className="newsfeed-notification-panel"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="newsfeed-notification-panel__header">
+              <div className="newsfeed-notification-panel__header-content">
+                <h3>Notifications</h3>
+                {unreadNotificationsCount > 0 && (
+                  <span className="newsfeed-notification-panel__unread-count">
+                    {unreadNotificationsCount} new
+                  </span>
+                )}
+              </div>
+              <div className="newsfeed-notification-panel__header-actions">
+                {unreadNotificationsCount > 0 && (
+                  <button
+                    className="newsfeed-notification-panel__action-btn"
+                    onClick={markAllAsRead}
+                    title="Mark all as read"
+                  >
+                    <CheckCircle size={18} />
+                  </button>
+                )}
+                {notifications.length > 0 && (
+                  <button
+                    className="newsfeed-notification-panel__action-btn"
+                    onClick={clearAllNotifications}
+                    title="Clear all"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                )}
+                <button
+                  className="newsfeed-notification-panel__close"
+                  onClick={() => setIsNotificationPanelOpen(false)}
+                  aria-label="Close notifications"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            <div className="newsfeed-notification-panel__content">
+              {notifications.length > 0 ? (
+                <div className="newsfeed-notification-panel__list">
+                  {notifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`newsfeed-notification-panel__item ${
+                        !notification.isRead ? "newsfeed-notification-panel__item--unread" : ""
+                      }`}
+                      onClick={() => markNotificationAsRead(notification.id)}
+                    >
+                      <div
+                        className="newsfeed-notification-panel__icon-wrapper"
+                        style={{ backgroundColor: `${getNotificationColor(notification.type)}20` }}
+                      >
+                        <div
+                          className="newsfeed-notification-panel__icon"
+                          style={{ color: getNotificationColor(notification.type) }}
+                        >
+                          {getNotificationIcon(notification.type)}
+                        </div>
+                      </div>
+                      <div className="newsfeed-notification-panel__content-wrapper">
+                        <div className="newsfeed-notification-panel__user-info">
+                          <LazyImage
+                            src={notification.userAvatar || "/placeholder-avatar.png"}
+                            alt={notification.userName}
+                            className="newsfeed-notification-panel__avatar"
+                          />
+                          <div className="newsfeed-notification-panel__text">
+                            <p className="newsfeed-notification-panel__message">
+                              <span className="newsfeed-notification-panel__user-name">
+                                {notification.userName}
+                              </span>{" "}
+                              {notification.message}
+                            </p>
+                            <span className="newsfeed-notification-panel__timestamp">
+                              {notification.timestamp}
+                            </span>
+                          </div>
+                        </div>
+                        {!notification.isRead && (
+                          <span className="newsfeed-notification-panel__unread-dot"></span>
+                        )}
+                      </div>
+                      <button
+                        className="newsfeed-notification-panel__delete-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteNotification(notification.id);
+                        }}
+                        aria-label="Delete notification"
+                        title="Delete"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="newsfeed-notification-panel__empty">
+                  <Bell size={64} />
+                  <p>No notifications</p>
+                  <p className="newsfeed-notification-panel__empty-subtitle">
+                    You're all caught up!
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
