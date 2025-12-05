@@ -68,13 +68,13 @@ export const registerBusiness = async (
       },
       body: JSON.stringify({
         accountType: "business",
-        businessName: formData.businessName,
-        businessType: formData.businessType,
-        businessEmail: formData.businessEmail,
-        cacNumber: formData.cacNumber,
-        businessPhone: formData.businessPhone,
-        businessAddress: formData.businessAddress,
-        businessPassword: formData.businessPassword,
+        business_name: formData.businessName,
+        business_type: formData.businessType,
+        user_email: formData.businessEmail,
+        CAC_number: formData.cacNumber,
+        user_phone: formData.businessPhone,
+        business_location_: formData.businessAddress,
+        user_password: formData.businessPassword,
       }),
     });
 
