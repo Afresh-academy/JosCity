@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   SquarePlus,
@@ -21,6 +21,8 @@ import {
   Video,
   Search,
   AlertCircle,
+  SlidersHorizontal,
+  Smile,
 } from "lucide-react";
 import primaryLogo from "../image/primary-logo.png";
 import headerAvatar from "../image/newsfeed/blessing.jpg";
@@ -31,7 +33,9 @@ import tianaImg from "../image/newsfeed/tiana.jpg";
 import willImg from "../image/newsfeed/will.jpg";
 import josephImg from "../image/newsfeed/joseph.png";
 import LazyImage from "./LazyImage";
+import EmojiPicker from "./EmojiPicker";
 import "../main.css";
+import "../scss/_emojipicker.scss";
 
 interface User {
   id: number;
@@ -123,6 +127,16 @@ const People: React.FC = () => {
   const [distance, setDistance] = useState(100);
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotification, setShowNotification] = useState(false);
+  const [isSearchEmojiPickerOpen, setIsSearchEmojiPickerOpen] = useState(false);
+  const [filterQuery, setFilterQuery] = useState("");
+  const [filterCity, setFilterCity] = useState("");
+  const [isFilterQueryEmojiPickerOpen, setIsFilterQueryEmojiPickerOpen] =
+    useState(false);
+  const [isFilterCityEmojiPickerOpen, setIsFilterCityEmojiPickerOpen] =
+    useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const filterQueryInputRef = useRef<HTMLInputElement>(null);
+  const filterCityInputRef = useRef<HTMLInputElement>(null);
 
   // Filter users based on search query
   const filteredUsers = useMemo(() => {
@@ -211,7 +225,7 @@ const People: React.FC = () => {
               title="Search Filters"
               aria-label="Toggle filters"
             >
-              <Search size={20} />
+              <SlidersHorizontal size={20} />
             </button>
             <button className="newsfeed-header__join-btn">
               <LazyImage
@@ -258,7 +272,15 @@ const People: React.FC = () => {
 
           <nav className="people-sidebar__nav">
             <div className="people-sidebar__section">
-              <a href="#" className="people-sidebar__item">
+              <a
+                href="/newsfeed"
+                className="people-sidebar__item"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/newsfeed");
+                  setIsLeftSidebarOpen(false);
+                }}
+              >
                 <Newspaper size={20} />
                 <span>News Feed</span>
               </a>
@@ -297,7 +319,15 @@ const People: React.FC = () => {
                 <Newspaper size={20} />
                 <span>News</span>
               </a>
-              <a href="#" className="people-sidebar__item">
+              <a
+                href="/forums"
+                className="people-sidebar__item"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/forums");
+                  setIsLeftSidebarOpen(false);
+                }}
+              >
                 <MessageSquare size={20} />
                 <span>Forums</span>
               </a>
@@ -322,16 +352,72 @@ const People: React.FC = () => {
         </aside>
 
         {/* Search Bar - Full Width */}
-        <div className="people-search-section">
-          <div className="people-search-section__input-wrapper">
+        <div className="newsfeed-search-section">
+          <div
+            className="newsfeed-search-section__input-wrapper"
+            style={{ position: "relative" }}
+          >
             <input
+              ref={searchInputRef}
               type="text"
-              placeholder="Search for users..."
-              className="people-search-section__input"
+              placeholder="Search people, hashtags, or posts..."
+              className="newsfeed-search-section__input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ paddingRight: "80px" }}
             />
-            <Search size={20} className="people-search-section__icon" />
+            <div
+              style={{
+                position: "absolute",
+                right: "40px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 10,
+              }}
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  setIsSearchEmojiPickerOpen(!isSearchEmojiPickerOpen)
+                }
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                aria-label="Add emoji"
+                title="Add emoji"
+              >
+                <Smile size={18} color="#666" />
+              </button>
+              {isSearchEmojiPickerOpen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "100%",
+                    right: 0,
+                    marginBottom: "8px",
+                    zIndex: 10001,
+                  }}
+                >
+                  <EmojiPicker
+                    isOpen={isSearchEmojiPickerOpen}
+                    onClose={() => setIsSearchEmojiPickerOpen(false)}
+                    onEmojiSelect={(emoji) => {
+                      setSearchQuery((prev) => prev + emoji);
+                      setIsSearchEmojiPickerOpen(false);
+                      searchInputRef.current?.focus();
+                    }}
+                    position="top"
+                  />
+                </div>
+              )}
+            </div>
+            <Search size={20} className="newsfeed-search-section__icon" />
           </div>
         </div>
 
@@ -447,7 +533,10 @@ const People: React.FC = () => {
           <div className="people-filters__header">
             <h3 className="people-filters__title">
               Search Filters
-              <Search size={18} className="people-filters__title-icon" />
+              <SlidersHorizontal
+                size={18}
+                className="people-filters__title-icon"
+              />
             </h3>
             <button
               className="people-filters__close"
@@ -488,21 +577,139 @@ const People: React.FC = () => {
             {/* Query */}
             <div className="people-filters__group">
               <label className="people-filters__label">Query</label>
-              <input
-                type="text"
-                className="people-filters__input"
-                placeholder=""
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  ref={filterQueryInputRef}
+                  type="text"
+                  className="people-filters__input"
+                  placeholder=""
+                  value={filterQuery}
+                  onChange={(e) => setFilterQuery(e.target.value)}
+                  style={{ paddingRight: "40px" }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "8px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    zIndex: 10,
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setIsFilterQueryEmojiPickerOpen(
+                        !isFilterQueryEmojiPickerOpen
+                      )
+                    }
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: "4px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    aria-label="Add emoji"
+                    title="Add emoji"
+                  >
+                    <Smile size={16} color="#0d4a1f" />
+                  </button>
+                  {isFilterQueryEmojiPickerOpen && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "100%",
+                        right: 0,
+                        marginBottom: "8px",
+                        zIndex: 10001,
+                      }}
+                    >
+                      <EmojiPicker
+                        isOpen={isFilterQueryEmojiPickerOpen}
+                        onClose={() => setIsFilterQueryEmojiPickerOpen(false)}
+                        onEmojiSelect={(emoji) => {
+                          setFilterQuery((prev) => prev + emoji);
+                          setIsFilterQueryEmojiPickerOpen(false);
+                          filterQueryInputRef.current?.focus();
+                        }}
+                        position="top"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* City */}
             <div className="people-filters__group">
               <label className="people-filters__label">City</label>
-              <input
-                type="text"
-                className="people-filters__input"
-                placeholder=""
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  ref={filterCityInputRef}
+                  type="text"
+                  className="people-filters__input"
+                  placeholder=""
+                  value={filterCity}
+                  onChange={(e) => setFilterCity(e.target.value)}
+                  style={{ paddingRight: "40px" }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "8px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    zIndex: 10,
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setIsFilterCityEmojiPickerOpen(
+                        !isFilterCityEmojiPickerOpen
+                      )
+                    }
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: "4px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    aria-label="Add emoji"
+                    title="Add emoji"
+                  >
+                    <Smile size={16} color="#0d4a1f" />
+                  </button>
+                  {isFilterCityEmojiPickerOpen && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "100%",
+                        right: 0,
+                        marginBottom: "8px",
+                        zIndex: 10001,
+                      }}
+                    >
+                      <EmojiPicker
+                        isOpen={isFilterCityEmojiPickerOpen}
+                        onClose={() => setIsFilterCityEmojiPickerOpen(false)}
+                        onEmojiSelect={(emoji) => {
+                          setFilterCity((prev) => prev + emoji);
+                          setIsFilterCityEmojiPickerOpen(false);
+                          filterCityInputRef.current?.focus();
+                        }}
+                        position="top"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Country */}

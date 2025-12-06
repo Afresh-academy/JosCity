@@ -22,7 +22,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CookiePolicy from "./pages/CookiePolicy";
 import Accessibility from "./pages/Accessibility";
-import People from "./components/People.";
+import People from "./components/People";
+import Forums from "./pages/Forums";
 
 import Request from "./components/Request";
 import SentRequest from "./components/SentRequest";
@@ -62,6 +63,7 @@ if (rootElement) {
           <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/accessibility" element={<Accessibility />} />
           <Route path="/people" element={<People />} />
+          <Route path="/forums" element={<Forums />} />
           <Route path="/request" element={<Request />} />
           <Route path="/sent-requests" element={<SentRequest />} />
         </Routes>

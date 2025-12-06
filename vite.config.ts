@@ -6,6 +6,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true, // Allow access from network devices
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_TARGET || "http://localhost:3000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   build: {
     outDir: "dist",

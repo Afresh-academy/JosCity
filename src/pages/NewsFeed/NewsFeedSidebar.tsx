@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home,
   Calendar,
@@ -22,12 +23,45 @@ interface NewsFeedSidebarProps {
 }
 
 const NewsFeedSidebar: React.FC<NewsFeedSidebarProps> = ({ isOpen = false, onClose }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [activeItem, setActiveItem] = useState<string>('newsfeed');
+
+  // Update active item based on current route
+  useEffect(() => {
+    if (location.pathname === '/people') {
+      setActiveItem('people');
+    } else if (location.pathname === '/forums') {
+      setActiveItem('forums');
+    } else if (location.pathname === '/newsfeed' || location.pathname === '/') {
+      setActiveItem('newsfeed');
+    }
+  }, [location.pathname]);
 
   const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement>, itemId: string) => {
     e.preventDefault();
     setActiveItem(itemId);
     // Close sidebar on mobile after clicking an item
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handlePeopleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setActiveItem('people');
+    navigate('/people');
+    // Close sidebar on mobile after clicking
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleForumsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setActiveItem('forums');
+    navigate('/forums');
+    // Close sidebar on mobile after clicking
     if (onClose) {
       onClose();
     }
@@ -86,9 +120,9 @@ const NewsFeedSidebar: React.FC<NewsFeedSidebarProps> = ({ isOpen = false, onClo
             <span>Business</span>
           </a>
           <a
-            href="#"
+            href="/people"
             className={`newsfeed-sidebar__item ${activeItem === 'people' ? 'newsfeed-sidebar__item--active' : ''}`}
-            onClick={(e) => handleItemClick(e, 'people')}
+            onClick={handlePeopleClick}
           >
             <Users size={20} />
             <span>People</span>
@@ -118,9 +152,9 @@ const NewsFeedSidebar: React.FC<NewsFeedSidebarProps> = ({ isOpen = false, onClo
             <span>News</span>
           </a>
           <a
-            href="#"
+            href="/forums"
             className={`newsfeed-sidebar__item ${activeItem === 'forums' ? 'newsfeed-sidebar__item--active' : ''}`}
-            onClick={(e) => handleItemClick(e, 'forums')}
+            onClick={handleForumsClick}
           >
             <MessageSquare size={20} />
             <span>Forums</span>

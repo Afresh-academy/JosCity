@@ -263,7 +263,7 @@
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    color: #1c8e38;
+    color: #0d4a1f;
     margin-bottom: 8px;
     letter-spacing: 0.5px;
   }
@@ -274,22 +274,27 @@
     gap: 12px;
     padding: 10px 12px;
     border-radius: 8px;
-    color: #1c8e38;
+    color: #0d4a1f;
     text-decoration: none;
     transition: all 0.2s;
     font-size: 14px;
 
     svg {
-      color: #1c8e38;
+      color: #0d4a1f;
       flex-shrink: 0;
     }
 
     &:hover {
-      background-color: #e1ffe9;
+      background-color: #0d4a1f;
+      color: white;
+
+      svg {
+        color: white;
+      }
     }
 
     &--active {
-      background-color: #1c8e38;
+      background-color: #0d4a1f;
       font-weight: 600;
       padding: 10px 12px;
       color: white;
@@ -299,11 +304,11 @@
       }
 
       &:hover {
-        background-color: #e1ffe9;
-        color: #1c8e38;
+        background-color: #0d4a1f;
+        color: white;
 
         svg {
-          color: #1c8e38;
+          color: white;
         }
       }
     }
@@ -380,7 +385,7 @@
     }
 
     &:focus {
-      border-color: #1c8e38;
+      border-color: #0d4a1f;
     }
 
     &::placeholder {
@@ -393,7 +398,7 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: #1c8e38;
+    color: #0d4a1f;
     pointer-events: none;
     flex-shrink: 0;
 
@@ -443,11 +448,11 @@
     gap: 8px;
 
     &:hover {
-      color: #1c8e38;
+      color: #0d4a1f;
     }
 
     &--active {
-      color: #1c8e38;
+      color: #0d4a1f;
       font-weight: 600;
 
       &::after {
@@ -457,7 +462,7 @@
         left: 0;
         right: 0;
         height: 2px;
-        background-color: #1c8e38;
+        background-color: #0d4a1f;
       }
     }
   }
@@ -550,7 +555,7 @@
 
   &:hover {
     background-color: #f9f9f9;
-    border-color: #1c8e38;
+    border-color: #0d4a1f;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
 
@@ -642,7 +647,7 @@
 
   &__mutual {
     font-size: 13px;
-    color: #1c8e38;
+    color: #0d4a1f;
     margin: 0;
     font-weight: 500;
 
@@ -660,7 +665,7 @@
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    background-color: #1c8e38;
+    background-color: #0d4a1f;
     color: white;
     border: none;
     border-radius: 6px;
@@ -672,9 +677,9 @@
     white-space: nowrap;
 
     &:hover {
-      background-color: #0d4a1f;
+      background-color: #0a3d1a;
       transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(28, 142, 56, 0.3);
+      box-shadow: 0 2px 4px rgba(13, 74, 31, 0.3);
     }
 
     &:active {
@@ -958,7 +963,7 @@
   &__title {
     font-size: 16px;
     font-weight: 600;
-    color: #1c8e38;
+    color: #0d4a1f;
     margin: 0;
     display: flex;
     align-items: center;
@@ -966,14 +971,14 @@
   }
 
   &__title-icon {
-    color: #1c8e38;
+    color: #0d4a1f;
   }
 
   &__close {
     display: none;
     background: none;
     border: none;
-    color: #1c8e38;
+    color: #0d4a1f;
     cursor: pointer;
     padding: 4px;
     border-radius: 4px;
@@ -1011,14 +1016,14 @@
   &__label {
     font-size: 14px;
     font-weight: 500;
-    color: #1c8e38;
+    color: #0d4a1f;
   }
 
   &__input,
   &__select {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #1c8e38;
+    border: 1px solid #0d4a1f;
     border-radius: 8px;
     font-size: 14px;
     outline: none;
@@ -1027,7 +1032,7 @@
     box-sizing: border-box;
 
     &:focus {
-      border-color: #1c8e38;
+      border-color: #0d4a1f;
     }
   }
 
@@ -1056,7 +1061,7 @@
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: #1c8e38;
+      background: #0d4a1f;
       cursor: pointer;
     }
 
@@ -1064,7 +1069,7 @@
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: #1c8e38;
+      background: #0d4a1f;
       cursor: pointer;
       border: none;
     }
@@ -1074,13 +1079,13 @@
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    color: #1c8e38;
+    color: #0d4a1f;
   }
 
   &__slider-value {
     font-size: 14px;
     font-weight: 500;
-    color: #1c8e38;
+    color: #0d4a1f;
     text-align: center;
     padding: 4px 0;
   }

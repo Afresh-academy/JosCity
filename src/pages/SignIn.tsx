@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import skyImage from "../image/sky.png";
 import primaryLogo from "../image/primary-logo.png";
 import { Mail, Lock, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import API_BASE_URL from "../api/config";
 import "../main.css";
 
 function SignIn() {
@@ -38,12 +39,7 @@ function SignIn() {
 
     setIsLoading(true);
     try {
-      const baseUrl =
-        import.meta.env.VITE_BASE_URL ||
-        import.meta.env.APP_BASE_URL ||
-        "https://new-joscity.onrender.com/api";
-
-      const response = await fetch(`${baseUrl}/auth/signin`, {
+      const response = await fetch(`${API_BASE_URL}/auth/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +98,6 @@ function SignIn() {
           </div>
 
           <h2 className="signin-title">Sign in to your account</h2>
-
           <form className="signin-form" onSubmit={handleSubmit}>
             <div className="signin-form-group">
               <label htmlFor="email">Email</label>

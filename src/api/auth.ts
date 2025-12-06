@@ -32,12 +32,25 @@ export const registerPersonal = async (
       }),
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } catch (jsonError) {
+      // If response is not valid JSON, return error
+      return {
+        success: false,
+        message: `Server error: ${response.status} ${response.statusText}`,
+        errors: [],
+      };
+    }
 
     if (!response.ok) {
       return {
         success: false,
-        message: data.message || "Registration failed",
+        message:
+          data.message ||
+          `Registration failed: ${response.status} ${response.statusText}`,
         errors: data.errors || [],
       };
     }
@@ -68,20 +81,33 @@ export const registerBusiness = async (
       body: JSON.stringify({
         business_name: formData.business_name,
         business_type: formData.business_type,
-        user_email: formData.business_email,
+        business_email: formData.business_email,
         CAC_number: formData.CAC_number,
-        user_phone: formData.business_phone,
-        business_location_: formData.business_location,
-        user_password: formData.business_password,
+        business_phone: formData.business_phone,
+        business_location: formData.business_location,
+        business_password: formData.business_password,
       }),
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } catch (jsonError) {
+      // If response is not valid JSON, return error
+      return {
+        success: false,
+        message: `Server error: ${response.status} ${response.statusText}`,
+        errors: [],
+      };
+    }
 
     if (!response.ok) {
       return {
         success: false,
-        message: data.message || "Registration failed",
+        message:
+          data.message ||
+          `Registration failed: ${response.status} ${response.statusText}`,
         errors: data.errors || [],
       };
     }
