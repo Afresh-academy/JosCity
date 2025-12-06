@@ -55,6 +55,7 @@ import primaryLogo from "../image/primary-logo.png";
 import userAvatar from "../image/sky.png";
 import PagesControlPanel from "../components/PagesControlPanel";
 import ProtectedRoute from "../components/ProtectedRoute";
+import AdminSettings from "./AdminSettings";
 
 const Admin: React.FC = () => {
   const navigate = useNavigate();
@@ -74,6 +75,9 @@ const Admin: React.FC = () => {
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isControlPanelOpen, setIsControlPanelOpen] = useState(false);
+  const [activeView, setActiveView] = useState<"dashboard" | "settings">(
+    "dashboard"
+  );
 
   // Load admin data on mount
   useEffect(() => {
@@ -240,14 +244,32 @@ const Admin: React.FC = () => {
                   <div className="admin-sidebar-section-container__list">
                     <a
                       href="#"
-                      className="admin-sidebar-section-container__item admin-sidebar-section-container__item--active"
+                      className={`admin-sidebar-section-container__item ${
+                        activeView === "dashboard"
+                          ? "admin-sidebar-section-container__item--active"
+                          : ""
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setActiveView("dashboard");
+                        setIsMobileMenuOpen(false);
+                      }}
                     >
                       <LayoutDashboard size={18} />
                       <span>Dashboard</span>
                     </a>
                     <a
                       href="#"
-                      className="admin-sidebar-section-container__item"
+                      className={`admin-sidebar-section-container__item ${
+                        activeView === "settings"
+                          ? "admin-sidebar-section-container__item--active"
+                          : ""
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setActiveView("settings");
+                        setIsMobileMenuOpen(false);
+                      }}
                     >
                       <Settings size={18} />
                       <span>Settings</span>
@@ -810,192 +832,200 @@ const Admin: React.FC = () => {
 
           {/* Main Content Area */}
           <main className="admin-main">
-            <div className="admin-dashboard">
-              <div className="admin-dashboard__search">
-                <Search size={18} />
-                <input type="text" placeholder="Search" />
-              </div>
-              <div className="admin-dashboard__header">
-                <h1>
-                  <LayoutDashboard size={20} />
-                  Dashboard
-                </h1>
-              </div>
+            {activeView === "settings" ? (
+              <AdminSettings />
+            ) : (
+              <div className="admin-dashboard">
+                <div className="admin-dashboard__search">
+                  <Search size={18} />
+                  <input type="text" placeholder="Search" />
+                </div>
+                <div className="admin-dashboard__header">
+                  <h1>
+                    <LayoutDashboard size={20} />
+                    Dashboard
+                  </h1>
+                </div>
 
-              {/* Chart */}
-              <div className="admin-chart">
-                <div className="admin-chart__title">Monthly Average</div>
-                <button className="admin-chart__menu-btn">
-                  <Menu size={16} />
-                </button>
-                <div className="admin-chart__container">
-                  <div className="admin-chart__y-axis">
-                    {[0, 5, 10, 15, 20, 25].map((value) => (
-                      <div key={value} className="admin-chart__y-label">
-                        {value}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="admin-chart__total-label">Total</div>
-                  <div className="admin-chart__bars-container">
-                    {/* Grid lines */}
-                    {[5, 10, 15, 20, 25].map((value) => {
-                      const position = ((25 - value) / 25) * 100;
-                      return (
-                        <div
-                          key={value}
-                          className="admin-chart__grid-line"
-                          style={{ top: `${position}%` }}
-                        ></div>
-                      );
-                    })}
-                    <div className="admin-chart__bars">
-                      {chartData.map((data, index) => {
-                        // Show bar only for November (index 10)
-                        const isNovember = index === 10;
-
-                        return (
-                          <React.Fragment key={index}>
-                            <div className="admin-chart__bar-group">
-                              <div className="admin-chart__bar-wrapper">
-                                {isNovember && (
-                                  <div
-                                    className="admin-chart__bar admin-chart__bar--users"
-                                    style={{
-                                      height: `${getBarHeight(data.users)}px`,
-                                    }}
-                                  ></div>
-                                )}
-                              </div>
-                            </div>
-                            {/* Add bar between November and December */}
-                            {isNovember && (
-                              <div className="admin-chart__bar-group admin-chart__bar-group--between">
-                                <div className="admin-chart__bar-wrapper">
-                                  <div
-                                    className="admin-chart__bar admin-chart__bar--users"
-                                    style={{
-                                      height: `${getBarHeight(
-                                        chartData[11].users
-                                      )}px`,
-                                    }}
-                                  ></div>
-                                </div>
-                              </div>
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </div>
-                    <div className="admin-chart__underline"></div>
-                    <div className="admin-chart__x-labels">
-                      {chartData.map((data, index) => (
-                        <div key={index} className="admin-chart__x-label">
-                          {data.month}
+                {/* Chart */}
+                <div className="admin-chart">
+                  <div className="admin-chart__title">Monthly Average</div>
+                  <button className="admin-chart__menu-btn">
+                    <Menu size={16} />
+                  </button>
+                  <div className="admin-chart__container">
+                    <div className="admin-chart__y-axis">
+                      {[0, 5, 10, 15, 20, 25].map((value) => (
+                        <div key={value} className="admin-chart__y-label">
+                          {value}
                         </div>
                       ))}
                     </div>
+                    <div className="admin-chart__total-label">Total</div>
+                    <div className="admin-chart__bars-container">
+                      {/* Grid lines */}
+                      {[5, 10, 15, 20, 25].map((value) => {
+                        const position = ((25 - value) / 25) * 100;
+                        return (
+                          <div
+                            key={value}
+                            className="admin-chart__grid-line"
+                            style={{ top: `${position}%` }}
+                          ></div>
+                        );
+                      })}
+                      <div className="admin-chart__bars">
+                        {chartData.map((data, index) => {
+                          // Show bar only for November (index 10)
+                          const isNovember = index === 10;
+
+                          return (
+                            <React.Fragment key={index}>
+                              <div className="admin-chart__bar-group">
+                                <div className="admin-chart__bar-wrapper">
+                                  {isNovember && (
+                                    <div
+                                      className="admin-chart__bar admin-chart__bar--users"
+                                      style={{
+                                        height: `${getBarHeight(data.users)}px`,
+                                      }}
+                                    ></div>
+                                  )}
+                                </div>
+                              </div>
+                              {/* Add bar between November and December */}
+                              {isNovember && (
+                                <div className="admin-chart__bar-group admin-chart__bar-group--between">
+                                  <div className="admin-chart__bar-wrapper">
+                                    <div
+                                      className="admin-chart__bar admin-chart__bar--users"
+                                      style={{
+                                        height: `${getBarHeight(
+                                          chartData[11].users
+                                        )}px`,
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                      <div className="admin-chart__underline"></div>
+                      <div className="admin-chart__x-labels">
+                        {chartData.map((data, index) => (
+                          <div key={index} className="admin-chart__x-label">
+                            {data.month}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="admin-chart__legend">
+                    <div className="admin-chart__legend-item">
+                      <span className="admin-chart__legend-dot admin-chart__legend-dot--users"></span>
+                      <span>Users</span>
+                    </div>
+                    <div className="admin-chart__legend-item">
+                      <span className="admin-chart__legend-dot admin-chart__legend-dot--pages"></span>
+                      <span>Pages</span>
+                    </div>
+                    <div className="admin-chart__legend-item">
+                      <span className="admin-chart__legend-dot admin-chart__legend-dot--groups"></span>
+                      <span>Groups</span>
+                    </div>
+                    <div className="admin-chart__legend-item">
+                      <span className="admin-chart__legend-dot admin-chart__legend-dot--events"></span>
+                      <span>Events</span>
+                    </div>
+                    <div className="admin-chart__legend-item">
+                      <span className="admin-chart__legend-dot admin-chart__legend-dot--posts"></span>
+                      <span>Posts</span>
+                    </div>
                   </div>
                 </div>
-                <div className="admin-chart__legend">
-                  <div className="admin-chart__legend-item">
-                    <span className="admin-chart__legend-dot admin-chart__legend-dot--users"></span>
-                    <span>Users</span>
+
+                {/* Statistics Cards */}
+                <div className="admin-stats">
+                  {/* Row 1 - Users (2 columns) */}
+                  <div className="admin-stat-card admin-stat-card--green admin-stat-card--span-3">
+                    <div className="admin-stat-card__number">22</div>
+                    <div className="admin-stat-card__label">Users</div>
+                    <div className="admin-stat-card__action">Manage Users</div>
                   </div>
-                  <div className="admin-chart__legend-item">
-                    <span className="admin-chart__legend-dot admin-chart__legend-dot--pages"></span>
-                    <span>Pages</span>
+                  <div className="admin-stat-card admin-stat-card--blue admin-stat-card--span-3">
+                    <div className="admin-stat-card__number">22</div>
+                    <div className="admin-stat-card__label">Online</div>
+                    <div className="admin-stat-card__action">Manage Online</div>
                   </div>
-                  <div className="admin-chart__legend-item">
-                    <span className="admin-chart__legend-dot admin-chart__legend-dot--groups"></span>
-                    <span>Groups</span>
+                  {/* Row 2 - User Status (3 columns) */}
+                  <div className="admin-stat-card admin-stat-card--yellow admin-stat-card--span-2">
+                    <div className="admin-stat-card__number">0</div>
+                    <div className="admin-stat-card__label">Pending</div>
+                    <div className="admin-stat-card__action">
+                      Manage Pending
+                    </div>
                   </div>
-                  <div className="admin-chart__legend-item">
-                    <span className="admin-chart__legend-dot admin-chart__legend-dot--events"></span>
-                    <span>Events</span>
+                  <div className="admin-stat-card admin-stat-card--orange admin-stat-card--span-2">
+                    <div className="admin-stat-card__number">2</div>
+                    <div className="admin-stat-card__label">Not Activated</div>
+                    <div className="admin-stat-card__action">
+                      Manage Not Activated
+                    </div>
                   </div>
-                  <div className="admin-chart__legend-item">
-                    <span className="admin-chart__legend-dot admin-chart__legend-dot--posts"></span>
-                    <span>Posts</span>
+                  <div className="admin-stat-card admin-stat-card--red admin-stat-card--span-2">
+                    <div className="admin-stat-card__number">0</div>
+                    <div className="admin-stat-card__label">Banned</div>
+                    <div className="admin-stat-card__action">Manage Banned</div>
+                  </div>
+                </div>
+
+                {/* Statistics Cards - Continued */}
+                <div className="admin-stats">
+                  {/* Row 4 - Posts & Comments (2 columns) */}
+                  <div className="admin-stat-card admin-stat-card--teal admin-stat-card--span-3">
+                    <div className="admin-stat-card__number">22</div>
+                    <div className="admin-stat-card__label">Posts</div>
+                    <div className="admin-stat-card__action">Manage Posts</div>
+                  </div>
+                  <div className="admin-stat-card admin-stat-card--light-blue admin-stat-card--span-3">
+                    <div className="admin-stat-card__number">5</div>
+                    <div className="admin-stat-card__label">Comments</div>
+                    <div className="admin-stat-card__action">
+                      Manage Comments
+                    </div>
+                  </div>
+
+                  {/* Row 5 - Modules (3 columns) */}
+                  <div className="admin-stat-card admin-stat-card--purple admin-stat-card--span-2">
+                    <div className="admin-stat-card__number">0</div>
+                    <div className="admin-stat-card__label">Page</div>
+                    <div className="admin-stat-card__action">Manage Page</div>
+                  </div>
+                  <div className="admin-stat-card admin-stat-card--purple admin-stat-card--span-2">
+                    <div className="admin-stat-card__number">0</div>
+                    <div className="admin-stat-card__label">Group</div>
+                    <div className="admin-stat-card__action">Manage Groups</div>
+                  </div>
+                  <div className="admin-stat-card admin-stat-card--purple admin-stat-card--span-2">
+                    <div className="admin-stat-card__number">0</div>
+                    <div className="admin-stat-card__label">Events</div>
+                    <div className="admin-stat-card__action">Manage Events</div>
+                  </div>
+
+                  {/* Row 6 - Messages & Notifications (2 columns) */}
+                  <div className="admin-stat-card admin-stat-card--blue admin-stat-card--span-3">
+                    <div className="admin-stat-card__number">13</div>
+                    <div className="admin-stat-card__label">Messages</div>
+                  </div>
+                  <div className="admin-stat-card admin-stat-card--teal admin-stat-card--span-3">
+                    <div className="admin-stat-card__number">343</div>
+                    <div className="admin-stat-card__label">Notifications</div>
                   </div>
                 </div>
               </div>
-
-              {/* Statistics Cards */}
-              <div className="admin-stats">
-                {/* Row 1 - Users (2 columns) */}
-                <div className="admin-stat-card admin-stat-card--green admin-stat-card--span-3">
-                  <div className="admin-stat-card__number">22</div>
-                  <div className="admin-stat-card__label">Users</div>
-                  <div className="admin-stat-card__action">Manage Users</div>
-                </div>
-                <div className="admin-stat-card admin-stat-card--blue admin-stat-card--span-3">
-                  <div className="admin-stat-card__number">22</div>
-                  <div className="admin-stat-card__label">Online</div>
-                  <div className="admin-stat-card__action">Manage Online</div>
-                </div>
-                {/* Row 2 - User Status (3 columns) */}
-                <div className="admin-stat-card admin-stat-card--yellow admin-stat-card--span-2">
-                  <div className="admin-stat-card__number">0</div>
-                  <div className="admin-stat-card__label">Pending</div>
-                  <div className="admin-stat-card__action">Manage Pending</div>
-                </div>
-                <div className="admin-stat-card admin-stat-card--orange admin-stat-card--span-2">
-                  <div className="admin-stat-card__number">2</div>
-                  <div className="admin-stat-card__label">Not Activated</div>
-                  <div className="admin-stat-card__action">
-                    Manage Not Activated
-                  </div>
-                </div>
-                <div className="admin-stat-card admin-stat-card--red admin-stat-card--span-2">
-                  <div className="admin-stat-card__number">0</div>
-                  <div className="admin-stat-card__label">Banned</div>
-                  <div className="admin-stat-card__action">Manage Banned</div>
-                </div>
-              </div>
-
-              {/* Statistics Cards - Continued */}
-              <div className="admin-stats">
-                {/* Row 4 - Posts & Comments (2 columns) */}
-                <div className="admin-stat-card admin-stat-card--teal admin-stat-card--span-3">
-                  <div className="admin-stat-card__number">22</div>
-                  <div className="admin-stat-card__label">Posts</div>
-                  <div className="admin-stat-card__action">Manage Posts</div>
-                </div>
-                <div className="admin-stat-card admin-stat-card--light-blue admin-stat-card--span-3">
-                  <div className="admin-stat-card__number">5</div>
-                  <div className="admin-stat-card__label">Comments</div>
-                  <div className="admin-stat-card__action">Manage Comments</div>
-                </div>
-
-                {/* Row 5 - Modules (3 columns) */}
-                <div className="admin-stat-card admin-stat-card--purple admin-stat-card--span-2">
-                  <div className="admin-stat-card__number">0</div>
-                  <div className="admin-stat-card__label">Page</div>
-                  <div className="admin-stat-card__action">Manage Page</div>
-                </div>
-                <div className="admin-stat-card admin-stat-card--purple admin-stat-card--span-2">
-                  <div className="admin-stat-card__number">0</div>
-                  <div className="admin-stat-card__label">Group</div>
-                  <div className="admin-stat-card__action">Manage Groups</div>
-                </div>
-                <div className="admin-stat-card admin-stat-card--purple admin-stat-card--span-2">
-                  <div className="admin-stat-card__number">0</div>
-                  <div className="admin-stat-card__label">Events</div>
-                  <div className="admin-stat-card__action">Manage Events</div>
-                </div>
-
-                {/* Row 6 - Messages & Notifications (2 columns) */}
-                <div className="admin-stat-card admin-stat-card--blue admin-stat-card--span-3">
-                  <div className="admin-stat-card__number">13</div>
-                  <div className="admin-stat-card__label">Messages</div>
-                </div>
-                <div className="admin-stat-card admin-stat-card--teal admin-stat-card--span-3">
-                  <div className="admin-stat-card__number">343</div>
-                  <div className="admin-stat-card__label">Notifications</div>
-                </div>
-              </div>
-            </div>
+            )}
           </main>
         </div>
 
