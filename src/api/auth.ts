@@ -15,30 +15,42 @@ export const registerPersonal = async (
   formData: PersonalFormData
 ): Promise<ApiResponse<{ userId: string; email: string }>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+    const response = await fetch(`${API_BASE_URL}/auth/personal/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accountType: "personal",
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        gender: formData.gender,
-        phoneNumber: formData.phoneNumber,
-        email: formData.email,
-        ninNumber: formData.ninNumber,
+        user_firstname: formData.user_firstname,
+        user_lastname: formData.user_lastname,
+        user_gender: formData.user_gender,
+        user_phone: formData.user_phone,
+        user_email: formData.user_email,
+        nin_number: formData.nin_number,
         address: formData.address,
-        password: formData.password,
+        user_password: formData.user_password,
       }),
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } catch (jsonError) {
+      // If response is not valid JSON, return error
+      return {
+        success: false,
+        message: `Server error: ${response.status} ${response.statusText}`,
+        errors: [],
+      };
+    }
 
     if (!response.ok) {
       return {
         success: false,
-        message: data.message || "Registration failed",
+        message:
+          data.message ||
+          `Registration failed: ${response.status} ${response.statusText}`,
         errors: data.errors || [],
       };
     }
@@ -61,29 +73,41 @@ export const registerBusiness = async (
   formData: BusinessFormData
 ): Promise<ApiResponse<{ businessId: string; email: string }>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+    const response = await fetch(`${API_BASE_URL}/auth/business/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accountType: "business",
-        businessName: formData.businessName,
-        businessType: formData.businessType,
-        businessEmail: formData.businessEmail,
-        cacNumber: formData.cacNumber,
-        businessPhone: formData.businessPhone,
-        businessAddress: formData.businessAddress,
-        businessPassword: formData.businessPassword,
+        business_name: formData.business_name,
+        business_type: formData.business_type,
+        business_email: formData.business_email,
+        CAC_number: formData.CAC_number,
+        business_phone: formData.business_phone,
+        business_location: formData.business_location,
+        business_password: formData.business_password,
       }),
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } catch (jsonError) {
+      // If response is not valid JSON, return error
+      return {
+        success: false,
+        message: `Server error: ${response.status} ${response.statusText}`,
+        errors: [],
+      };
+    }
 
     if (!response.ok) {
       return {
         success: false,
-        message: data.message || "Registration failed",
+        message:
+          data.message ||
+          `Registration failed: ${response.status} ${response.statusText}`,
         errors: data.errors || [],
       };
     }

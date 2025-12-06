@@ -1,20 +1,34 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Plus, Type, Image, Video, X } from "lucide-react";
 import LazyImage from "../../components/LazyImage";
+import CreateStoryModal from "./CreateStoryModal";
 
 interface Story {
   id: number;
   userName: string;
   avatar: string;
   hasNewStory?: boolean;
+  type?: "text" | "photo" | "video";
+  content?: string;
+  caption?: string;
 }
 
 interface StoriesSectionProps {
   stories: Story[];
+  userName?: string;
+  userAvatar?: string;
+  onStory?: (type: "text" | "photo" | "video", content: string, caption?: string) => void;
 }
 
-const StoriesSection: React.FC<StoriesSectionProps> = ({ stories }) => {
+const StoriesSection: React.FC<StoriesSectionProps> = ({ 
+  stories, 
+  userName = "You",
+  userAvatar,
+  onStory 
+}) => {
   const [isStoryTypePanelOpen, setIsStoryTypePanelOpen] = useState(false);
+  const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
+  const [selectedStoryType, setSelectedStoryType] = useState<"text" | "photo" | "video">("text");
   const panelRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -24,20 +38,15 @@ const StoriesSection: React.FC<StoriesSectionProps> = ({ stories }) => {
 
   const handleStoryTypeSelect = (type: "text" | "photo" | "video") => {
     setIsStoryTypePanelOpen(false);
-    // Handle story creation based on type
-    console.log(`Creating ${type} story`);
-    // You can add logic here to open the appropriate story creation modal/form
-    switch (type) {
-      case "text":
-        // Open text story creation
-        break;
-      case "photo":
-        // Open photo story creation
-        break;
-      case "video":
-        // Open video story creation
-        break;
+    setSelectedStoryType(type);
+    setIsStoryModalOpen(true);
+  };
+
+  const handleStoryCreated = (type: "text" | "photo" | "video", content: string, caption?: string) => {
+    if (onStory) {
+      onStory(type, content, caption);
     }
+    setIsStoryModalOpen(false);
   };
 
   // Close panel when clicking outside
@@ -152,6 +161,16 @@ const StoriesSection: React.FC<StoriesSectionProps> = ({ stories }) => {
           </div>
         </div>
       )}
+
+      {/* Story Creation Modal */}
+      <CreateStoryModal
+        isOpen={isStoryModalOpen}
+        onClose={() => setIsStoryModalOpen(false)}
+        userName={userName}
+        userAvatar={userAvatar}
+        storyType={selectedStoryType}
+        onStory={handleStoryCreated}
+      />
     </div>
   );
 };

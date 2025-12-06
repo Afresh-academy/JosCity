@@ -10,7 +10,11 @@ import {
   ShieldCheck,
   AlertCircle,
 } from "lucide-react";
+import API_BASE_URL from "../api/config";
 import "../main.css";
+
+const ADMIN_EMAIL = "admin@joscity.com";
+const ADMIN_PASSWORD = "admin123";
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -18,8 +22,8 @@ function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: ADMIN_EMAIL,
+    password: ADMIN_PASSWORD,
   });
 
   // Redirect if already logged in
@@ -54,14 +58,47 @@ function AdminLogin() {
         return;
       }
 
-      // Simulate admin login
-      // Store token in localStorage for demo purposes
-      localStorage.setItem("adminToken", "demo-token");
-      localStorage.setItem("adminData", JSON.stringify({
-        email: formData.email,
-        display_name: "Admin User"
-      }));
-      
+      // Make API call to admin login endpoint
+      const response = await fetch(`${API_BASE_URL}/admin/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      let data;
+      try {
+        const text = await response.text();
+        data = text ? JSON.parse(text) : {};
+      } catch (jsonError) {
+        setError(`Server error: ${response.status} ${response.statusText}`);
+        setIsLoading(false);
+        return;
+      }
+
+      if (!response.ok) {
+        setError(
+          data.message || "Login failed. Please check your credentials."
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      // Store admin token and data
+      if (data.token) {
+        localStorage.setItem("adminToken", data.token);
+      }
+      if (data.admin || data.user) {
+        localStorage.setItem(
+          "adminData",
+          JSON.stringify(data.admin || data.user)
+        );
+      }
+
       // Redirect to admin dashboard
       navigate("/admin");
     } catch (err) {
@@ -94,7 +131,7 @@ function AdminLogin() {
             style={{
               marginTop: "0.5rem",
               marginBottom: "1.5rem",
-              color: "#666",
+              color: "#ffffff",
               fontSize: "0.9rem",
             }}
           >

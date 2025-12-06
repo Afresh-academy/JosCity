@@ -11,7 +11,7 @@ import {
   Trash2,
   Pin,
 } from "lucide-react";
-import LazyImage from "../../components/LazyImage";
+import LazyImage from "../LazyImage";
 
 interface Comment {
   id: number;
@@ -28,7 +28,6 @@ interface Post {
   action: string;
   timeAgo: string;
   image?: string;
-  video?: string;
   likes: number;
   comments: number;
   views: number;
@@ -154,7 +153,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   }, [showMenu]);
 
   return (
-    <article className="newsfeed-post" data-post-id={post.id}>
+    <article className="newsfeed-post">
       <div className="newsfeed-post__header">
         <div className="newsfeed-post__user-info">
           <LazyImage
@@ -230,19 +229,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             alt={post.action || caption || "Post image"}
             className="newsfeed-post__image"
           />
-        </div>
-      )}
-
-      {post.video && post.video.trim() && (
-        <div className="newsfeed-post__image-wrapper">
-          <video
-            src={post.video}
-            controls
-            className="newsfeed-post__image"
-            style={{ width: "100%", maxHeight: "600px", objectFit: "contain" }}
-          >
-            Your browser does not support the video tag.
-          </video>
         </div>
       )}
 

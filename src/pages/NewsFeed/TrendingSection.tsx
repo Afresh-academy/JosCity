@@ -1,5 +1,5 @@
-import React from 'react';
-import { Flame } from 'lucide-react';
+import React from "react";
+import { Flame } from "lucide-react";
 
 interface Trending {
   hashtag: string;
@@ -11,7 +11,10 @@ interface TrendingSectionProps {
   onHashtagClick?: (hashtag: string) => void;
 }
 
-const TrendingSection: React.FC<TrendingSectionProps> = ({ trending, onHashtagClick }) => {
+const TrendingSection: React.FC<TrendingSectionProps> = ({
+  trending,
+  onHashtagClick,
+}) => {
   // Only show top 2 hashtags
   const topHashtags = trending.slice(0, 2);
 
@@ -32,7 +35,7 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ trending, onHashtagCl
             >
               <span className="newsfeed-trending__hashtag">{item.hashtag}</span>
               <span className="newsfeed-trending__count">
-                ({item.posts} Post{item.posts !== 1 ? 's' : ''})
+                ({item.posts} Post{item.posts !== 1 ? "s" : ""})
               </span>
             </button>
           ))
@@ -47,4 +50,3 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ trending, onHashtagCl
 };
 
 export default TrendingSection;
-

@@ -7,11 +7,13 @@ import LazyImage from "../../components/LazyImage";
 interface CreatePostInputProps {
   userName: string;
   userAvatar?: string;
+  onPost?: (caption: string, image: string | null, video: string | null) => void;
 }
 
 const CreatePostInput: React.FC<CreatePostInputProps> = ({
   userName,
   userAvatar,
+  onPost,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -55,6 +57,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
           </button>
           <button
             className="newsfeed-create-post__action-btn"
+            onClick={() => setIsModalOpen(true)}
             title="Add Audio"
           >
             <Mic size={20} />
@@ -67,6 +70,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
         onClose={() => setIsModalOpen(false)}
         userName={userName}
         userAvatar={userAvatar}
+        onPost={onPost}
       />
     </>
   );

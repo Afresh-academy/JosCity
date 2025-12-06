@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, forwardRef } from 'react';
+import React, { useState, useRef, useEffect, forwardRef } from "react";
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -9,134 +9,131 @@ interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   onError?: () => void;
 }
 
-const LazyImage = forwardRef<HTMLDivElement, LazyImageProps>(({
-  src,
-  alt,
-  placeholder,
-  className = '',
-  onLoad,
-  onError,
-  ...props
-}, ref) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+const LazyImage = forwardRef<HTMLDivElement, LazyImageProps>(
+  (
+    { src, alt, placeholder, className = "", onLoad, onError, ...props },
+    ref
+  ) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [isInView, setIsInView] = useState(false);
+    const [hasError, setHasError] = useState(false);
+    const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Use forwarded ref or internal ref
-  const containerRef = (ref && typeof ref !== 'function' ? ref : wrapperRef);
+    // Use forwarded ref or internal ref
+    const containerRef = ref && typeof ref !== "function" ? ref : wrapperRef;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true);
-            observer.disconnect();
-          }
-        });
-      },
-      {
-        threshold: 0.01,
-        rootMargin: '50px',
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setIsInView(true);
+              observer.disconnect();
+            }
+          });
+        },
+        {
+          threshold: 0.01,
+          rootMargin: "50px",
+        }
+      );
+
+      const element = containerRef.current;
+      if (element) {
+        observer.observe(element);
       }
-    );
 
-    const element = containerRef.current;
-    if (element) {
-      observer.observe(element);
-    }
+      return () => {
+        observer.disconnect();
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    return () => {
-      observer.disconnect();
+    const handleLoad = () => {
+      setIsLoaded(true);
+      if (onLoad) {
+        onLoad();
+      }
     };
-  }, []);
 
-  const handleLoad = () => {
-    setIsLoaded(true);
-    if (onLoad) {
-      onLoad();
-    }
-  };
+    const handleError = () => {
+      setHasError(true);
+      if (onError) {
+        onError();
+      }
+    };
 
-  const handleError = () => {
-    setHasError(true);
-    if (onError) {
-      onError();
-    }
-  };
-
-  return (
-    <div
-      ref={containerRef}
-      className={`lazy-image-wrapper ${className}`}
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        backgroundColor: placeholder ? 'transparent' : '#f0f0f0',
-      }}
-    >
-      {isInView && (
-        <>
-          {!isLoaded && !hasError && (
-            <div
-              className="lazy-image-placeholder"
+    return (
+      <div
+        ref={containerRef}
+        className={`lazy-image-wrapper ${className}`}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: placeholder ? "transparent" : "#f0f0f0",
+        }}
+      >
+        {isInView && (
+          <>
+            {!isLoaded && !hasError && (
+              <div
+                className="lazy-image-placeholder"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: placeholder
+                    ? `url(${placeholder}) center/cover`
+                    : "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
+                  backgroundSize: placeholder ? "cover" : "200% 100%",
+                  animation: placeholder ? "none" : "shimmer 1.5s infinite",
+                }}
+              />
+            )}
+            <img
+              src={src}
+              alt={alt}
+              className={`lazy-image ${
+                isLoaded ? "lazy-image-loaded" : "lazy-image-loading"
+              }`}
+              onLoad={handleLoad}
+              onError={handleError}
+              loading="lazy"
+              decoding="async"
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                background: placeholder
-                  ? `url(${placeholder}) center/cover`
-                  : 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-                backgroundSize: placeholder ? 'cover' : '200% 100%',
-                animation: placeholder
-                  ? 'none'
-                  : 'shimmer 1.5s infinite',
+                opacity: isLoaded ? 1 : 0,
+                transition: "opacity 0.3s ease-in-out",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
               }}
+              {...props}
             />
-          )}
-          <img
-            src={src}
-            alt={alt}
-            className={`lazy-image ${isLoaded ? 'lazy-image-loaded' : 'lazy-image-loading'}`}
-            onLoad={handleLoad}
-            onError={handleError}
-            loading="lazy"
-            decoding="async"
+          </>
+        )}
+        {hasError && (
+          <div
+            className="lazy-image-error"
             style={{
-              opacity: isLoaded ? 1 : 0,
-              transition: 'opacity 0.3s ease-in-out',
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#f0f0f0",
+              color: "#999",
+              fontSize: "14px",
             }}
-            {...props}
-          />
-        </>
-      )}
-      {hasError && (
-        <div
-          className="lazy-image-error"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f0f0f0',
-            color: '#999',
-            fontSize: '14px',
-          }}
-        >
-          Failed to load image
-        </div>
-      )}
-      <style>{`
+          >
+            Failed to load image
+          </div>
+        )}
+        <style>{`
         @keyframes shimmer {
           0% {
             background-position: -200% 0;
@@ -146,11 +143,11 @@ const LazyImage = forwardRef<HTMLDivElement, LazyImageProps>(({
           }
         }
       `}</style>
-    </div>
-  );
-});
+      </div>
+    );
+  }
+);
 
-LazyImage.displayName = 'LazyImage';
+LazyImage.displayName = "LazyImage";
 
 export default LazyImage;
-
