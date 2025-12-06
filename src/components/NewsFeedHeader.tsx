@@ -20,7 +20,7 @@ interface NewsFeedHeaderProps {
 const NewsFeedHeader: React.FC<NewsFeedHeaderProps> = ({
   isLeftSidebarOpen,
   onToggleLeftSidebar,
-  showCreateMenu = false,
+  showCreateMenu: _showCreateMenu = false,
   showRightSidebarToggle = false,
   onRightSidebarToggle,
   unreadNotificationsCount = 0,

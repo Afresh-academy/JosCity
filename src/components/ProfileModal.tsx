@@ -16,7 +16,7 @@ interface ProfileModalProps {
 const ProfileModal: React.FC<ProfileModalProps> = ({
   isOpen,
   onClose,
-  userId,
+  userId: _userId,
   userName,
   userAvatar,
   isOnline = false,

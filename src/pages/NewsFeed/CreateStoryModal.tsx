@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { X, Image as ImageIcon, Video, Type } from "lucide-react";
+import { X, Image as ImageIcon, Video } from "lucide-react";
 import LazyImage from "../../components/LazyImage";
 
 interface CreateStoryModalProps {

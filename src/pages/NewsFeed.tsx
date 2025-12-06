@@ -236,19 +236,19 @@ const NewsFeed: React.FC = () => {
       userAvatar: getUserAvatar(),
       action: "",
       timeAgo: "Just now",
-      image: image || undefined,
-      video: video || undefined,
+      image: image || "",
+      video: video || "",
       likes: 0,
       comments: 0,
       views: 0,
       reviews: 0,
-      caption: caption || undefined,
+      caption: caption || "",
       hashtags: caption
         ? caption
             .split(" ")
             .filter((word) => word.startsWith("#"))
-            .join(" ") || undefined
-        : undefined,
+            .join(" ") || ""
+        : "",
     };
     
     // Add new post at the beginning of the array
