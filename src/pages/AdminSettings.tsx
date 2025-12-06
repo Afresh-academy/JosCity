@@ -34,7 +34,6 @@ interface PendingRegistration {
 }
 
 const AdminSettings: React.FC = () => {
-  const navigate = useNavigate();
   const [pendingRegistrations, setPendingRegistrations] = useState<
     PendingRegistration[]
   >([]);
@@ -681,7 +680,6 @@ const AdminSettings: React.FC = () => {
                 )}
               </>
             )}
-          </div>
 
       <style>{`
         @keyframes spin {
