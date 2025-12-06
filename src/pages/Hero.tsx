@@ -211,6 +211,17 @@ function Hero() {
             className={`hero__badge ${
               visibleElements.has("hero-badge") ? "fade-in" : ""
             }`}
+            onClick={() => navigate("/admin/login")}
+            style={{ cursor: "pointer" }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate("/admin/login");
+              }
+            }}
+            aria-label="Go to admin panel"
           >
             <Lightbulb size={20} />
             <span>Powered by Cbrilliance AI tech LTD</span>
